@@ -1,5 +1,10 @@
-import MainLayout from '../layouts/main'
+import React from 'react';
+import MainLayout from '@layouts/main';
 
-export default function Example() {
-  return <MainLayout>Example page</MainLayout>
-}
+const Example = () => (
+  <MainLayout>
+    <h1>Example page</h1>
+  </MainLayout>
+);
+
+export default Example;
