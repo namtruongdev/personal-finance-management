@@ -1,11 +1,27 @@
-import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
-import { CustomLayout, CustomSider } from '@components/forms/register/styles';
+import {
+  FacebookFilled,
+  GithubOutlined,
+  GoogleOutlined,
+} from '@ant-design/icons';
+import { FormSignup, Props } from 'interface/formInterface';
+import {
+  ButtonIcon,
+  ButtonNoBorder,
+  CustomLayout,
+  CustomSider,
+  Div,
+  DivIcon,
+  DivIconPlugin,
+  MissPass,
+  SignTitle,
+} from '@components/forms/register/styles';
 import { Button, Checkbox, Form, Input, Layout } from 'antd';
+import 'firebase/auth';
+import { providers, signIn, useSession } from 'next-auth/client';
 import Link from 'next/link';
-import React, { useMemo } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import Header from '../components/header';
-import { ButtonIcon, Div, DivIcon, TitleH1 } from './signup';
 
 const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
@@ -13,12 +29,16 @@ export const ButtonSignin = styled(Button)`
     margin-bottom: 0px !important;
   }
 `;
-const Signin = () => {
+const Signin = ({ providers: signInProviders }: Props) => {
+  const [session] = useSession();
+  useEffect(() => {
+    if (session) {
+      router.push('/');
+    }
+  }, [session]);
   const [form] = Form.useForm();
-  const onFinish = (values: unknown) => {
-    // console.log('Received values of form: ', values);
-  };
-
+  const router = useRouter();
+  const onFinish = (values: FormSignup) => {};
   const formItemLayout = useMemo(
     () => ({
       labelCol: { span: 24 },
@@ -44,8 +64,10 @@ const Signin = () => {
 
   return (
     <div>
-      <Header />
       <CustomLayout>
+        <Link href="/">
+          <a>Home</a>
+        </Link>
         <Layout>
           <Content
             style={{
@@ -55,7 +77,7 @@ const Signin = () => {
             }}
           >
             <Div>
-              <TitleH1 left>Đăng nhập</TitleH1>
+              <SignTitle>Đăng nhập</SignTitle>
               <Form
                 {...formItemLayout}
                 layout="vertical"
@@ -65,14 +87,40 @@ const Signin = () => {
                 scrollToFirstError
               >
                 <DivIcon>
-                  <ButtonIcon primary margin>
-                    <FacebookFilled
-                      style={{ fontSize: 22, marginRight: '10px' }}
-                    />
-                  </ButtonIcon>
-                  <ButtonIcon>
-                    <GoogleOutlined style={{ fontSize: 22 }} />
-                  </ButtonIcon>
+                  {Object.values(signInProviders).map((provider) => (
+                    <DivIconPlugin key={provider.name}>
+                      <form>
+                        <ButtonNoBorder
+                          type="button"
+                          onClick={() => signIn(provider.id)}
+                        >
+                          {provider.name === 'Facebook' ? (
+                            <ButtonIcon margin>
+                              <FacebookFilled
+                                style={{ fontSize: 22, marginRight: '10px' }}
+                              />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                          {provider.name === 'Google' ? (
+                            <ButtonIcon>
+                              <GoogleOutlined style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                          {provider.name === 'GitHub' ? (
+                            <ButtonIcon>
+                              <GithubOutlined style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                        </ButtonNoBorder>
+                      </form>
+                    </DivIconPlugin>
+                  ))}
                 </DivIcon>
                 <Form.Item
                   name="email"
@@ -109,9 +157,7 @@ const Signin = () => {
                   {...tailFormItemLayout}
                 >
                   <Checkbox>Nhớ mật khẩu</Checkbox>
-                  <a style={{ float: 'right' }} href="">
-                    Quên mật khẩu?
-                  </a>
+                  <MissPass href="#">Quên mật khẩu?</MissPass>
                 </Form.Item>
                 <Form.Item style={{ marginBottom: '5px' }}>
                   <ButtonSignin type="primary" block htmlType="submit">
@@ -132,5 +178,9 @@ const Signin = () => {
     </div>
   );
 };
-
 export default Signin;
+export async function getStaticProps() {
+  return {
+    props: { providers: await providers() },
+  };
+}
