@@ -36,7 +36,7 @@ const { Content } = Layout;
 export const success = () => {
   message.success('done', 1);
 };
-const Signup = ({ providers: signInProviders }: Props) => {
+const Signup = ({ providers: prd }: Props) => {
   const [session] = useSession();
   const router = useRouter();
   useEffect(() => {
