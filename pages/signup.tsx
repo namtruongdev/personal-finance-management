@@ -36,7 +36,7 @@ const { Content } = Layout;
 export const success = () => {
   message.success('done', 1);
 };
-const Signup = ({ providers: signInProviders }: Props) => {
+const Signup = ({ providers: prd }: Props) => {
   const [session] = useSession();
   const router = useRouter();
   useEffect(() => {
@@ -260,7 +260,7 @@ const Signup = ({ providers: signInProviders }: Props) => {
                 >
                   <Input.Password />
                 </Form.Item>
-                <CustomButtonForm
+                <Form.Item
                   name="agreement"
                   valuePropName="checked"
                   rules={[
@@ -276,11 +276,17 @@ const Signup = ({ providers: signInProviders }: Props) => {
                   {...tailFormItemLayout}
                 >
                   <Checkbox>
-                    Tôi đã đọc
-                    <a href="javascript:void(0)">điểu khoản</a>
+                    Tôi đã đọc <a href="javascript:void(0)">điểu khoản</a>
                   </Checkbox>
+                </Form.Item>
+                <CustomButtonForm>
+                  <Button type="primary" htmlType="submit">
+                    Đăng ký
+                  </Button>
                   <Link href="/signin">
-                    <Button type="primary">Đăng nhập</Button>
+                    <a>
+                      <Button type="primary">Đăng nhập</Button>
+                    </a>
                   </Link>
                 </CustomButtonForm>
               </Form>
