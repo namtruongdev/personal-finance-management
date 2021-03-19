@@ -7,7 +7,7 @@ import { ROUTES } from '@configs/router';
 import type { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { ProSettings } from '@ant-design/pro-layout';
 
-import { MoneyBag } from '@components/Icons/index';
+import { MoneyBag } from '@components/forms/register/Icons/index';
 
 const SettingDrawer = dynamic(
   () => import('@ant-design/pro-layout/lib/components/SettingDrawer'),
