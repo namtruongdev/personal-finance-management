@@ -15,10 +15,6 @@ export default NextAuth({
       clientId: process.env.NEXT_PUBLIC_GOOGLE_ID,
       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_SECRET,
     }),
-    // Providers.Twitter({
-    //   clientId: process.env.TWITTER_ID,
-    //   clientSecret: process.env.TWITTER_SECRET,
-    // }),
   ],
   // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.
   // https://next-auth.js.org/configuration/databases
@@ -42,13 +38,6 @@ export default NextAuth({
 
   jwt: {
     // A secret to use for key generation (you should set this explicitly)
-    // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
-    // Set to true to use encryption (default: false)
-    // encryption: true,
-    // You can define your own encode/decode functions for signing and encryption
-    // if you want to override the default behaviour.
-    // encode: async ({ secret, token, maxAge }) => {},
-    // decode: async ({ secret, token, maxAge }) => {},
   },
 
   // You can define custom pages to override the built-in pages.
@@ -56,7 +45,7 @@ export default NextAuth({
   // pages is not specified for that route.
   // https://next-auth.js.org/configuration/pages
   pages: {
-    // signIn: '/api/auth/signin',  // Displays signin buttons
+    // signIn: '/signin',  // Displays signin buttons
     // signOut: '/api/auth/signout', // Displays form with sign out button
     // error: '/api/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/api/auth/verify-request', // Used for check email page
@@ -71,6 +60,16 @@ export default NextAuth({
     // async redirect(url, baseUrl) { return baseUrl },
     // async session(session, user) { return session },
     // async jwt(token, user, account, profile, isNewUser) { return token }
+    // async jwt(token, user, account, profile, isNewUser) {
+    //   const isUserSignedIn = !!user;
+    //   // make a http call to our graphql api
+    //   // store this in postgres
+    //   if (isUserSignedIn) {
+    //     // token.id = user.id.toString();
+    //     token = { ...token, id: user.id.toString() };
+    //   }
+    //   return Promise.resolve(token);
+    // },
   },
 
   // Events are useful for logging
