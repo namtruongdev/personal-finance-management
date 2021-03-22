@@ -80,6 +80,7 @@
         "exports": "only-multiline",
         "functions": "never"
       }
-    ]
+    ],
+    "no-console": "error"
   }
 }
