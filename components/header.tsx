@@ -23,15 +23,15 @@ export default function Header() {
             {!session && (
               <>
                 <span>You are not signed in</span>
-                <a
-                  href="/api/auth/signin"
+                <button
+                  type="button"
                   onClick={(e) => {
                     e.preventDefault();
                     signIn();
                   }}
                 >
                   Sign in
-                </a>
+                </button>
               </>
             )}
             {session && (
