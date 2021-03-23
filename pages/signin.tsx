@@ -1,13 +1,13 @@
-/* eslint-disable max-len */
 import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
 import { CustomLayout, CustomSider } from '@components/forms/register/styles';
 import { Button, Checkbox, Form, Input, Layout } from 'antd';
-import { Content } from 'antd/lib/layout/layout';
 import Link from 'next/link';
-import React from 'react';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
+import Header from '../components/header';
 import { ButtonIcon, Div, DivIcon, TitleH1 } from './signup';
 
+const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
   .ant-form-vertical .ant-form-item {
     margin-bottom: 0px !important;
@@ -16,27 +16,35 @@ export const ButtonSignin = styled(Button)`
 const Signin = () => {
   const [form] = Form.useForm();
   const onFinish = (values: unknown) => {
-    console.log('Received values of form: ', values);
+    // console.log('Received values of form: ', values);
   };
-  const formItemLayout = {
-    labelCol: { span: 24 },
-    wrapperCol: { span: 24 },
-  };
-  const tailFormItemLayout = {
-    wrapperCol: {
-      xs: {
-        span: 24,
-        offset: 0,
+
+  const formItemLayout = useMemo(
+    () => ({
+      labelCol: { span: 24 },
+      wrapperCol: { span: 24 },
+    }),
+    []
+  );
+  const tailFormItemLayout = useMemo(
+    () => ({
+      wrapperCol: {
+        xs: {
+          span: 24,
+          offset: 0,
+        },
+        sm: {
+          span: 24,
+          offset: 0,
+        },
       },
-      sm: {
-        span: 24,
-        offset: 0,
-      },
-    },
-  };
+    }),
+    []
+  );
 
   return (
     <div>
+      <Header />
       <CustomLayout>
         <Layout>
           <Content
@@ -48,61 +56,6 @@ const Signin = () => {
           >
             <Div>
               <TitleH1 left>Đăng nhập</TitleH1>
-              {/* <Form
-                                form={form}
-                                name="normal_login"
-                                className="login-form"
-                                initialValues={{ remember: true }}
-                                onFinish={onFinish}
-                            >
-                                <Form.Item
-                                    name="username"
-                                    rules={[{ required: true, message: 'Please input your Username!' }]}
-                                >
-                                    <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
-                                </Form.Item>
-                                <Form.Item
-                                    name="password"
-                                    rules={[{ required: true, message: 'Please input your Password!' }]}
-                                >
-                                    <Input
-                                        prefix={<LockOutlined className="site-form-item-icon" />}
-                                        type="password"
-                                        placeholder="Password"
-                                    />
-                                </Form.Item>
-                                <Form.Item>
-                                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                                        <Checkbox>Nhớ mật khẩu</Checkbox>
-                                    </Form.Item>
-
-                                    <a className="login-form-forgot" href="">
-                                        Quên mật khẩu
-        </a>
-                                </Form.Item>
-                                <CustomButtonForm2 >
-                                    <Form.Item>
-                                        <Button type="primary" htmlType="submit" className="login-form-button">
-                                            Đăng nhập
-                                        </Button>
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <ButtonIcon primary margin>
-                                            <FacebookFilled style={{ fontSize: 22, marginRight: '10px' }} />
-                                        </ButtonIcon>
-                                        <ButtonIcon>
-                                            <GoogleOutlined style={{ fontSize: 22 }} />
-                                        </ButtonIcon>
-                                    </Form.Item>
-                                </CustomButtonForm2>
-                                <Form.Item>
-                                    <p>
-                                        Or <Link href="/signup">
-                                            <a>Đăng ký ngay</a>
-                                        </Link>
-                                    </p>
-                                </Form.Item>
-                            </Form> */}
               <Form
                 {...formItemLayout}
                 layout="vertical"

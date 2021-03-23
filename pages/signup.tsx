@@ -5,11 +5,11 @@ import {
   CustomSider,
 } from '@components/forms/register/styles';
 import { Button, Checkbox, Form, Input, Layout, Typography } from 'antd';
-import { Content } from 'antd/lib/layout/layout';
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
 
+const { Content } = Layout;
 const { Title } = Typography;
 // const formItemLayout = {
 //     labelCol: {
@@ -64,11 +64,7 @@ export const Div = styled.div`
 const Signup = () => {
   const [form] = Form.useForm();
   const onFinish = (values: unknown) => {
-    console.log('Received values of form: ', values);
-  };
-  const router = useRouter();
-  const handleClick = () => {
-    router.push(`/signin`);
+    // console.log('Received values of form: ', values);
   };
   const formItemLayout = {
     labelCol: { span: 24 },
@@ -203,13 +199,11 @@ const Signup = () => {
                   <Button type="primary" htmlType="submit">
                     Đăng ký
                   </Button>
-                  <Button
-                    type="primary"
-                    onClick={handleClick}
-                    htmlType="submit"
-                  >
-                    Đăng nhập
-                  </Button>
+                  <Link href="/signin">
+                    <a>
+                      <Button type="primary">Đăng nhập</Button>
+                    </a>
+                  </Link>
                 </CustomButtonForm>
               </Form>
             </Div>
