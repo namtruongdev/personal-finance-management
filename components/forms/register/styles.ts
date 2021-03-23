@@ -40,10 +40,10 @@ export const CustomButtonForm2 = styled(Form.Item)`
   }
 `;
 export const DivIconPlugin = styled.div`
-  max-width: 200px;
-  max-height: 200px;
-  min-height: 100px;
-  min-width: 100px;
+  max-width: 150px;
+  max-height: 150px;
+  min-height: 50px;
+  min-width: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
