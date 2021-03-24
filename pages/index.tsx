@@ -3,12 +3,26 @@ import React from 'react';
 import MainLayout from '@layouts/main';
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/client';
+import firebaseDb from './firebase';
+import 'firebase/auth';
 
 const Home = () => {
   const [session] = useSession();
+  const handleLogout = () => {
+    firebaseDb
+      .auth()
+      .signOut()
+      .then((res) => {
+        // eslint-disable-next-line no-console
+        console.log(res, 'log out');
+      });
+  };
   return (
     <MainLayout>
       <h1>Bảng điều khiển</h1>
+      <a href="/signin" onClick={handleLogout}>
+        Logout
+      </a>
       {session ? (
         <a
           href="/api/auth/signout"
@@ -37,3 +51,6 @@ const Home = () => {
 };
 
 export default Home;
+// function then(arg0: (res: any) => void) {
+//     throw new Error('Function not implemented.');
+// }

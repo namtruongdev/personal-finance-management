@@ -21,6 +21,7 @@ const Contacts = () => {
         }
       });
   }, []);
+
   const handleFireBase = (key) => {
     if (window.confirm('Are you sure to delete')) {
       firebaseDb

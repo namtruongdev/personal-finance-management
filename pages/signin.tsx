@@ -12,6 +12,8 @@ import Link from 'next/link';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { ButtonIcon, Div, DivIcon, TitleH1 } from './signup';
+import firebaseDb from './firebase';
+import 'firebase/auth';
 
 export interface Props {
   providers?: Provider;
@@ -28,6 +30,7 @@ const Signin = ({ providers }: Props) => {
   const [form] = Form.useForm();
   const onFinish = (values: unknown) => {
     // console.log('Received values of form: ', values);
+    handleLogin(values);
   };
 
   const formItemLayout = useMemo(
@@ -52,7 +55,30 @@ const Signin = ({ providers }: Props) => {
     }),
     []
   );
+  const handleLogin = (values) => {
+    firebaseDb
+      .auth()
+      .signInWithEmailAndPassword(values.email, values.password)
+      .then((res) => {
+        // eslint-disable-next-line no-console
+        console.log(res, 'lrrn +++++++');
+      })
 
+      .catch((err) => {
+        switch (err.code) {
+          case 'auth/invalid-email':
+          case 'auth/user-disabled':
+          case 'auth/user-not-found':
+            break;
+          case 'auth/wrong-password':
+            break;
+        }
+        // eslint-disable-next-line no-console
+        console.log(err, 'check lỗi ::::::::');
+      });
+    // eslint-disable-next-line no-console
+    console.log('test key =============');
+  };
   return (
     <div>
       <CustomLayout>
