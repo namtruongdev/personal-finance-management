@@ -6,16 +6,16 @@ import {
   DivIconPlugin,
 } from '@components/forms/register/styles';
 import { Button, Checkbox, Form, Input, Layout } from 'antd';
-import { providers, signIn } from 'next-auth/client';
+import { providers, signIn, useSession } from 'next-auth/client';
 import { Provider } from 'next-auth/providers';
 import Link from 'next/link';
-import React, { useMemo } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { ButtonIcon, Div, DivIcon, TitleH1 } from './signup';
 
 export interface Props {
   providers?: Provider;
-  // csrfToken: unknown
 }
 const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
@@ -25,6 +25,13 @@ export const ButtonSignin = styled(Button)`
 `;
 // eslint-disable-next-line @typescript-eslint/no-shadow
 const Signin = ({ providers }: Props) => {
+  const [session] = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if (session) {
+      router.push('/');
+    }
+  }, [session]);
   const [form] = Form.useForm();
   const onFinish = (values: unknown) => {
     // console.log('Received values of form: ', values);
@@ -86,7 +93,7 @@ const Signin = ({ providers }: Props) => {
                           onClick={() => signIn(provider.id)}
                         >
                           {provider.name === 'Facebook' ? (
-                            <ButtonIcon primary margin>
+                            <ButtonIcon margin>
                               <FacebookFilled
                                 style={{ fontSize: 22, marginRight: '10px' }}
                               />

@@ -1,4 +1,5 @@
 import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
+import { Btn } from '@components/forms/register/intef';
 import {
   ButtonNoBorder,
   CustomButtonForm,
@@ -7,10 +8,11 @@ import {
   DivIconPlugin,
 } from '@components/forms/register/styles';
 import { Button, Checkbox, Form, Input, Layout, Typography } from 'antd';
-import { providers, signIn } from 'next-auth/client';
+import { providers, signIn, useSession } from 'next-auth/client';
 import { Provider } from 'next-auth/providers';
 import Link from 'next/link';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 const { Content } = Layout;
@@ -25,15 +27,15 @@ export const TitleH1 = styled(Title)`
   margin-left: ${(props: String) => (props.left ? '0px' : '')};
   margin-bottom: ${(props: String) => (props.left ? '25px !important' : '')};
 `;
-export const ButtonIcon = styled(Button)`
+export const ButtonIcon = styled(Button)<Btn>`
   width: 30px;
   outline: none;
   display: flex;
   justify-content: center;
   align-content: center;
-  padding-right: ${(props: String) => (props.margin ? '5px' : '')};
-  margin-left: ${(props: String) => (props.margin ? '0px' : '')};
-  margin-right: ${(props: String) => (props.margin ? '10px' : '')};
+  padding-right: ${(props) => (props.margin ? '5px' : '')};
+  margin-left: ${(props) => (props.margin ? '0px' : '')};
+  margin-right: ${(props) => (props.margin ? '10px' : '')};
 `;
 export const DivIcon = styled.div`
   display: flex;
@@ -60,9 +62,17 @@ export const Div = styled.div`
 
 // eslint-disable-next-line @typescript-eslint/no-shadow
 const Signup = ({ providers }: Props) => {
+  const [session] = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if (session) {
+      router.push('/');
+    }
+  }, [session]);
   const [form] = Form.useForm();
   const onFinish = (values: unknown) => {
-    // console.log('Received values of form: ', values);
+    // eslint-disable-next-line no-console
+    console.log('Received values of form: ', values);
   };
   const formItemLayout = {
     labelCol: { span: 24 },
@@ -95,7 +105,7 @@ const Signup = ({ providers }: Props) => {
                         onClick={() => signIn(provider.id)}
                       >
                         {provider.name === 'Facebook' ? (
-                          <ButtonIcon primary margin>
+                          <ButtonIcon margin>
                             <FacebookFilled
                               style={{ fontSize: 22, marginRight: '10px' }}
                             />
@@ -147,10 +157,6 @@ const Signup = ({ providers }: Props) => {
                   name="name"
                   label="Tên người dùng"
                   rules={[
-                    {
-                      type: 'email',
-                      message: 'The input is not valid E-mail!',
-                    },
                     {
                       required: true,
                       message: 'Please input your E-mail!',
@@ -215,7 +221,8 @@ const Signup = ({ providers }: Props) => {
                   {...tailFormItemLayout}
                 >
                   <Checkbox>
-                    Tôi đã đọc <a href="javascript:void(0)">điểu khoản</a>
+                    Tôi đã đọc
+                    <a href="javascript:void(0)">điểu khoản</a>
                   </Checkbox>
                 </Form.Item>
                 <CustomButtonForm>
