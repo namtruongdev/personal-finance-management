@@ -25,6 +25,16 @@ export const ButtonSignin = styled(Button)`
     margin-bottom: 0px !important;
   }
 `;
+const GhIcon = () => (
+  <ButtonIcon>
+    <img
+      height="22"
+      alt="github"
+      width="22"
+      src="https://unpkg.com/simple-icons@v4/icons/github.svg"
+    />
+  </ButtonIcon>
+);
 // eslint-disable-next-line @typescript-eslint/no-shadow
 const Signin = ({ providers }: Props) => {
   const [form] = Form.useForm();
@@ -112,7 +122,7 @@ const Signin = ({ providers }: Props) => {
                           onClick={() => signIn(provider.id)}
                         >
                           {provider.name === 'Facebook' ? (
-                            <ButtonIcon primary margin>
+                            <ButtonIcon margin>
                               <FacebookFilled
                                 style={{ fontSize: 22, marginRight: '10px' }}
                               />
@@ -193,16 +203,7 @@ const Signin = ({ providers }: Props) => {
 };
 
 export default Signin;
-const GhIcon = () => (
-  <ButtonIcon>
-    <img
-      height="22"
-      alt="github"
-      width="22"
-      src="https://unpkg.com/simple-icons@v4/icons/github.svg"
-    />
-  </ButtonIcon>
-);
+
 Signin.getInitialProps = async (context) => ({
   providers: await providers(),
 });
