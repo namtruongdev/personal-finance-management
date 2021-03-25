@@ -7,25 +7,38 @@ import {
   CustomSider,
   DivIconPlugin,
 } from '@components/forms/register/styles';
-import { Button, Checkbox, Form, Input, Layout, Typography } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Layout,
+  message,
+  Typography,
+} from 'antd';
+import 'firebase/auth';
 import { providers, signIn, useSession } from 'next-auth/client';
 import { Provider } from 'next-auth/providers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import firebaseDb from './firebase';
 
 const { Content } = Layout;
 const { Title } = Typography;
 export interface Props {
   providers?: Provider;
 }
+
+export interface Prop {
+  margin?: String | Boolean;
+  // premier: string
+}
 export const TitleH1 = styled(Title)`
   text-align: center;
   margin-bottom: 20px;
   margin-bottom: 20px !important;
-  margin-left: ${(props: String) => (props.left ? '0px' : '')};
-  margin-bottom: ${(props: String) => (props.left ? '25px !important' : '')};
 `;
 export const ButtonIcon = styled(Button)<Btn>`
   width: 30px;
@@ -60,6 +73,10 @@ export const Div = styled.div`
   width: 350px;
 `;
 
+export const success = () => {
+  message.success('done', 1);
+};
+
 // eslint-disable-next-line @typescript-eslint/no-shadow
 const Signup = ({ providers }: Props) => {
   const [session] = useSession();
@@ -70,16 +87,111 @@ const Signup = ({ providers }: Props) => {
     }
   }, [session]);
   const [form] = Form.useForm();
+
+  // const [user, setUser] = useState({});
+  // const [contactObjects, setContactObjects] = useState({});
+  // const [emailError, setEmailError] = useState("");
+  // const [passwordError, setPasswordError] = useState("");
+  // const [hasAccount, setHasAccount] = useState(false);
+  useEffect(() => {
+    firebaseDb
+      .database()
+      .ref()
+      .child('datafirebase')
+      .on('value', (snapshot) => {
+        if (snapshot.val() != null) {
+          // setContactObjects({ ...snapshot.val() });
+        } else {
+          // setContactObjects({});
+          success();
+        }
+      });
+    // checkuser();
+  }, []);
+  const setFormBlank = () => {
+    form.resetFields();
+  };
   const onFinish = (values: unknown) => {
-    // eslint-disable-next-line no-console
-    console.log('Received values of form: ', values);
+    // console.log('Received values of form: ', values);
+    // setData(values)
+    // handleGetFireBase(values);
+    handleSignup(values);
+    handleCheckMail(values);
   };
   const formItemLayout = {
     labelCol: { span: 24 },
     wrapperCol: { span: 24 },
   };
+
   // eslint-disable-next-line no-console
   console.log(Object.values(providers));
+
+  const handleSignup = (values) => {
+    firebaseDb
+      .auth()
+      .createUserWithEmailAndPassword(values.email, values.password)
+
+      .catch((err) => {
+        switch (err.code) {
+          case 'auth/email-already-in-use':
+          case 'auth/invalid-email':
+            form.setFields([
+              {
+                name: 'email',
+                errors: ['Email đã tồn tại !'],
+              },
+            ]);
+
+            // setEmailError(err.message);
+            break;
+          case 'auth/weak-password':
+            // setPasswordError(err.message);
+            break;
+        }
+        // eslint-disable-next-line no-console
+        console.log(err, 'check lỗi ::::::::');
+        setFormBlank();
+      });
+    // checkuser();
+  };
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  // const checkuser = () => firebaseDb?.auth()?.onAuthStateChanged((user) => {
+  //     if (user) {
+
+  //     }
+  // })
+
+  const actionCodeSettings = {
+    // URL you want to redirect back to. The domain (www.example.com) for this
+    // URL must be in the authorized domains list in the Firebase Console.
+    url: 'http://localhost',
+    // This must be true.
+    handleCodeInApp: true,
+
+    dynamicLinkDomain: 'http://localhost',
+  };
+  const handleCheckMail = (values) => {
+    firebaseDb
+      ?.auth()
+      ?.sendSignInLinkToEmail('taan300897@gmail.com', actionCodeSettings)
+      .then(() => {
+        alert('chay');
+        window.localStorage.setItem('emailForSignIn', 'taan300897@gmail.com');
+      })
+      .catch((error) => {
+        // ...
+      });
+  };
+
+  // const handleOnFinishFailed = () => {
+  //     debugger
+  // }
+
+  // const onValuesChange = (changedValues, allValues) => {
+  //     console.log('changedValues', changedValues)
+  //     console.log('allValues', allValues)
+  // }
+
   return (
     <div>
       <CustomLayout>
@@ -135,6 +247,8 @@ const Signup = ({ providers }: Props) => {
                 form={form}
                 name="register"
                 onFinish={onFinish}
+                // onFinishFailed={handleOnFinishFailed}
+                // onValuesChange={onValuesChange}
                 scrollToFirstError
               >
                 <Form.Item
@@ -205,7 +319,7 @@ const Signup = ({ providers }: Props) => {
                 >
                   <Input.Password />
                 </Form.Item>
-                <Form.Item
+                <CustomButtonForm
                   name="agreement"
                   valuePropName="checked"
                   rules={[
@@ -224,11 +338,6 @@ const Signup = ({ providers }: Props) => {
                     Tôi đã đọc
                     <a href="javascript:void(0)">điểu khoản</a>
                   </Checkbox>
-                </Form.Item>
-                <CustomButtonForm>
-                  <Button type="primary" htmlType="submit">
-                    Đăng ký
-                  </Button>
                   <Link href="/signin">
                     <a>
                       <Button type="primary">Đăng nhập</Button>
@@ -256,7 +365,7 @@ const GhIcon = () => (
     />
   </ButtonIcon>
 );
-// type Ctx =
-Signup.getInitialProps = async (context?: {}) => ({
+
+Signup.getInitialProps = async (context) => ({
   providers: await providers(),
 });
