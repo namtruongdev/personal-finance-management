@@ -18,7 +18,7 @@ import {
 import { providers, signIn } from 'next-auth/client';
 import { Provider } from 'next-auth/providers';
 import Link from 'next/link';
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import firebaseDb from './firebase';
 import 'firebase/auth';
@@ -83,21 +83,21 @@ const Signup = ({ providers }: Props) => {
   // const [emailError, setEmailError] = useState("");
   // const [passwordError, setPasswordError] = useState("");
   // const [hasAccount, setHasAccount] = useState(false);
-  useEffect(() => {
-    firebaseDb
-      .database()
-      .ref()
-      .child('datafirebase')
-      .on('value', (snapshot) => {
-        if (snapshot.val() != null) {
-          // setContactObjects({ ...snapshot.val() });
-        } else {
-          // setContactObjects({});
-          success();
-        }
-      });
-    // checkuser();
-  }, []);
+  // useEffect(() => {
+  //     firebaseDb
+  //         .database()
+  //         .ref()
+  //         .child('datafirebase')
+  //         .on('value', (snapshot) => {
+  //             if (snapshot.val() != null) {
+  //                 // setContactObjects({ ...snapshot.val() });
+  //             } else {
+  //                 // setContactObjects({});
+  //                 success();
+  //             }
+  //         });
+  //     // checkuser();
+  // }, []);
   const setFormBlank = () => {
     form.resetFields();
   };
@@ -151,26 +151,29 @@ const Signup = ({ providers }: Props) => {
   //     }
   // })
 
-  const actionCodeSettings = {
-    // URL you want to redirect back to. The domain (www.example.com) for this
-    // URL must be in the authorized domains list in the Firebase Console.
-    url: 'http://localhost',
-    // This must be true.
-    handleCodeInApp: true,
-
-    dynamicLinkDomain: 'http://localhost',
-  };
   const handleCheckMail = (values) => {
-    firebaseDb
-      ?.auth()
-      ?.sendSignInLinkToEmail('taan300897@gmail.com', actionCodeSettings)
-      .then(() => {
-        alert('chay');
-        window.localStorage.setItem('emailForSignIn', 'taan300897@gmail.com');
+    const auth = firebaseDb.auth();
+    // console.log(auth.currentUser, "okeeeeee data");
+
+    auth.currentUser
+      .sendEmailVerification()
+
+      .then((res) => {
+        // console.log(res.emailVerified, "check key");
       })
-      .catch((error) => {
-        // ...
+      .catch((err) => {
+        // console.log(err.emailVerified, "check log out");
       });
+    // firebaseDb
+    //   ?.auth()
+    //   ?.sendSignInLinkToEmail('taan300897@gmail.com', actionCodeSettings)
+    //   .then(() => {
+    //     alert('chay');
+    //     window.localStorage.setItem('emailForSignIn', 'taan300897@gmail.com');
+    //   })
+    //   .catch((error) => {
+    //     // ...
+    //   });
   };
 
   // const handleOnFinishFailed = () => {

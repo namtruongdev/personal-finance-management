@@ -56,14 +56,14 @@ const Signin = ({ providers }: Props) => {
     []
   );
   const handleLogin = (values) => {
+    // debugger;
     firebaseDb
       .auth()
       .signInWithEmailAndPassword(values.email, values.password)
       .then((res) => {
         // eslint-disable-next-line no-console
-        console.log(res, 'lrrn +++++++');
+        console.log(res.user.emailVerified, 'lrrn +++++++');
       })
-
       .catch((err) => {
         switch (err.code) {
           case 'auth/invalid-email':
@@ -112,7 +112,7 @@ const Signin = ({ providers }: Props) => {
                           onClick={() => signIn(provider.id)}
                         >
                           {provider.name === 'Facebook' ? (
-                            <ButtonIcon primary margin>
+                            <ButtonIcon margin>
                               <FacebookFilled
                                 style={{ fontSize: 22, marginRight: '10px' }}
                               />

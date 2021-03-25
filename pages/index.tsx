@@ -20,9 +20,11 @@ const Home = () => {
   return (
     <MainLayout>
       <h1>Bảng điều khiển</h1>
-      <a href="/signin" onClick={handleLogout}>
-        Logout
-      </a>
+
+      <button type="button" onClick={handleLogout}>
+        {' '}
+        Logout{' '}
+      </button>
       {session ? (
         <a
           href="/api/auth/signout"
