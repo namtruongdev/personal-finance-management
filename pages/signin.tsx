@@ -1,9 +1,13 @@
 import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
 import {
+  ButtonIcon,
   ButtonNoBorder,
   CustomLayout,
   CustomSider,
+  Div,
+  DivIcon,
   DivIconPlugin,
+  TitleH1,
 } from '@components/forms/register/styles';
 import { Button, Checkbox, Form, Input, Layout } from 'antd';
 import 'firebase/auth';
@@ -13,7 +17,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { ButtonIcon, Div, DivIcon, TitleH1 } from './signup';
 
 export interface Props {
   providers?: Provider;
@@ -24,20 +27,22 @@ export const ButtonSignin = styled(Button)`
     margin-bottom: 0px !important;
   }
 `;
+// const reSetPass = () => {
+//   message.warning('email ko xac dinh');
+// };
 // eslint-disable-next-line @typescript-eslint/no-shadow
 const Signin = ({ providers }: Props) => {
   const [session] = useSession();
-  const router = useRouter();
   useEffect(() => {
     if (session) {
       router.push('/');
     }
   }, [session]);
   const [form] = Form.useForm();
+  const router = useRouter();
   const onFinish = (values: unknown) => {
     // console.log('Received values of form: ', values);
   };
-
   const formItemLayout = useMemo(
     () => ({
       labelCol: { span: 24 },
@@ -109,7 +114,7 @@ const Signin = ({ providers }: Props) => {
                           ) : (
                             ''
                           )}
-                          {provider.name === 'GitHub' ? <GhIcon /> : ''}
+                          {provider.name === 'GitHub' ? <GhIcons /> : ''}
                         </ButtonNoBorder>
                       </form>
                     </DivIconPlugin>
@@ -150,7 +155,7 @@ const Signin = ({ providers }: Props) => {
                   {...tailFormItemLayout}
                 >
                   <Checkbox>Nhớ mật khẩu</Checkbox>
-                  <a style={{ float: 'right' }} href="">
+                  <a style={{ float: 'right' }} href="#">
                     Quên mật khẩu?
                   </a>
                 </Form.Item>
@@ -173,18 +178,17 @@ const Signin = ({ providers }: Props) => {
     </div>
   );
 };
-
-export default Signin;
-const GhIcon = () => (
+const GhIcons = () => (
   <ButtonIcon>
     <img
       height="22"
-      alt="github"
       width="22"
+      alt="github"
       src="https://unpkg.com/simple-icons@v4/icons/github.svg"
     />
   </ButtonIcon>
 );
-Signin.getInitialProps = async (context) => ({
+export default Signin;
+Signin.getInitialProps = async () => ({
   providers: await providers(),
 });

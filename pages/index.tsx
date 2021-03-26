@@ -3,8 +3,29 @@ import MainLayout from '@layouts/main';
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/client';
 // import firebaseDb from './firebase';
-import 'firebase/auth';
+import { LoginOutlined, UserOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
+import { ButtonIcon } from '@components/forms/register/styles';
 
+const ButtonInPage = styled(ButtonIcon)`
+  /* padding-left:4px */
+`;
+interface Props {
+  right?: String | Boolean;
+  left?: String | Boolean;
+}
+export const IconAnt = styled.span<Props>`
+  font-size: 1.5rem;
+  margin-top: -5px;
+  padding-right: 8px;
+  margin-left: 54px;
+  margin-left: ${(props) => (props.right ? '59px' : '')};
+  margin-left: ${(props) => (props.left ? '-12px' : '')};
+  margin-top: ${(props) => (props.left ? '-7px' : '')};
+`;
+export const NameIcon = styled.span`
+  font-size: 16px;
+`;
 const Home = () => {
   const [session] = useSession();
   // const handleLogout = () => {
@@ -30,18 +51,33 @@ const Home = () => {
           Sign out
         </a>
       ) : (
-        'chua signin'
+        <>
+          <p>
+            <Link href="/signin">
+              <a>
+                <ButtonInPage>
+                  <IconAnt>
+                    <LoginOutlined />
+                  </IconAnt>
+                  <NameIcon>Sign in</NameIcon>
+                </ButtonInPage>
+              </a>
+            </Link>
+          </p>
+          <p>
+            <Link href="/signup">
+              <a>
+                <ButtonInPage>
+                  <IconAnt right>
+                    <UserOutlined />
+                  </IconAnt>
+                  <NameIcon>Sign up</NameIcon>
+                </ButtonInPage>
+              </a>
+            </Link>
+          </p>
+        </>
       )}
-      <p>
-        <Link href="/signin">
-          <a>signin</a>
-        </Link>
-      </p>
-      <p>
-        <Link href="/signup">
-          <a>signup</a>
-        </Link>
-      </p>
     </MainLayout>
   );
 };

@@ -1,60 +1,27 @@
-import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
-import { Btn } from '@components/forms/register/intef';
+import AfterSignup from '@components/forms/login/afterSignup';
+import { SigninFb, SigninGg } from '@components/forms/login/allSignin';
 import {
-  ButtonNoBorder,
   CustomButtonForm,
   CustomLayout,
   CustomSider,
-  DivIconPlugin,
+  Div,
+  DivIcon,
+  TitleH1,
 } from '@components/forms/register/styles';
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Layout,
-  message,
-  Typography,
-} from 'antd';
+import { Button, Checkbox, Form, Input, Layout, message } from 'antd';
 import 'firebase/auth';
-import { providers, signIn, useSession } from 'next-auth/client';
-import { Provider } from 'next-auth/providers';
+import { providers, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
 import firebaseDb from './firebase';
+import { Props } from './signin';
 
 const { Content } = Layout;
-const { Title } = Typography;
-export interface Props {
-  providers?: Provider;
-}
 
-export interface Prop {
-  margin?: String | Boolean;
-  // premier: string
-}
-export const TitleH1 = styled(Title)`
-  text-align: center;
-  margin-bottom: 20px;
-  margin-bottom: 20px !important;
-`;
-export const ButtonIcon = styled(Button)<Btn>`
-  width: 30px;
-  outline: none;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  padding-right: ${(props) => (props.margin ? '5px' : '')};
-  margin-left: ${(props) => (props.margin ? '0px' : '')};
-  margin-right: ${(props) => (props.margin ? '10px' : '')};
-`;
-export const DivIcon = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-`;
+export const success = () => {
+  message.success('done', 1);
+};
 const tailFormItemLayout = {
   wrapperCol: {
     xs: {
@@ -68,15 +35,6 @@ const tailFormItemLayout = {
   },
 };
 
-export const Div = styled.div`
-  /* border:1px solid; */
-  width: 350px;
-`;
-
-export const success = () => {
-  message.success('done', 1);
-};
-
 // eslint-disable-next-line @typescript-eslint/no-shadow
 const Signup = ({ providers }: Props) => {
   const [session] = useSession();
@@ -87,36 +45,12 @@ const Signup = ({ providers }: Props) => {
     }
   }, [session]);
   const [form] = Form.useForm();
-
-  // const [user, setUser] = useState({});
-  // const [contactObjects, setContactObjects] = useState({});
-  // const [emailError, setEmailError] = useState("");
-  // const [passwordError, setPasswordError] = useState("");
-  // const [hasAccount, setHasAccount] = useState(false);
-  useEffect(() => {
-    firebaseDb
-      .database()
-      .ref()
-      .child('datafirebase')
-      .on('value', (snapshot) => {
-        if (snapshot.val() != null) {
-          // setContactObjects({ ...snapshot.val() });
-        } else {
-          // setContactObjects({});
-          success();
-        }
-      });
-    // checkuser();
-  }, []);
+  const [isUser, setIsUser] = useState(true);
   const setFormBlank = () => {
     form.resetFields();
   };
   const onFinish = (values: unknown) => {
-    // console.log('Received values of form: ', values);
-    // setData(values)
-    // handleGetFireBase(values);
     handleSignup(values);
-    handleCheckMail(values);
   };
   const formItemLayout = {
     labelCol: { span: 24 },
@@ -124,13 +58,16 @@ const Signup = ({ providers }: Props) => {
   };
 
   // eslint-disable-next-line no-console
-  console.log(Object.values(providers));
 
   const handleSignup = (values) => {
     firebaseDb
       .auth()
       .createUserWithEmailAndPassword(values.email, values.password)
-
+      .then((res) => {
+        success();
+        setIsUser(res.user.emailVerified);
+        setFormBlank();
+      })
       .catch((err) => {
         switch (err.code) {
           case 'auth/email-already-in-use':
@@ -141,58 +78,15 @@ const Signup = ({ providers }: Props) => {
                 errors: ['Email đã tồn tại !'],
               },
             ]);
-
-            // setEmailError(err.message);
             break;
           case 'auth/weak-password':
-            // setPasswordError(err.message);
             break;
         }
-        // eslint-disable-next-line no-console
-        console.log(err, 'check lỗi ::::::::');
-        setFormBlank();
-      });
-    // checkuser();
-  };
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  // const checkuser = () => firebaseDb?.auth()?.onAuthStateChanged((user) => {
-  //     if (user) {
-
-  //     }
-  // })
-
-  const actionCodeSettings = {
-    // URL you want to redirect back to. The domain (www.example.com) for this
-    // URL must be in the authorized domains list in the Firebase Console.
-    url: 'http://localhost',
-    // This must be true.
-    handleCodeInApp: true,
-
-    dynamicLinkDomain: 'http://localhost',
-  };
-  const handleCheckMail = (values) => {
-    firebaseDb
-      ?.auth()
-      ?.sendSignInLinkToEmail('taan300897@gmail.com', actionCodeSettings)
-      .then(() => {
-        alert('chay');
-        window.localStorage.setItem('emailForSignIn', 'taan300897@gmail.com');
-      })
-      .catch((error) => {
-        // ...
       });
   };
-
-  // const handleOnFinishFailed = () => {
-  //     debugger
-  // }
-
-  // const onValuesChange = (changedValues, allValues) => {
-  //     console.log('changedValues', changedValues)
-  //     console.log('allValues', allValues)
-  // }
-
-  return (
+  return !isUser ? (
+    <AfterSignup />
+  ) : (
     <div>
       <CustomLayout>
         <Link href="/">
@@ -209,34 +103,8 @@ const Signup = ({ providers }: Props) => {
             <Div>
               <TitleH1>Đăng ký</TitleH1>
               <DivIcon>
-                {Object.values(providers).map((provider) => (
-                  <DivIconPlugin key={provider.name}>
-                    <form>
-                      <ButtonNoBorder
-                        type="button"
-                        onClick={() => signIn(provider.id)}
-                      >
-                        {provider.name === 'Facebook' ? (
-                          <ButtonIcon margin>
-                            <FacebookFilled
-                              style={{ fontSize: 22, marginRight: '10px' }}
-                            />
-                          </ButtonIcon>
-                        ) : (
-                          ''
-                        )}
-                        {provider.name === 'Google' ? (
-                          <ButtonIcon>
-                            <GoogleOutlined style={{ fontSize: '22px' }} />
-                          </ButtonIcon>
-                        ) : (
-                          ''
-                        )}
-                        {provider.name === 'GitHub' ? <GhIcon /> : ''}
-                      </ButtonNoBorder>
-                    </form>
-                  </DivIconPlugin>
-                ))}
+                <SigninGg />
+                <SigninFb />
               </DivIcon>
               <TitleH1 level={5}>
                 <small>hoặc sử dụng email của bạn để đăng ký</small>
@@ -355,16 +223,16 @@ const Signup = ({ providers }: Props) => {
 };
 
 export default Signup;
-const GhIcon = () => (
-  <ButtonIcon>
-    <img
-      height="22"
-      width="22"
-      alt="github"
-      src="https://unpkg.com/simple-icons@v4/icons/github.svg"
-    />
-  </ButtonIcon>
-);
+// const GhIcon = () => (
+//   <ButtonIcon>
+//     <img
+//       height="22"
+//       width="22"
+//       alt="github"
+//       src="https://unpkg.com/simple-icons@v4/icons/github.svg"
+//     />
+//   </ButtonIcon>
+// );
 
 Signup.getInitialProps = async (context) => ({
   providers: await providers(),

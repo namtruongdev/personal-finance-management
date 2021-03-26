@@ -1,8 +1,9 @@
 // import styled from 'styled-components'
 import styled from 'styled-components';
-import { Layout, Form } from 'antd';
+import { Layout, Form, Button, Typography } from 'antd';
 
 const { Sider } = Layout;
+const { Title } = Typography;
 
 export const CustomLayout = styled(Layout)`
   min-height: 100vh;
@@ -52,4 +53,32 @@ export const ButtonNoBorder = styled.button`
   border: none;
   outline: none;
   cursor: pointer;
+`;
+export interface Prop {
+  margin?: String | Boolean;
+  // premier: string
+}
+export const TitleH1 = styled(Title)`
+  text-align: center;
+  margin-bottom: 20px;
+  margin-bottom: 20px !important;
+`;
+export const ButtonIcon = styled(Button)<Prop>`
+  width: 30px;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  padding-right: ${(props) => (props.margin ? '5px' : '')};
+  margin-right: ${(props) => (props.margin ? '10px' : '')};
+`;
+
+export const DivIcon = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+`;
+
+export const Div = styled.div`
+  width: 350px;
 `;
