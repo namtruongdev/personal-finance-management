@@ -6,6 +6,7 @@ import {
   DivIconPlugin,
 } from '@components/forms/register/styles';
 import { Button, Checkbox, Form, Input, Layout } from 'antd';
+import 'firebase/auth';
 import { providers, signIn, useSession } from 'next-auth/client';
 import { Provider } from 'next-auth/providers';
 import Link from 'next/link';
@@ -13,8 +14,6 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import { ButtonIcon, Div, DivIcon, TitleH1 } from './signup';
-import firebaseDb from './firebase';
-import 'firebase/auth';
 
 export interface Props {
   providers?: Provider;
@@ -37,7 +36,6 @@ const Signin = ({ providers }: Props) => {
   const [form] = Form.useForm();
   const onFinish = (values: unknown) => {
     // console.log('Received values of form: ', values);
-    handleLogin(values);
   };
 
   const formItemLayout = useMemo(
@@ -62,30 +60,7 @@ const Signin = ({ providers }: Props) => {
     }),
     []
   );
-  const handleLogin = (values) => {
-    firebaseDb
-      .auth()
-      .signInWithEmailAndPassword(values.email, values.password)
-      .then((res) => {
-        // eslint-disable-next-line no-console
-        console.log(res, 'lrrn +++++++');
-      })
 
-      .catch((err) => {
-        switch (err.code) {
-          case 'auth/invalid-email':
-          case 'auth/user-disabled':
-          case 'auth/user-not-found':
-            break;
-          case 'auth/wrong-password':
-            break;
-        }
-        // eslint-disable-next-line no-console
-        console.log(err, 'check lỗi ::::::::');
-      });
-    // eslint-disable-next-line no-console
-    console.log('test key =============');
-  };
   return (
     <div>
       <CustomLayout>
