@@ -1,48 +1,38 @@
-import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
+import { SigninFb, SigninGg } from '@components/forms/login/allSignin';
 import {
-  ButtonNoBorder,
   CustomLayout,
   CustomSider,
-  DivIconPlugin,
+  TitleH1,
 } from '@components/forms/register/styles';
-import { Button, Checkbox, Form, Input, Layout } from 'antd';
-import { providers, signIn } from 'next-auth/client';
-import { Provider } from 'next-auth/providers';
-import Link from 'next/link';
-import React, { useMemo } from 'react';
-import styled from 'styled-components';
-import { ButtonIcon, Div, DivIcon, TitleH1 } from './signup';
-import firebaseDb from './firebase';
+import { Button, Checkbox, Form, Input, Layout, message } from 'antd';
 import 'firebase/auth';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useMemo, useState } from 'react';
+import styled from 'styled-components';
+import firebaseDb from './firebase';
+import { Div, DivIcon, success } from './signup';
 
-export interface Props {
-  providers?: Provider;
-  // csrfToken: unknown
-}
 const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
   .ant-form-vertical .ant-form-item {
     margin-bottom: 0px !important;
   }
 `;
-const GhIcon = () => (
-  <ButtonIcon>
-    <img
-      height="22"
-      alt="github"
-      width="22"
-      src="https://unpkg.com/simple-icons@v4/icons/github.svg"
-    />
-  </ButtonIcon>
-);
+const reSetPass = () => {
+  message.warning('email ko xac dinh');
+};
 // eslint-disable-next-line @typescript-eslint/no-shadow
-const Signin = ({ providers }: Props) => {
+const Signin = () => {
   const [form] = Form.useForm();
+  const router = useRouter();
+  const [emailMissPass, setEmailMissPass] = useState('');
   const onFinish = (values: unknown) => {
-    // console.log('Received values of form: ', values);
     handleLogin(values);
   };
-
+  const checkUs = () => {
+    router.push('/');
+  };
   const formItemLayout = useMemo(
     () => ({
       labelCol: { span: 24 },
@@ -66,29 +56,29 @@ const Signin = ({ providers }: Props) => {
     []
   );
   const handleLogin = (values) => {
-    // debugger;
     firebaseDb
       .auth()
       .signInWithEmailAndPassword(values.email, values.password)
-      .then((res) => {
-        // eslint-disable-next-line no-console
-        console.log(res.user.emailVerified, 'lrrn +++++++');
-      })
-      .catch((err) => {
-        switch (err.code) {
-          case 'auth/invalid-email':
-          case 'auth/user-disabled':
-          case 'auth/user-not-found':
-            break;
-          case 'auth/wrong-password':
-            break;
-        }
-        // eslint-disable-next-line no-console
-        console.log(err, 'check lỗi ::::::::');
-      });
-    // eslint-disable-next-line no-console
-    console.log('test key =============');
+      .then(() => checkUs());
   };
+
+  const missPass = () => {
+    const auth = firebaseDb.auth();
+    const emailAddress = emailMissPass[0]?.value;
+    auth
+      .sendPasswordResetEmail(emailAddress)
+      .then((res) => {
+        success();
+      })
+      .catch((error) => {
+        reSetPass();
+      });
+  };
+  const onFieldChange = (one, all) => {
+    const email = all.filter((item) => item.name[0] === 'email');
+    setEmailMissPass(email);
+  };
+
   return (
     <div>
       <CustomLayout>
@@ -112,36 +102,11 @@ const Signin = ({ providers }: Props) => {
                 name="register"
                 onFinish={onFinish}
                 scrollToFirstError
+                onFieldsChange={onFieldChange}
               >
                 <DivIcon>
-                  {Object.values(providers).map((provider) => (
-                    <DivIconPlugin key={provider.name}>
-                      <form>
-                        <ButtonNoBorder
-                          type="button"
-                          onClick={() => signIn(provider.id)}
-                        >
-                          {provider.name === 'Facebook' ? (
-                            <ButtonIcon margin>
-                              <FacebookFilled
-                                style={{ fontSize: 22, marginRight: '10px' }}
-                              />
-                            </ButtonIcon>
-                          ) : (
-                            ''
-                          )}
-                          {provider.name === 'Google' ? (
-                            <ButtonIcon>
-                              <GoogleOutlined style={{ fontSize: '22px' }} />
-                            </ButtonIcon>
-                          ) : (
-                            ''
-                          )}
-                          {provider.name === 'GitHub' ? <GhIcon /> : ''}
-                        </ButtonNoBorder>
-                      </form>
-                    </DivIconPlugin>
-                  ))}
+                  <SigninGg />
+                  <SigninFb />
                 </DivIcon>
                 <Form.Item
                   name="email"
@@ -178,7 +143,7 @@ const Signin = ({ providers }: Props) => {
                   {...tailFormItemLayout}
                 >
                   <Checkbox>Nhớ mật khẩu</Checkbox>
-                  <a style={{ float: 'right' }} href="">
+                  <a style={{ float: 'right' }} href="#" onClick={missPass}>
                     Quên mật khẩu?
                   </a>
                 </Form.Item>
@@ -203,7 +168,3 @@ const Signin = ({ providers }: Props) => {
 };
 
 export default Signin;
-
-Signin.getInitialProps = async (context) => ({
-  providers: await providers(),
-});
