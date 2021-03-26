@@ -12,12 +12,16 @@ const ButtonInPage = styled(ButtonIcon)`
 `;
 interface Props {
   right?: String | Boolean;
+  left?: String | Boolean;
 }
 export const IconAnt = styled.span<Props>`
-  font-size: 22px;
+  font-size: 1.5rem;
   margin-top: -5px;
   padding-right: 8px;
-  margin-left: ${(props) => (props.right ? '59px' : '54px')};
+  margin-left: 54px;
+  margin-left: ${(props) => (props.right ? '59px' : '')};
+  margin-left: ${(props) => (props.left ? '-12px' : '')};
+  margin-top: ${(props) => (props.left ? '-7px' : '')};
 `;
 export const NameIcon = styled.span`
   font-size: 16px;
@@ -40,7 +44,7 @@ const Home = () => {
         <>
           {user.displayName}
           <ButtonInPage onClick={handleLogout}>
-            <IconAnt right>
+            <IconAnt left>
               <LogoutOutlined />
             </IconAnt>
             <NameIcon>Log out</NameIcon>
