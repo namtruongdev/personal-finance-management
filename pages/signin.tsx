@@ -1,4 +1,5 @@
 import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
+import { FormSignup, Props } from '@components/forms/register/intef';
 import {
   ButtonIcon,
   ButtonNoBorder,
@@ -16,9 +17,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import jwt from 'jsonwebtoken';
-import { FormSignup, Props } from '@components/forms/register/intef';
-import { success } from './signup';
 
 const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
@@ -39,14 +37,14 @@ const Signin = ({ providers: signInProviders }: Props) => {
   const [form] = Form.useForm();
   const router = useRouter();
   const onFinish = (values: FormSignup) => {
-    if (
-      values.email === decoded.email &&
-      values.password === decoded.password
-    ) {
-      success();
-    } else {
-      window.alert('sai tai khoan hoac mat khau');
-    }
+    // if (
+    //   values.email === decoded.email &&
+    //   values.password === decoded.password
+    // ) {
+    //   success();
+    // } else {
+    //   window.alert('sai tai khoan hoac mat khau');
+    // }
     // console.log('Received values of form: ', values);
   };
   const formItemLayout = useMemo(
@@ -71,8 +69,7 @@ const Signin = ({ providers: signInProviders }: Props) => {
     }),
     []
   );
-  const cat = localStorage?.getItem('myCat');
-  const decoded = jwt.verify(cat, 'hieuc');
+
   return (
     <div>
       <CustomLayout>
@@ -198,6 +195,6 @@ const GhIcons = () => (
 export default Signin;
 export async function getStaticProps() {
   return {
-    providers: await providers(),
+    props: { providers: await providers() },
   };
 }

@@ -243,8 +243,8 @@ const GhIcons = () => (
   </ButtonIcon>
 );
 
-export async function getserversideprops() {
+export async function getStaticProps() {
   return {
-    providers: await providers(),
+    props: { providers: await providers() },
   };
 }
