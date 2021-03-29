@@ -1,11 +1,10 @@
-import React from 'react';
-import MainLayout from '@layouts/main';
-import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/client';
-// import firebaseDb from './firebase';
 import { LoginOutlined, UserOutlined } from '@ant-design/icons';
+import { ButtonIcon, SpanImg } from '@components/forms/register/styles';
+import MainLayout from '@layouts/main';
+import { signOut, useSession } from 'next-auth/client';
+import Link from 'next/link';
+import React from 'react';
 import styled from 'styled-components';
-import { ButtonIcon } from '@components/forms/register/styles';
 
 const ButtonInPage = styled(ButtonIcon)`
   /* padding-left:4px */
@@ -26,8 +25,17 @@ export const IconAnt = styled.span<Props>`
 export const NameIcon = styled.span`
   font-size: 16px;
 `;
+
 const Home = () => {
   const [session] = useSession();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const data = firebase?.firestore();
+  //     const data1 = await data.collection("messages").get();
+  //     setInfo(data1.docs.map(doc => doc.data()))
+  //   }
+  //   fetchData()
+  // }, [])
   // const handleLogout = () => {
   //   firebaseDb
   //     .auth()
@@ -37,48 +45,63 @@ const Home = () => {
   //       console.log(res, 'log out');
   //     });
   // };
+  // const token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+  // const decoded = jwt.verify(token, 'shhhhh');
   return (
-    <MainLayout>
-      <h1>Bảng điều khiển</h1>
-      {session ? (
-        <a
-          href="/api/auth/signout"
-          onClick={(e) => {
-            e.preventDefault();
-            signOut();
-          }}
-        >
-          Sign out
-        </a>
-      ) : (
-        <>
-          <p>
+    <>
+      <MainLayout>
+        <h1>Bảng điều khiển</h1>
+        {session ? (
+          <a
+            href="/api/auth/signout"
+            onClick={(e) => {
+              e.preventDefault();
+              signOut();
+            }}
+          >
+            {session.user.image && (
+              <SpanImg
+                style={{ backgroundImage: `url(${session.user.image})` }}
+              />
+            )}
+            <span>
+              <small>Signed in as</small>
+              <br />
+              <strong>{session.user.name}</strong>
+            </span>
+            Sign out
+          </a>
+        ) : (
+          <>
             <Link href="/signin">
-              <a>
-                <ButtonInPage>
-                  <IconAnt>
-                    <LoginOutlined />
-                  </IconAnt>
-                  <NameIcon>Sign in</NameIcon>
-                </ButtonInPage>
-              </a>
+              <ButtonInPage>
+                <IconAnt>
+                  <LoginOutlined />
+                </IconAnt>
+                <NameIcon>Sign in</NameIcon>
+              </ButtonInPage>
             </Link>
-          </p>
-          <p>
-            <Link href="/signup">
-              <a>
-                <ButtonInPage>
-                  <IconAnt right>
-                    <UserOutlined />
-                  </IconAnt>
-                  <NameIcon>Sign up</NameIcon>
-                </ButtonInPage>
-              </a>
-            </Link>
-          </p>
-        </>
-      )}
-    </MainLayout>
+            <p>
+              <Link href="/signup">
+                <a>
+                  <ButtonInPage>
+                    <IconAnt right>
+                      <UserOutlined />
+                    </IconAnt>
+                    <NameIcon>Sign up</NameIcon>
+                  </ButtonInPage>
+                </a>
+              </Link>
+            </p>
+          </>
+        )}
+        <div>hi</div>
+        <div>
+          <iframe title="jwt" src="/api/examples/jwt" />
+          <iframe title="session" src="/api/examples/session" />
+        </div>
+      </MainLayout>
+    </>
   );
 };
 

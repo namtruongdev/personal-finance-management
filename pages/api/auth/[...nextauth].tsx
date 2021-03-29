@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
+import jwt from 'jsonwebtoken';
 
 export default NextAuth({
   providers: [
@@ -38,13 +40,30 @@ export default NextAuth({
 
   jwt: {
     // A secret to use for key generation (you should set this explicitly)
-    // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
+    secret: process.env.NEXT_PUBLIC_SECRET,
     // Set to true to use encryption (default: false)
-    // encryption: true,
+    encryption: true,
     // You can define your own encode/decode functions for signing and encryption
     // if you want to override the default behaviour.
-    // encode: async ({ secret, token, maxAge }) => {},
-    // decode: async ({ secret, token, maxAge }) => {},
+    encode: async ({ secret, token, maxAge }) => {
+      const jwtClaims = {
+        sub: '1234567890',
+        name: 'John Doe',
+        iat: 1516239022,
+        'https://hasura.io/jwt/claims': {
+          'x-hasura-allowed-roles': ['user'],
+          'x-hasura-default-role': 'user',
+          'x-hasura-role': 'user',
+          'x-hasura-user-id': token.id,
+        },
+      };
+      const encodedToken = jwt.sign(jwtClaims, secret, { algorithm: 'HS256' });
+      return encodedToken;
+    },
+    decode: async ({ secret, token, maxAge }) => {
+      const decodedToken = jwt.verify(token, secret, { algorithms: ['HS256'] });
+      return decodedToken;
+    },
   },
 
   // You can define custom pages to override the built-in pages.
@@ -67,6 +86,16 @@ export default NextAuth({
     // async redirect(url, baseUrl) { return baseUrl },
     // async session(session, user) { return session },
     // async jwt(token, user, account, profile, isNewUser) { return token }
+    async jwt(token, user, account, profile, isNewUser) {
+      const isUserSignedIn = !!user;
+      // make a http call to our graphql api
+      // store this in postgres
+      if (isUserSignedIn) {
+        // token.id = user.id.toString();
+        token = { ...token, id: user.id.toString() };
+      }
+      return Promise.resolve(token);
+    },
   },
 
   // Events are useful for logging

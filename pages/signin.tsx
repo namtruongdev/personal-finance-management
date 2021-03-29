@@ -12,15 +12,14 @@ import {
 import { Button, Checkbox, Form, Input, Layout } from 'antd';
 import 'firebase/auth';
 import { providers, signIn, useSession } from 'next-auth/client';
-import { Provider } from 'next-auth/providers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
+import jwt from 'jsonwebtoken';
+import { FormSignup, Props } from '@components/forms/register/intef';
+import { success } from './signup';
 
-export interface Props {
-  providers?: Provider;
-}
 const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
   .ant-form-vertical .ant-form-item {
@@ -30,8 +29,7 @@ export const ButtonSignin = styled(Button)`
 // const reSetPass = () => {
 //   message.warning('email ko xac dinh');
 // };
-// eslint-disable-next-line @typescript-eslint/no-shadow
-const Signin = ({ providers }: Props) => {
+const Signin = ({ providers: signInProviders }: Props) => {
   const [session] = useSession();
   useEffect(() => {
     if (session) {
@@ -40,7 +38,15 @@ const Signin = ({ providers }: Props) => {
   }, [session]);
   const [form] = Form.useForm();
   const router = useRouter();
-  const onFinish = (values: unknown) => {
+  const onFinish = (values: FormSignup) => {
+    if (
+      values.email === decoded.email &&
+      values.password === decoded.password
+    ) {
+      success();
+    } else {
+      window.alert('sai tai khoan hoac mat khau');
+    }
     // console.log('Received values of form: ', values);
   };
   const formItemLayout = useMemo(
@@ -65,7 +71,8 @@ const Signin = ({ providers }: Props) => {
     }),
     []
   );
-
+  const cat = localStorage?.getItem('myCat');
+  const decoded = jwt.verify(cat, 'hieuc');
   return (
     <div>
       <CustomLayout>
@@ -91,7 +98,7 @@ const Signin = ({ providers }: Props) => {
                 scrollToFirstError
               >
                 <DivIcon>
-                  {Object.values(providers).map((provider) => (
+                  {Object.values(signInProviders).map((provider) => (
                     <DivIconPlugin key={provider.name}>
                       <form>
                         <ButtonNoBorder
@@ -189,6 +196,8 @@ const GhIcons = () => (
   </ButtonIcon>
 );
 export default Signin;
-Signin.getInitialProps = async () => ({
-  providers: await providers(),
-});
+export async function getStaticProps() {
+  return {
+    providers: await providers(),
+  };
+}

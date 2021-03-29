@@ -82,3 +82,24 @@ export const DivIcon = styled.div`
 export const Div = styled.div`
   width: 350px;
 `;
+export const SpanImg = styled.span`
+  border-radius: 2rem;
+  float: left;
+  height: 2.8rem;
+  width: 2.8rem;
+  background-color: white;
+  background-size: cover;
+  background-repeat: no-repeat;
+`;
+export const SpanText = styled.span`
+  position: absolute;
+  padding-top: 0.8rem;
+  left: 1rem;
+  right: 6.5rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inherit;
+  z-index: 1;
+  line-height: 1.3rem;
+`;
