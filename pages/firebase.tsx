@@ -4,6 +4,7 @@ import 'firebase/database';
 const firebaseConfig = {
   apiKey: 'AIzaSyDSk4bsrEJZWwRz-YkNBEoLxRArb5IN9Z0',
   authDomain: 'nextjs-8be4d.firebaseapp.com',
+  databaseURL: 'https://nextjs-8be4d-default-rtdb.firebaseio.com',
   projectId: 'nextjs-8be4d',
   storageBucket: 'nextjs-8be4d.appspot.com',
   messagingSenderId: '704232791157',
