@@ -16,5 +16,10 @@ export const ROUTES: Route = {
       name: 'Example Page',
       icon: <PlaySquareOutlined />,
     },
+    {
+      path: '/estimate',
+      name: 'Estimate',
+      icon: <PlaySquareOutlined />,
+    },
   ],
 };
