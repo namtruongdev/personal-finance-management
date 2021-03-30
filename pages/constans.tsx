@@ -10,7 +10,7 @@ const Contacts = () => {
 
   useEffect(() => {
     firebaseDb
-      .database()
+      ?.database()
       .ref()
       .child('datafirebase')
       .on('value', (snapshot) => {

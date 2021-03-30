@@ -1,12 +1,12 @@
 import React from 'react';
 import MainLayout from '@layouts/main';
 import Contacts from './constans';
-import Dangnhap from './dangnhap';
+import StoreFireBase from './storeFireBase';
 
 const Example = () => (
   <MainLayout>
     <Contacts />
-    <Dangnhap />
+    <StoreFireBase />
     <h1>Example page</h1>
   </MainLayout>
 );
