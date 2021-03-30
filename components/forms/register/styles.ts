@@ -1,6 +1,6 @@
-// import styled from 'styled-components'
 import styled from 'styled-components';
 import { Layout, Form, Button, Typography } from 'antd';
+import { Span } from 'interface/formInterface';
 
 const { Sider } = Layout;
 const { Title } = Typography;
@@ -58,7 +58,7 @@ export interface Prop {
   margin?: String | Boolean;
   // premier: string
 }
-export const TitleH1 = styled(Title)`
+export const SignTitle = styled(Title)`
   text-align: center;
   margin-bottom: 20px;
   margin-bottom: 20px !important;
@@ -81,4 +81,40 @@ export const DivIcon = styled.div`
 
 export const Div = styled.div`
   width: 350px;
+`;
+export const SpanImg = styled.span`
+  border-radius: 2rem;
+  float: left;
+  height: 2.8rem;
+  width: 2.8rem;
+  background-color: white;
+  background-size: cover;
+  background-repeat: no-repeat;
+`;
+export const SpanText = styled.span`
+  position: absolute;
+  padding-top: 0.8rem;
+  left: 1rem;
+  right: 6.5rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inherit;
+  z-index: 1;
+  line-height: 1.3rem;
+`;
+export const MissPass = styled.a`
+  float: right;
+`;
+export const IconAnt = styled.span<Span>`
+  font-size: 1.5rem;
+  margin-top: -5px;
+  padding-right: 8px;
+  margin-left: 54px;
+  margin-left: ${(props) => (props.right ? '59px' : '')};
+  margin-left: ${(props) => (props.left ? '-12px' : '')};
+  margin-top: ${(props) => (props.left ? '-7px' : '')};
+`;
+export const NameIcon = styled.span`
+  font-size: 16px;
 `;

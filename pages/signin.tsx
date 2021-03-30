@@ -1,4 +1,9 @@
-import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
+import {
+  FacebookFilled,
+  GithubOutlined,
+  GoogleOutlined,
+} from '@ant-design/icons';
+import { FormSignup, Props } from 'interface/formInterface';
 import {
   ButtonIcon,
   ButtonNoBorder,
@@ -7,31 +12,24 @@ import {
   Div,
   DivIcon,
   DivIconPlugin,
-  TitleH1,
+  MissPass,
+  SignTitle,
 } from '@components/forms/register/styles';
 import { Button, Checkbox, Form, Input, Layout } from 'antd';
 import 'firebase/auth';
 import { providers, signIn, useSession } from 'next-auth/client';
-import { Provider } from 'next-auth/providers';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 
-export interface Props {
-  providers?: Provider;
-}
 const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
   .ant-form-vertical .ant-form-item {
     margin-bottom: 0px !important;
   }
 `;
-// const reSetPass = () => {
-//   message.warning('email ko xac dinh');
-// };
-// eslint-disable-next-line @typescript-eslint/no-shadow
-const Signin = ({ providers }: Props) => {
+const Signin = ({ providers: signInProviders }: Props) => {
   const [session] = useSession();
   useEffect(() => {
     if (session) {
@@ -40,9 +38,7 @@ const Signin = ({ providers }: Props) => {
   }, [session]);
   const [form] = Form.useForm();
   const router = useRouter();
-  const onFinish = (values: unknown) => {
-    // console.log('Received values of form: ', values);
-  };
+  const onFinish = (values: FormSignup) => {};
   const formItemLayout = useMemo(
     () => ({
       labelCol: { span: 24 },
@@ -81,7 +77,7 @@ const Signin = ({ providers }: Props) => {
             }}
           >
             <Div>
-              <TitleH1>Đăng nhập</TitleH1>
+              <SignTitle>Đăng nhập</SignTitle>
               <Form
                 {...formItemLayout}
                 layout="vertical"
@@ -91,7 +87,7 @@ const Signin = ({ providers }: Props) => {
                 scrollToFirstError
               >
                 <DivIcon>
-                  {Object.values(providers).map((provider) => (
+                  {Object.values(signInProviders).map((provider) => (
                     <DivIconPlugin key={provider.name}>
                       <form>
                         <ButtonNoBorder
@@ -114,7 +110,13 @@ const Signin = ({ providers }: Props) => {
                           ) : (
                             ''
                           )}
-                          {provider.name === 'GitHub' ? <GhIcons /> : ''}
+                          {provider.name === 'GitHub' ? (
+                            <ButtonIcon>
+                              <GithubOutlined style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
                         </ButtonNoBorder>
                       </form>
                     </DivIconPlugin>
@@ -155,9 +157,7 @@ const Signin = ({ providers }: Props) => {
                   {...tailFormItemLayout}
                 >
                   <Checkbox>Nhớ mật khẩu</Checkbox>
-                  <a style={{ float: 'right' }} href="#">
-                    Quên mật khẩu?
-                  </a>
+                  <MissPass href="#">Quên mật khẩu?</MissPass>
                 </Form.Item>
                 <Form.Item style={{ marginBottom: '5px' }}>
                   <ButtonSignin type="primary" block htmlType="submit">
@@ -178,17 +178,9 @@ const Signin = ({ providers }: Props) => {
     </div>
   );
 };
-const GhIcons = () => (
-  <ButtonIcon>
-    <img
-      height="22"
-      width="22"
-      alt="github"
-      src="https://unpkg.com/simple-icons@v4/icons/github.svg"
-    />
-  </ButtonIcon>
-);
 export default Signin;
-Signin.getInitialProps = async () => ({
-  providers: await providers(),
-});
+export async function getStaticProps() {
+  return {
+    props: { providers: await providers() },
+  };
+}

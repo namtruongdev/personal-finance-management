@@ -1,42 +1,34 @@
-import AfterSignup from '@components/forms/login/afterSignup';
-import { SigninFb, SigninGg } from '@components/forms/login/allSignin';
 import {
+  FacebookFilled,
+  GithubOutlined,
+  GoogleOutlined,
+} from '@ant-design/icons';
+import { FormSignup, Props } from 'interface/formInterface';
+import {
+  ButtonIcon,
+  ButtonNoBorder,
   CustomButtonForm,
   CustomLayout,
   CustomSider,
   Div,
   DivIcon,
-  TitleH1,
+  DivIconPlugin,
+  SignTitle,
 } from '@components/forms/register/styles';
+import React, { useEffect, useMemo } from 'react';
 import { Button, Checkbox, Form, Input, Layout, message } from 'antd';
 import 'firebase/auth';
-import { providers, useSession } from 'next-auth/client';
+import jwt from 'jsonwebtoken';
+import { providers, signIn, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import firebaseDb from './firebase';
-import { Props } from './signin';
 
 const { Content } = Layout;
 
 export const success = () => {
   message.success('done', 1);
 };
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 24,
-      offset: 0,
-    },
-  },
-};
-
-// eslint-disable-next-line @typescript-eslint/no-shadow
-const Signup = ({ providers }: Props) => {
+const Signup = ({ providers: prd }: Props) => {
   const [session] = useSession();
   const router = useRouter();
   useEffect(() => {
@@ -44,49 +36,36 @@ const Signup = ({ providers }: Props) => {
       router.push('/');
     }
   }, [session]);
+  const tailFormItemLayout = useMemo(
+    () => ({
+      wrapperCol: {
+        xs: {
+          span: 24,
+          offset: 0,
+        },
+        sm: {
+          span: 24,
+          offset: 0,
+        },
+      },
+    }),
+    []
+  );
   const [form] = Form.useForm();
-  const [isUser, setIsUser] = useState(true);
-  const setFormBlank = () => {
-    form.resetFields();
-  };
-  const onFinish = (values: unknown) => {
-    handleSignup(values);
-  };
-  const formItemLayout = {
-    labelCol: { span: 24 },
-    wrapperCol: { span: 24 },
-  };
 
-  // eslint-disable-next-line no-console
-
-  const handleSignup = (values) => {
-    firebaseDb
-      .auth()
-      .createUserWithEmailAndPassword(values.email, values.password)
-      .then((res) => {
-        success();
-        setIsUser(res.user.emailVerified);
-        setFormBlank();
-      })
-      .catch((err) => {
-        switch (err.code) {
-          case 'auth/email-already-in-use':
-          case 'auth/invalid-email':
-            form.setFields([
-              {
-                name: 'email',
-                errors: ['Email đã tồn tại !'],
-              },
-            ]);
-            break;
-          case 'auth/weak-password':
-            break;
-        }
-      });
+  const onFinish = (values: FormSignup) => {
+    const codeEncoded = { email: values.email, password: values.password };
+    const token = jwt.sign(codeEncoded, 'hieuc');
+    localStorage.setItem('myCat', token);
   };
-  return !isUser ? (
-    <AfterSignup />
-  ) : (
+  const formItemLayout = useMemo(
+    () => ({
+      labelCol: { span: 24 },
+      wrapperCol: { span: 24 },
+    }),
+    []
+  );
+  return (
     <div>
       <CustomLayout>
         <Link href="/">
@@ -101,14 +80,46 @@ const Signup = ({ providers }: Props) => {
             }}
           >
             <Div>
-              <TitleH1>Đăng ký</TitleH1>
+              <SignTitle>Đăng ký</SignTitle>
               <DivIcon>
-                <SigninGg />
-                <SigninFb />
+                {Object.values(prd).map((provider) => (
+                  <DivIconPlugin key={provider.name}>
+                    <form>
+                      <ButtonNoBorder
+                        type="button"
+                        onClick={() => signIn(provider.id)}
+                      >
+                        {provider.name === 'Facebook' ? (
+                          <ButtonIcon margin>
+                            <FacebookFilled
+                              style={{ fontSize: 22, marginRight: '10px' }}
+                            />
+                          </ButtonIcon>
+                        ) : (
+                          ''
+                        )}
+                        {provider.name === 'Google' ? (
+                          <ButtonIcon>
+                            <GoogleOutlined style={{ fontSize: '22px' }} />
+                          </ButtonIcon>
+                        ) : (
+                          ''
+                        )}
+                        {provider.name === 'GitHub' ? (
+                          <ButtonIcon>
+                            <GithubOutlined style={{ fontSize: '22px' }} />
+                          </ButtonIcon>
+                        ) : (
+                          ''
+                        )}
+                      </ButtonNoBorder>
+                    </form>
+                  </DivIconPlugin>
+                ))}
               </DivIcon>
-              <TitleH1 level={5}>
+              <SignTitle level={5}>
                 <small>hoặc sử dụng email của bạn để đăng ký</small>
-              </TitleH1>
+              </SignTitle>
               <Form
                 {...formItemLayout}
                 layout="vertical"
@@ -223,17 +234,8 @@ const Signup = ({ providers }: Props) => {
 };
 
 export default Signup;
-// const GhIcon = () => (
-//   <ButtonIcon>
-//     <img
-//       height="22"
-//       width="22"
-//       alt="github"
-//       src="https://unpkg.com/simple-icons@v4/icons/github.svg"
-//     />
-//   </ButtonIcon>
-// );
-
-Signup.getInitialProps = async (context) => ({
-  providers: await providers(),
-});
+export async function getStaticProps() {
+  return {
+    props: { providers: await providers() },
+  };
+}

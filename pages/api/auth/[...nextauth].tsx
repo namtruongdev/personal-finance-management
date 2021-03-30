@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 
@@ -38,13 +39,6 @@ export default NextAuth({
 
   jwt: {
     // A secret to use for key generation (you should set this explicitly)
-    // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
-    // Set to true to use encryption (default: false)
-    // encryption: true,
-    // You can define your own encode/decode functions for signing and encryption
-    // if you want to override the default behaviour.
-    // encode: async ({ secret, token, maxAge }) => {},
-    // decode: async ({ secret, token, maxAge }) => {},
   },
 
   // You can define custom pages to override the built-in pages.
@@ -67,6 +61,16 @@ export default NextAuth({
     // async redirect(url, baseUrl) { return baseUrl },
     // async session(session, user) { return session },
     // async jwt(token, user, account, profile, isNewUser) { return token }
+    // async jwt(token, user, account, profile, isNewUser) {
+    //   const isUserSignedIn = !!user;
+    //   // make a http call to our graphql api
+    //   // store this in postgres
+    //   if (isUserSignedIn) {
+    //     // token.id = user.id.toString();
+    //     token = { ...token, id: user.id.toString() };
+    //   }
+    //   return Promise.resolve(token);
+    // },
   },
 
   // Events are useful for logging

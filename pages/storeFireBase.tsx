@@ -8,6 +8,7 @@ const StoreFireBase = () => {
 
   useEffect(() => {
     fetchData();
+    fetchAValue();
   }, []);
 
   const fetchData = async () => {
@@ -19,6 +20,19 @@ const StoreFireBase = () => {
         id: doc.id,
       }))
     );
+  };
+  // show a element
+  const fetchAValue = async () => {
+    const db = firebase.firestore();
+    await db.collection('messages').where('text', '==', 'trường').get();
+
+    // await setSpells(
+    //     data.map((doc) => ({
+    //         ...doc.data(),
+    //         id: doc.id,
+    //     }))
+    // );
+    // console.log(data, ":::::::::::");
   };
   const handleAdd = async () => {
     const db = firebase.firestore();
