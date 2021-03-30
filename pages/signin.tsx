@@ -1,11 +1,11 @@
-import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
+// import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
 import { CustomLayout, CustomSider } from '@components/forms/register/styles';
 import { Button, Checkbox, Form, Input, Layout } from 'antd';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import Header from '../components/header';
-import { ButtonIcon, Div, DivIcon, TitleH1 } from './signup';
+import { Div } from './signup';
 
 const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
@@ -55,7 +55,7 @@ const Signin = () => {
             }}
           >
             <Div>
-              <TitleH1 left>Đăng nhập</TitleH1>
+              {/* <TitleH1 left>Đăng nhập</TitleH1> */}
               <Form
                 {...formItemLayout}
                 layout="vertical"
@@ -64,8 +64,8 @@ const Signin = () => {
                 onFinish={onFinish}
                 scrollToFirstError
               >
-                <DivIcon>
-                  <ButtonIcon primary margin>
+                {/* <DivIcon>
+                  <ButtonIcon  margin>
                     <FacebookFilled
                       style={{ fontSize: 22, marginRight: '10px' }}
                     />
@@ -73,7 +73,7 @@ const Signin = () => {
                   <ButtonIcon>
                     <GoogleOutlined style={{ fontSize: 22 }} />
                   </ButtonIcon>
-                </DivIcon>
+                </DivIcon> */}
                 <Form.Item
                   name="email"
                   label="E-mail"

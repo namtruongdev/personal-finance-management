@@ -1,4 +1,3 @@
-import { FacebookFilled, GoogleOutlined } from '@ant-design/icons';
 import {
   CustomButtonForm,
   CustomLayout,
@@ -82,7 +81,7 @@ const Signup = () => {
             }}
           >
             <Div>
-              <TitleH1>Đăng ký</TitleH1>
+              {/* <TitleH1>Đăng ký</TitleH1>
               <DivIcon>
                 <ButtonIcon primary margin>
                   <FacebookFilled
@@ -95,7 +94,7 @@ const Signup = () => {
               </DivIcon>
               <TitleH1 level={5}>
                 <small>hoặc sử dụng email của bạn để đăng ký</small>
-              </TitleH1>
+              </TitleH1> */}
               <Form
                 {...formItemLayout}
                 layout="vertical"
