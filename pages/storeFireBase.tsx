@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import firebase from 'firebase';
 import SpellInput from '@components/fireStore/spellInput';
-// import firebaseDb from './firebase';
 
 const StoreFireBase = () => {
   const [spells, setSpells] = useState([]);
@@ -28,18 +27,19 @@ const StoreFireBase = () => {
   };
   return (
     <div>
-      <input value={newText} onChange={(e) => setNewText(e.target.value)} />
-      <button type="button" onClick={handleAdd}>
-        Create
-      </button>
+      <div>
+        <input value={newText} onChange={(e) => setNewText(e.target.value)} />
+        <button type="button" onClick={handleAdd}>
+          Create
+        </button>
+      </div>
       <ul>
         {spells.map((spell) => (
           <li key={spell.uid}>
+            <img src={spell.photoURL} alt="hieu" />
             {spell.text}
 
             <SpellInput spell={spell} fetchDataInput={fetchData} />
-
-            <img src={spell.photoURL} alt="hieu" />
           </li>
         ))}
       </ul>

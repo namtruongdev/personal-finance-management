@@ -11,10 +11,8 @@ const firebaseConfig = {
   appId: '1:704232791157:web:365e9f5b6168ec56f92c3c',
 };
 
-// eslint-disable-next-line max-len
 const fireDb = !firebase.apps.length
   ? firebase.initializeApp(firebaseConfig)
   : null;
 
-// eslint-disable-next-line max-len
 export default fireDb;
