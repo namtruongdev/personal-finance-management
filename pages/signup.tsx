@@ -23,7 +23,6 @@ import {
   message,
   notification,
 } from 'antd';
-import 'firebase/auth';
 import { Props } from 'interface/formInterface';
 import { providers, signIn, useSession } from 'next-auth/client';
 import Link from 'next/link';
@@ -239,8 +238,8 @@ const Signup = ({ providers: prd }: Props) => {
                         value
                           ? Promise.resolve()
                           : Promise.reject(
-                              new Error('Làm ơn chấp nhận điều khoản')
-                            ),
+                            new Error('Làm ơn chấp nhận điều khoản')
+                          ),
                     },
                   ]}
                   {...tailFormItemLayout}
