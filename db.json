@@ -1,0 +1,22 @@
+{
+  "users": [
+    {
+      "email": "anhhoangdeptrai@gmail.com",
+      "password": "$2a$12$D1c53TlyQimqK7WbvvnsmeDZW7zWhJE/E6iKB683nRqOo6Z2ix5u.",
+      "name": "Hoàng",
+      "id": 14
+    },
+    {
+      "email": "thiennd@gmail.com",
+      "password": "$2a$12$4vmMPnu1d/v5gQqLVsjetu4OdtZvi/HZtwYv7EEg0XcOGsNpM13/2",
+      "name": "nguyễn đức thiện",
+      "id": 15
+    },
+    {
+      "email": "thien@thien.com",
+      "password": "$2a$12$2yExKcat73QXRfSAPmpWZOc2rf6wyNHpOnalmSdgcwRtqpCxsOTx6",
+      "name": "thien",
+      "id": 16
+    }
+  ]
+}
