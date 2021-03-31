@@ -23,7 +23,6 @@ import {
   notification,
   Spin,
 } from 'antd';
-import 'firebase/auth';
 import { Props } from 'interface/formInterface';
 import Cookies from 'js-cookie';
 import { providers, signIn, useSession } from 'next-auth/client';
