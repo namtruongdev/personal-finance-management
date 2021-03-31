@@ -17,18 +17,41 @@ export const ROUTES: Route = {
       icon: <PlaySquareOutlined />,
     },
     {
-      path: '/estimate',
+      path: '/typeAction/estimate',
       name: 'Estimate',
+      icon: <PlaySquareOutlined />,
+      routes: [
+        {
+          path: '/typeAction/estimate/requiredCst',
+          name: 'Chi tiêu thiết yếu',
+        },
+        {
+          path: '/typeAction/estimate/norequiredCst',
+          name: 'Chi tiêu không thiết yếu',
+        },
+        {
+          path: '/typeAction/estimate/spendingPlans',
+          name: 'Kế hoạch chi tiêu',
+        },
+        {
+          path: '/typeAction/estimate/unspectedCst',
+          name: 'Chi tiêu đột xuất',
+        },
+      ],
+    },
+    {
+      path: '/typeAction/income',
+      name: 'Thu nhập',
       icon: <PlaySquareOutlined />,
     },
     {
-      path: '/estimate',
-      name: 'Estimate',
+      path: '/typeAction/consumption',
+      name: 'Tiêu thụ',
       icon: <PlaySquareOutlined />,
     },
     {
-      path: '/expence',
-      name: 'Expence',
+      path: '/typeAction/statistical',
+      name: 'Thống kê',
       icon: <PlaySquareOutlined />,
     },
   ],
