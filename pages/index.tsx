@@ -75,6 +75,7 @@ const Home = () => {
 };
 
 export default Home;
+
 // function then(arg0: (res: any) => void) {
 //     throw new Error('Function not implemented.');
 // }

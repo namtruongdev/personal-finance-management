@@ -18,7 +18,7 @@ export const ROUTES: Route = {
     },
     {
       path: '/typeAction/estimate',
-      name: 'Estimate',
+      name: 'Dự toán',
       icon: <PlaySquareOutlined />,
       routes: [
         {
@@ -40,13 +40,31 @@ export const ROUTES: Route = {
       ],
     },
     {
-      path: '/typeAction/income',
-      name: 'Thu nhập',
+      path: '/typeAction/consumption',
+      name: 'Chi tiêu',
       icon: <PlaySquareOutlined />,
+      routes: [
+        {
+          path: '/typeAction/consumption/requiredCst',
+          name: 'Chi tiêu thiết yếu',
+        },
+        {
+          path: '/typeAction/consumption/norequiredCst',
+          name: 'Chi tiêu không thiết yếu',
+        },
+        {
+          path: '/typeAction/consumption/spendingPlans',
+          name: 'Kế hoạch chi tiêu',
+        },
+        {
+          path: '/typeAction/consumption/unspectedCst',
+          name: 'Chi tiêu đột xuất',
+        },
+      ],
     },
     {
-      path: '/typeAction/consumption',
-      name: 'Tiêu thụ',
+      path: '/typeAction/income',
+      name: 'Thu nhập',
       icon: <PlaySquareOutlined />,
     },
     {
