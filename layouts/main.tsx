@@ -26,7 +26,7 @@ const DefautFooter = dynamic(
 
 const menuHeaderRender = (logo: React.ReactNode, title: React.ReactNode) => (
   <Link href="/">
-    <a>
+    <a href="/">
       {logo}
       {title}
     </a>
@@ -50,7 +50,11 @@ const Main = ({ children }) => {
 
   const menuItemRender = (options: MenuDataItem, element: React.ReactNode) => (
     <Link href={options.path}>
-      <a onClick={() => setPathname(options.path || '/')} aria-hidden="true">
+      <a
+        href={options.path}
+        onClick={() => setPathname(options.path || '/')}
+        aria-hidden="true"
+      >
         {element}
       </a>
     </Link>
