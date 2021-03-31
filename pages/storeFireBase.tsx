@@ -21,11 +21,14 @@ const StoreFireBase = () => {
       }))
     );
   };
+
   // show a element
   const fetchAValue = async () => {
-    const db = firebase.firestore();
-    await db.collection('messages').where('text', '==', 'trường').get();
-
+    // const db = firebase.firestore();
+    // await db.collection('messages').where('text', '==', 'trường').get();
+    // console.log(111111111)
+    // const data = await db.collection('messages').get();
+    // console.log('data', data)
     // await setSpells(
     //     data.map((doc) => ({
     //         ...doc.data(),
@@ -50,8 +53,11 @@ const StoreFireBase = () => {
       <ul>
         {spells.map((spell) => (
           <li key={spell.uid}>
-            <img src={spell.photoURL} alt="hieu" />
-            {spell.text}
+            <img
+              src={spell.photoURL ? spell.photoURL : spell.picture}
+              alt="hieu"
+            />
+            {spell.text ? spell.text : spell.name}
 
             <SpellInput spell={spell} fetchDataInput={fetchData} />
           </li>

@@ -5,16 +5,22 @@ import {
   NameIcon,
   SpanImg,
 } from '@components/forms/register/styles';
+
 import MainLayout from '@layouts/main';
 import { signOut, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import React from 'react';
 import styled from 'styled-components';
+// import useRender from './api/examples/jwt'
 
 const ButtonInPage = styled(ButtonIcon)`
   /* padding-left:4px */
 `;
 const Home = () => {
+  // const [{ counter }] = useRender();
+
+  // console.log(useRender(), "------------");
+
   const [session] = useSession();
   return (
     <>
