@@ -17,58 +17,58 @@ export const ROUTES: Route = {
       icon: <PlaySquareOutlined />,
     },
     {
-      path: '/typeAction/estimate',
+      path: '/du-toan',
       name: 'Dự toán',
       icon: <PlaySquareOutlined />,
       routes: [
         {
-          path: '/typeAction/estimate/requiredCst',
+          path: '/chi-tieu/chi-tieu-thiet-yeu',
           name: 'Chi tiêu thiết yếu',
         },
         {
-          path: '/typeAction/estimate/norequiredCst',
+          path: '/chi-tieu/chi-tieu-ko-thiet-yeu',
           name: 'Chi tiêu không thiết yếu',
         },
         {
-          path: '/typeAction/estimate/spendingPlans',
-          name: 'Kế hoạch chi tiêu',
+          path: '/chi-tieu/chi-tieu-dot-xuat',
+          name: 'Chi tiêu đột xuất',
         },
         {
-          path: '/typeAction/estimate/unspectedCst',
-          name: 'Chi tiêu đột xuất',
+          path: '/chi-tieu/ke-hoach-chi-tieu',
+          name: 'Kế hoạch chi tiêu',
         },
       ],
     },
     {
-      path: '/typeAction/consumption',
+      path: '/chi-tieu',
       name: 'Chi tiêu',
       icon: <PlaySquareOutlined />,
       routes: [
         {
-          path: '/typeAction/consumption/requiredCst',
+          path: '/chi-tieu/chi-tieu-thiet-yeu',
           name: 'Chi tiêu thiết yếu',
         },
         {
-          path: '/typeAction/consumption/norequiredCst',
+          path: '/chi-tieu/chi-tieu-ko-thiet-yeu',
           name: 'Chi tiêu không thiết yếu',
         },
         {
-          path: '/typeAction/consumption/spendingPlans',
-          name: 'Kế hoạch chi tiêu',
+          path: '/chi-tieu/chi-tieu-dot-xuat',
+          name: 'Chi tiêu đột xuất',
         },
         {
-          path: '/typeAction/consumption/unspectedCst',
-          name: 'Chi tiêu đột xuất',
+          path: '/chi-tieu/ke-hoach-chi-tieu',
+          name: 'Kế hoạch chi tiêu',
         },
       ],
     },
     {
-      path: '/typeAction/income',
+      path: '/thu-nhap',
       name: 'Thu nhập',
       icon: <PlaySquareOutlined />,
     },
     {
-      path: '/typeAction/statistical',
+      path: '/thong-ke',
       name: 'Thống kê',
       icon: <PlaySquareOutlined />,
     },
