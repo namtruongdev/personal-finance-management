@@ -17,18 +17,59 @@ export const ROUTES: Route = {
       icon: <PlaySquareOutlined />,
     },
     {
-      path: '/estimate',
-      name: 'Estimate',
+      path: '/typeAction/estimate',
+      name: 'Dự toán',
+      icon: <PlaySquareOutlined />,
+      routes: [
+        {
+          path: '/typeAction/estimate/requiredCst',
+          name: 'Chi tiêu thiết yếu',
+        },
+        {
+          path: '/typeAction/estimate/norequiredCst',
+          name: 'Chi tiêu không thiết yếu',
+        },
+        {
+          path: '/typeAction/estimate/spendingPlans',
+          name: 'Kế hoạch chi tiêu',
+        },
+        {
+          path: '/typeAction/estimate/unspectedCst',
+          name: 'Chi tiêu đột xuất',
+        },
+      ],
+    },
+    {
+      path: '/typeAction/consumption',
+      name: 'Chi tiêu',
+      icon: <PlaySquareOutlined />,
+      routes: [
+        {
+          path: '/typeAction/consumption/requiredCst',
+          name: 'Chi tiêu thiết yếu',
+        },
+        {
+          path: '/typeAction/consumption/norequiredCst',
+          name: 'Chi tiêu không thiết yếu',
+        },
+        {
+          path: '/typeAction/consumption/spendingPlans',
+          name: 'Kế hoạch chi tiêu',
+        },
+        {
+          path: '/typeAction/consumption/unspectedCst',
+          name: 'Chi tiêu đột xuất',
+        },
+      ],
+    },
+    {
+      path: '/typeAction/income',
+      name: 'Thu nhập',
       icon: <PlaySquareOutlined />,
     },
     {
-      path: '/estimate',
-      name: 'Estimate',
-      icon: <PlaySquareOutlined />,
-    },
-    {
-      path: '/expence',
-      name: 'Expence',
+      path: '/typeAction/statistical',
+      name: 'Thống kê',
       icon: <PlaySquareOutlined />,
     },
   ],
