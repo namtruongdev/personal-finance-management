@@ -1,77 +1,138 @@
 import {
+  FacebookFilled,
+  GithubOutlined,
+  GoogleOutlined,
+} from '@ant-design/icons';
+import {
+  ButtonIcon,
+  ButtonNoBorder,
   CustomButtonForm,
   CustomLayout,
   CustomSider,
+  Div,
+  DivIcon,
+  DivIconPlugin,
+  SignTitle,
 } from '@components/forms/register/styles';
-import { Button, Checkbox, Form, Input, Layout, Typography } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Layout,
+  message,
+  notification,
+} from 'antd';
+import bcrypt from 'bcryptjs';
+import 'firebase/auth';
+import { Props } from 'interface/formInterface';
+import { providers, signIn, useSession } from 'next-auth/client';
 import Link from 'next/link';
-import React from 'react';
-import styled from 'styled-components';
+import Router, { useRouter } from 'next/router';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const { Content } = Layout;
-const { Title } = Typography;
-// const formItemLayout = {
-//     labelCol: {
-//         xs: { span: 24 },
-//         sm: { span: 8 },
-//     },
-//     wrapperCol: {
-//         xs: { span: 24 },
-//         sm: { span: 16 },
-//     },
-// };
-export const TitleH1 = styled(Title)`
-  text-align: center;
-  margin-bottom: 20px;
-  margin-bottom: 20px !important;
-  margin-left: ${(props: String) => (props.left ? '0px' : '')};
-  margin-bottom: ${(props: String) => (props.left ? '25px !important' : '')};
-`;
-export const ButtonIcon = styled(Button)`
-  width: 30px;
-  outline: none;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  padding-right: ${(props: String) => (props.margin ? '5px' : '')};
-  margin-left: ${(props: String) => (props.margin ? '0px' : '')};
-  margin-right: ${(props: String) => (props.margin ? '10px' : '')};
-`;
-export const DivIcon = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-`;
-const tailFormItemLayout = {
-  wrapperCol: {
-    xs: {
-      span: 24,
-      offset: 0,
-    },
-    sm: {
-      span: 24,
-      offset: 0,
-    },
-  },
+
+export const success = () => {
+  message.success('done', 1);
 };
-
-export const Div = styled.div`
-  /* border:1px solid; */
-  width: 350px;
-`;
-
-const Signup = () => {
+const Signup = ({ providers: signInProviders }: Props) => {
+  const [session] = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if (session) {
+      router.push('/');
+    }
+  }, [session]);
+  const tailFormItemLayout = useMemo(
+    () => ({
+      wrapperCol: {
+        xs: {
+          span: 24,
+          offset: 0,
+        },
+        sm: {
+          span: 24,
+          offset: 0,
+        },
+      },
+    }),
+    []
+  );
   const [form] = Form.useForm();
+  const [listUser, setListUser] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:8080/user', {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        Accept: '*/*',
+      }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        setListUser(response);
+      })
+      .catch((err) => {});
+  }, []);
+
+  const checkEmail = (email) => {
+    // let check=false;
+    const a =
+      listUser.length > 0 &&
+      listUser.map((item) => {
+        if (item.email === email) {
+          return true;
+        }
+        return false;
+      });
+    return a;
+  };
   const onFinish = (values: unknown) => {
-    // console.log('Received values of form: ', values);
+    const salt = bcrypt.genSaltSync(12);
+    const hash = bcrypt.hashSync(values.password, salt);
+    const check = checkEmail(values.email);
+    if (check) {
+      notification.warning({
+        message: '',
+        description: 'Email đã tồn tại.',
+      });
+    } else {
+      const rep = fetch('http://localhost:8080/user', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        }),
+        body: JSON.stringify({
+          email: values.email,
+          password: hash,
+          name: values.name,
+        }),
+      });
+      if (rep) {
+        notification.success({
+          message: '',
+          description: 'Đăng kí thành công',
+        });
+        Router.push('/signin');
+      }
+    }
   };
-  const formItemLayout = {
-    labelCol: { span: 24 },
-    wrapperCol: { span: 24 },
-  };
+
+  const formItemLayout = useMemo(
+    () => ({
+      labelCol: { span: 24 },
+      wrapperCol: { span: 24 },
+    }),
+    []
+  );
   return (
     <div>
       <CustomLayout>
+        <Link href="/">
+          <a>Home</a>
+        </Link>
         <Layout>
           <Content
             style={{
@@ -81,26 +142,54 @@ const Signup = () => {
             }}
           >
             <Div>
-              {/* <TitleH1>Đăng ký</TitleH1>
+              <SignTitle>Đăng ký</SignTitle>
               <DivIcon>
-                <ButtonIcon primary margin>
-                  <FacebookFilled
-                    style={{ fontSize: 22, marginRight: '10px' }}
-                  />
-                </ButtonIcon>
-                <ButtonIcon>
-                  <GoogleOutlined style={{ fontSize: 22 }} />
-                </ButtonIcon>
+                {Object.values(prd).map((provider) => (
+                  <DivIconPlugin key={provider.name}>
+                    <form>
+                      <ButtonNoBorder
+                        type="button"
+                        onClick={() => signIn(provider.id)}
+                      >
+                        {provider.name === 'Facebook' ? (
+                          <ButtonIcon margin>
+                            <FacebookFilled
+                              style={{ fontSize: 22, marginRight: '10px' }}
+                            />
+                          </ButtonIcon>
+                        ) : (
+                          ''
+                        )}
+                        {provider.name === 'Google' ? (
+                          <ButtonIcon>
+                            <GoogleOutlined style={{ fontSize: '22px' }} />
+                          </ButtonIcon>
+                        ) : (
+                          ''
+                        )}
+                        {provider.name === 'GitHub' ? (
+                          <ButtonIcon>
+                            <GithubOutlined style={{ fontSize: '22px' }} />
+                          </ButtonIcon>
+                        ) : (
+                          ''
+                        )}
+                      </ButtonNoBorder>
+                    </form>
+                  </DivIconPlugin>
+                ))}
               </DivIcon>
-              <TitleH1 level={5}>
+              <SignTitle level={5}>
                 <small>hoặc sử dụng email của bạn để đăng ký</small>
-              </TitleH1> */}
+              </SignTitle>
               <Form
                 {...formItemLayout}
                 layout="vertical"
                 form={form}
                 name="register"
                 onFinish={onFinish}
+                // onFinishFailed={handleOnFinishFailed}
+                // onValuesChange={onValuesChange}
                 scrollToFirstError
               >
                 <Form.Item
@@ -124,12 +213,8 @@ const Signup = () => {
                   label="Tên người dùng"
                   rules={[
                     {
-                      type: 'email',
-                      message: 'The input is not valid E-mail!',
-                    },
-                    {
                       required: true,
-                      message: 'Please input your E-mail!',
+                      message: 'Please input your name!',
                     },
                   ]}
                 >
@@ -175,7 +260,7 @@ const Signup = () => {
                 >
                   <Input.Password />
                 </Form.Item>
-                <Form.Item
+                <CustomButtonForm
                   name="agreement"
                   valuePropName="checked"
                   rules={[
@@ -191,17 +276,11 @@ const Signup = () => {
                   {...tailFormItemLayout}
                 >
                   <Checkbox>
-                    Tôi đã đọc <a href="javascript:void(0)">điểu khoản</a>
+                    Tôi đã đọc
+                    <a href="javascript:void(0)">điểu khoản</a>
                   </Checkbox>
-                </Form.Item>
-                <CustomButtonForm>
-                  <Button type="primary" htmlType="submit">
-                    Đăng ký
-                  </Button>
                   <Link href="/signin">
-                    <a>
-                      <Button type="primary">Đăng nhập</Button>
-                    </a>
+                    <Button type="primary">Đăng nhập</Button>
                   </Link>
                 </CustomButtonForm>
               </Form>
@@ -215,3 +294,8 @@ const Signup = () => {
 };
 
 export default Signup;
+export async function getStaticProps() {
+  return {
+    props: { providers: await providers() },
+  };
+}

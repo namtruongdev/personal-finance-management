@@ -7,7 +7,7 @@ import { ROUTES } from '@configs/router';
 import type { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { ProSettings } from '@ant-design/pro-layout';
 
-import { MoneyBag } from '@components/Icons/index';
+import { MoneyBag } from '@components/forms/register/Icons/index';
 
 const SettingDrawer = dynamic(
   () => import('@ant-design/pro-layout/lib/components/SettingDrawer'),
@@ -26,7 +26,7 @@ const DefautFooter = dynamic(
 
 const menuHeaderRender = (logo: React.ReactNode, title: React.ReactNode) => (
   <Link href="/">
-    <a>
+    <a href="/">
       {logo}
       {title}
     </a>
@@ -50,7 +50,11 @@ const Main = ({ children }) => {
 
   const menuItemRender = (options: MenuDataItem, element: React.ReactNode) => (
     <Link href={options.path}>
-      <a onClick={() => setPathname(options.path || '/')} aria-hidden="true">
+      <a
+        href={options.path}
+        onClick={() => setPathname(options.path || '/')}
+        aria-hidden="true"
+      >
         {element}
       </a>
     </Link>
