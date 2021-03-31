@@ -1,16 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable import/no-anonymous-default-export */
 import { getSession } from 'next-auth/client';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-// eslint-disable-next-line max-len
-export default async (
-  req: any,
-  res: {
-    send: (arg0: { content?: string; error?: string }) => void;
-  }
-) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
-
   if (session) {
     res.send({
       content:

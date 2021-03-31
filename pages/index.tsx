@@ -5,36 +5,35 @@ import {
   NameIcon,
   SpanImg,
 } from '@components/forms/register/styles';
-
 import MainLayout from '@layouts/main';
 import { signOut, useSession } from 'next-auth/client';
 import Link from 'next/link';
+import {
+  absoluteUrl,
+  getAppCookies,
+  setLogout,
+  verifyToken,
+} from 'constants/until';
 import React from 'react';
-import styled from 'styled-components';
-// import useRender from './api/examples/jwt'
 
-const ButtonInPage = styled(ButtonIcon)`
-  /* padding-left:4px */
-`;
-const Home = () => {
-  // const [{ counter }] = useRender();
-
-  // console.log(useRender(), "------------");
-
+const Home = ({ profile }) => {
   const [session] = useSession();
+  const handleOnClickLogout = (e) => {
+    setLogout(e);
+  };
   return (
     <>
       <MainLayout>
         <h1>Bảng điều khiển</h1>
-        {session ? (
+        {session || profile ? (
           <a
             href="/api/auth/signout"
             onClick={(e) => {
               e.preventDefault();
-              signOut();
+              session ? signOut() : handleOnClickLogout(e);
             }}
           >
-            {session.user.image && (
+            {session && session.user.image && (
               <SpanImg
                 style={{ backgroundImage: `url(${session.user.image})` }}
               />
@@ -42,29 +41,29 @@ const Home = () => {
             <span>
               <small>Signed in as</small>
               <br />
-              <strong>{session.user.name}</strong>
+              <strong>{session && session.user.name}</strong>
             </span>
             Sign out
           </a>
         ) : (
           <>
             <Link href="/signin">
-              <ButtonInPage>
+              <ButtonIcon>
                 <IconAnt>
                   <LoginOutlined />
                 </IconAnt>
                 <NameIcon>Sign in</NameIcon>
-              </ButtonInPage>
+              </ButtonIcon>
             </Link>
             <p>
               <Link href="/signup">
                 <a>
-                  <ButtonInPage>
+                  <ButtonIcon>
                     <IconAnt right>
                       <UserOutlined />
                     </IconAnt>
                     <NameIcon>Sign up</NameIcon>
-                  </ButtonInPage>
+                  </ButtonIcon>
                 </a>
               </Link>
             </p>
@@ -80,6 +79,21 @@ const Home = () => {
   );
 };
 
+export async function getServerSideProps(context) {
+  const { req } = context;
+  const { origin } = absoluteUrl(req);
+
+  const baseApiUrl = `${origin}/api`;
+
+  const { token } = getAppCookies(req);
+  const profile = token ? verifyToken(token.split(' ')[1]) : '';
+  return {
+    props: {
+      baseApiUrl,
+      profile,
+    },
+  };
+}
 export default Home;
 // function then(arg0: (res: any) => void) {
 //     throw new Error('Function not implemented.');

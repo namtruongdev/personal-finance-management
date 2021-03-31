@@ -3,7 +3,6 @@ import {
   GithubOutlined,
   GoogleOutlined,
 } from '@ant-design/icons';
-import { FormSignup, Props } from 'interface/formInterface';
 import {
   ButtonIcon,
   ButtonNoBorder,
@@ -15,20 +14,29 @@ import {
   DivIconPlugin,
   SignTitle,
 } from '@components/forms/register/styles';
-import React, { useEffect, useMemo } from 'react';
-import { Button, Checkbox, Form, Input, Layout, message } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Layout,
+  message,
+  notification,
+} from 'antd';
+import bcrypt from 'bcryptjs';
 import 'firebase/auth';
-import jwt from 'jsonwebtoken';
+import { Props } from 'interface/formInterface';
 import { providers, signIn, useSession } from 'next-auth/client';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import Router, { useRouter } from 'next/router';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const { Content } = Layout;
 
 export const success = () => {
   message.success('done', 1);
 };
-const Signup = ({ providers: prd }: Props) => {
+const Signup = ({ providers: signInProviders }: Props) => {
   const [session] = useSession();
   const router = useRouter();
   useEffect(() => {
@@ -52,12 +60,66 @@ const Signup = ({ providers: prd }: Props) => {
     []
   );
   const [form] = Form.useForm();
+  const [listUser, setListUser] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:8080/user', {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        Accept: '*/*',
+      }),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        setListUser(response);
+      })
+      .catch((err) => {});
+  }, []);
 
-  const onFinish = (values: FormSignup) => {
-    const codeEncoded = { email: values.email, password: values.password };
-    const token = jwt.sign(codeEncoded, 'hieuc');
-    localStorage.setItem('myCat', token);
+  const checkEmail = (email) => {
+    // let check=false;
+    const a =
+      listUser.length > 0 &&
+      listUser.map((item) => {
+        if (item.email === email) {
+          return true;
+        }
+        return false;
+      });
+    return a;
   };
+  const onFinish = (values: unknown) => {
+    const salt = bcrypt.genSaltSync(12);
+    const hash = bcrypt.hashSync(values.password, salt);
+    const check = checkEmail(values.email);
+    if (check) {
+      notification.warning({
+        message: '',
+        description: 'Email đã tồn tại.',
+      });
+    } else {
+      const rep = fetch('http://localhost:8080/user', {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        }),
+        body: JSON.stringify({
+          email: values.email,
+          password: hash,
+          name: values.name,
+        }),
+      });
+      if (rep) {
+        notification.success({
+          message: '',
+          description: 'Đăng kí thành công',
+        });
+        Router.push('/signin');
+      }
+    }
+  };
+
   const formItemLayout = useMemo(
     () => ({
       labelCol: { span: 24 },
@@ -152,7 +214,7 @@ const Signup = ({ providers: prd }: Props) => {
                   rules={[
                     {
                       required: true,
-                      message: 'Please input your E-mail!',
+                      message: 'Please input your name!',
                     },
                   ]}
                 >
@@ -218,9 +280,7 @@ const Signup = ({ providers: prd }: Props) => {
                     <a href="javascript:void(0)">điểu khoản</a>
                   </Checkbox>
                   <Link href="/signin">
-                    <a>
-                      <Button type="primary">Đăng nhập</Button>
-                    </a>
+                    <Button type="primary">Đăng nhập</Button>
                   </Link>
                 </CustomButtonForm>
               </Form>
