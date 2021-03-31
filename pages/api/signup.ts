@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import db from '../../utils/database/index';
+import db from '@utils/database/index';
 
 export default async (req, res) => {
   try {
