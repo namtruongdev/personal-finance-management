@@ -43,6 +43,8 @@ const Home = ({ profile, data }) => {
             <small>Signed in as</small>
             <br />
             <strong>{session && session.user.name}</strong>
+            <strong>{profile && profile.name}</strong>
+            <br />
           </span>
           Sign out
         </a>

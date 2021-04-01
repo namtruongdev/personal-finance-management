@@ -23,13 +23,12 @@ import {
   message,
   notification,
 } from 'antd';
-import bcrypt from 'bcryptjs';
 import 'firebase/auth';
 import { Props } from 'interface/formInterface';
 import { providers, signIn, useSession } from 'next-auth/client';
 import Link from 'next/link';
-import Router, { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useMemo } from 'react';
 
 const { Content } = Layout;
 
@@ -60,62 +59,33 @@ const Signup = ({ providers: prd }: Props) => {
     []
   );
   const [form] = Form.useForm();
-  const [listUser, setListUser] = useState([]);
-  useEffect(() => {
-    fetch('http://localhost:8080/user', {
-      method: 'GET',
+
+  const onFinish = async (values: unknown) => {
+    const rep = await fetch('http://localhost:3000/api/signup', {
+      method: 'POST',
       headers: new Headers({
         'Content-Type': 'application/json',
-        Accept: '*/*',
+        Accept: 'application/json',
       }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        setListUser(response);
-      })
-      .catch((err) => {});
-  }, []);
-
-  const checkEmail = (email) => {
-    // let check=false;
-    const a =
-      listUser.length > 0 &&
-      listUser.map((item) => {
-        if (item.email === email) {
-          return true;
-        }
-        return false;
-      });
-    return a;
-  };
-  const onFinish = (values: unknown) => {
-    const salt = bcrypt.genSaltSync(12);
-    const hash = bcrypt.hashSync(values.password, salt);
-    const check = checkEmail(values.email);
-    if (check) {
-      notification.warning({
-        message: '',
-        description: 'Email đã tồn tại.',
-      });
-    } else {
-      const rep = fetch('http://localhost:8080/user', {
-        method: 'POST',
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        }),
-        body: JSON.stringify({
-          email: values.email,
-          password: hash,
-          name: values.name,
-        }),
-      });
-      if (rep) {
+      body: JSON.stringify({
+        email: values.email,
+        name: values.name,
+        password: values.password,
+      }),
+    });
+    const repData = await rep.json();
+    if (rep.status === 200) {
+      if (repData.error) {
+        notification.warning({
+          message: '',
+          description: repData.message,
+        });
+      } else {
         notification.success({
           message: '',
           description: 'Đăng kí thành công',
         });
-        Router.push('/signin');
+        router.push('/signin');
       }
     }
   };
@@ -300,7 +270,7 @@ const Signup = ({ providers: prd }: Props) => {
 };
 
 export default Signup;
-export async function getStaticProps() {
+export async function getServerSideProps() {
   return {
     props: { providers: await providers() },
   };
