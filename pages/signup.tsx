@@ -59,7 +59,7 @@ const Signup = ({ providers: prd }: Props) => {
   );
   const [form] = Form.useForm();
 
-  const onFinish = async (values: unknown) => {
+  const onFinish = async (values) => {
     const rep = await fetch('http://localhost:3000/api/signup', {
       method: 'POST',
       headers: new Headers({

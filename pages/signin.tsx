@@ -57,15 +57,18 @@ const Signin = ({ providers: signInProviders }: Props) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(values),
-    }).catch((error) => {
-      notification.warning({
-        message: '',
-        description: 'Đăng nhập thất bại',
-      });
-      setLoading(false);
     });
 
     const result = await loginApi.json();
+
+    //     .catch((error) => {
+    //       notification.warning({
+    //         message: '',
+    //         description: 'Đăng nhập thất bại',
+    //       });
+    //       setLoading(false);
+    // });
+
     if (result.success && result.token) {
       Cookies.set('token', result.token);
       // window.location.href = referer ? referer : "/";
@@ -128,37 +131,38 @@ const Signin = ({ providers: signInProviders }: Props) => {
                   scrollToFirstError
                 >
                   <DivIcon>
-                    {Object.values(signInProviders).map((provider) => (
-                      <DivIconPlugin key={provider.name}>
-                        {/* <form> */}
-                        <ButtonNoBorder onClick={() => signIn(provider.id)}>
-                          {provider.name === 'Facebook' ? (
-                            <ButtonIcon margin="margin">
-                              <FacebookFilled
-                                style={{ fontSize: 22, marginRight: '10px' }}
-                              />
-                            </ButtonIcon>
-                          ) : (
-                            ''
-                          )}
-                          {provider.name === 'Google' ? (
-                            <ButtonIcon>
-                              <GoogleOutlined style={{ fontSize: '22px' }} />
-                            </ButtonIcon>
-                          ) : (
-                            ''
-                          )}
-                          {provider.name === 'GitHub' ? (
-                            <ButtonIcon>
-                              <GithubOutlined style={{ fontSize: '22px' }} />
-                            </ButtonIcon>
-                          ) : (
-                            ''
-                          )}
-                        </ButtonNoBorder>
-                        {/* </form> */}
-                      </DivIconPlugin>
-                    ))}
+                    {signInProviders !== null &&
+                      Object.values(signInProviders).map((provider) => (
+                        <DivIconPlugin key={provider.name}>
+                          {/* <form> */}
+                          <ButtonNoBorder onClick={() => signIn(provider.id)}>
+                            {provider.name === 'Facebook' ? (
+                              <ButtonIcon margin="margin">
+                                <FacebookFilled
+                                  style={{ fontSize: 22, marginRight: '10px' }}
+                                />
+                              </ButtonIcon>
+                            ) : (
+                              ''
+                            )}
+                            {provider.name === 'Google' ? (
+                              <ButtonIcon>
+                                <GoogleOutlined style={{ fontSize: '22px' }} />
+                              </ButtonIcon>
+                            ) : (
+                              ''
+                            )}
+                            {provider.name === 'GitHub' ? (
+                              <ButtonIcon>
+                                <GithubOutlined style={{ fontSize: '22px' }} />
+                              </ButtonIcon>
+                            ) : (
+                              ''
+                            )}
+                          </ButtonNoBorder>
+                          {/* </form> */}
+                        </DivIconPlugin>
+                      ))}
                   </DivIcon>
                   <Form.Item
                     name="email"
