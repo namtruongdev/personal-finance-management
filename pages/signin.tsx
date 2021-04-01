@@ -50,7 +50,8 @@ const Signin = ({ providers: signInProviders }: Props) => {
 
   const onFinish = async (values: unknown) => {
     setLoading(true);
-    const loginApi = await fetch(`http://localhost:3000/api/auth`, {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const loginApi: any = await fetch(`http://localhost:3000/api/auth`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -130,36 +131,33 @@ const Signin = ({ providers: signInProviders }: Props) => {
                   <DivIcon>
                     {Object.values(signInProviders).map((provider) => (
                       <DivIconPlugin key={provider.name}>
-                        <form>
-                          <ButtonNoBorder
-                            type="button"
-                            onClick={() => signIn(provider.id)}
-                          >
-                            {provider.name === 'Facebook' ? (
-                              <ButtonIcon margin>
-                                <FacebookFilled
-                                  style={{ fontSize: 22, marginRight: '10px' }}
-                                />
-                              </ButtonIcon>
-                            ) : (
-                              ''
-                            )}
-                            {provider.name === 'Google' ? (
-                              <ButtonIcon>
-                                <GoogleOutlined style={{ fontSize: '22px' }} />
-                              </ButtonIcon>
-                            ) : (
-                              ''
-                            )}
-                            {provider.name === 'GitHub' ? (
-                              <ButtonIcon>
-                                <GithubOutlined style={{ fontSize: '22px' }} />
-                              </ButtonIcon>
-                            ) : (
-                              ''
-                            )}
-                          </ButtonNoBorder>
-                        </form>
+                        {/* <form> */}
+                        <ButtonNoBorder onClick={() => signIn(provider.id)}>
+                          {provider.name === 'Facebook' ? (
+                            <ButtonIcon margin="margin">
+                              <FacebookFilled
+                                style={{ fontSize: 22, marginRight: '10px' }}
+                              />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                          {provider.name === 'Google' ? (
+                            <ButtonIcon>
+                              <GoogleOutlined style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                          {provider.name === 'GitHub' ? (
+                            <ButtonIcon>
+                              <GithubOutlined style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                        </ButtonNoBorder>
+                        {/* </form> */}
                       </DivIconPlugin>
                     ))}
                   </DivIcon>
@@ -193,7 +191,7 @@ const Signin = ({ providers: signInProviders }: Props) => {
                     <Input.Password />
                   </Form.Item>
                   <Form.Item
-                    name="agreement"
+                    // name="agreement"
                     valuePropName="checked"
                     {...tailFormItemLayout}
                   >
@@ -221,7 +219,7 @@ const Signin = ({ providers: signInProviders }: Props) => {
   );
 };
 export default Signin;
-export async function getStaticProps() {
+export async function getServerSideProps() {
   return {
     props: { providers: await providers() },
   };

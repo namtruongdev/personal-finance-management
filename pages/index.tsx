@@ -51,28 +51,27 @@ const Home = ({ profile, data }) => {
       ) : (
         <>
           <Link href="/signin">
-            <ButtonIcon>
-              <IconAnt>
-                <LoginOutlined />
-              </IconAnt>
-              <NameIcon>Sign in</NameIcon>
-            </ButtonIcon>
+            <a>
+              <ButtonIcon htmlType="button">
+                <IconAnt>
+                  <LoginOutlined />
+                </IconAnt>
+                <NameIcon>Sign in</NameIcon>
+              </ButtonIcon>
+            </a>
           </Link>
-          <p>
-            <Link href="/signup">
-              <a aria-hidden="true">
-                <ButtonIcon>
-                  <IconAnt right>
-                    <UserOutlined />
-                  </IconAnt>
-                  <NameIcon>Sign up</NameIcon>
-                </ButtonIcon>
-              </a>
-            </Link>
-          </p>
+          <Link href="/signup">
+            <a aria-hidden="true">
+              <ButtonIcon>
+                <IconAnt right>
+                  <UserOutlined />
+                </IconAnt>
+                <NameIcon>Sign up</NameIcon>
+              </ButtonIcon>
+            </a>
+          </Link>
         </>
       )}
-      <div>hi</div>
       <div>
         <iframe title="jwt" src="/api/examples/jwt" />
         <iframe title="session" src="/api/examples/session" />

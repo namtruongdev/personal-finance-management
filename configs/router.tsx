@@ -12,11 +12,6 @@ export const ROUTES: Route = {
       icon: <SmileOutlined />,
     },
     {
-      path: '/example',
-      name: 'Example Page',
-      icon: <PlaySquareOutlined />,
-    },
-    {
       path: '/du-toan',
       name: 'Dự toán',
       icon: <PlaySquareOutlined />,
@@ -70,6 +65,11 @@ export const ROUTES: Route = {
     {
       path: '/thong-ke',
       name: 'Thống kê',
+      icon: <PlaySquareOutlined />,
+    },
+    {
+      path: '/phan-bo-loi-nhuan',
+      name: 'Phân bố lợi nhuận',
       icon: <PlaySquareOutlined />,
     },
   ],

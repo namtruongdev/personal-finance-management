@@ -23,7 +23,7 @@ import {
   message,
   notification,
 } from 'antd';
-import { Props } from 'interface/formInterface';
+import { FormSignup, Props } from 'interface/formInterface';
 import { providers, signIn, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -59,7 +59,7 @@ const Signup = ({ providers: prd }: Props) => {
   );
   const [form] = Form.useForm();
 
-  const onFinish = async (values: unknown) => {
+  const onFinish = async (values: FormSignup) => {
     const rep = await fetch('http://localhost:3000/api/signup', {
       method: 'POST',
       headers: new Headers({
@@ -99,9 +99,6 @@ const Signup = ({ providers: prd }: Props) => {
   return (
     <div>
       <CustomLayout>
-        <Link href="/">
-          <a>Home</a>
-        </Link>
         <Layout>
           <Content
             style={{
@@ -115,36 +112,31 @@ const Signup = ({ providers: prd }: Props) => {
               <DivIcon>
                 {Object.values(prd).map((provider) => (
                   <DivIconPlugin key={provider.name}>
-                    <form>
-                      <ButtonNoBorder
-                        type="button"
-                        onClick={() => signIn(provider.id)}
-                      >
-                        {provider.name === 'Facebook' ? (
-                          <ButtonIcon margin>
-                            <FacebookFilled
-                              style={{ fontSize: 22, marginRight: '10px' }}
-                            />
-                          </ButtonIcon>
-                        ) : (
-                          ''
-                        )}
-                        {provider.name === 'Google' ? (
-                          <ButtonIcon>
-                            <GoogleOutlined style={{ fontSize: '22px' }} />
-                          </ButtonIcon>
-                        ) : (
-                          ''
-                        )}
-                        {provider.name === 'GitHub' ? (
-                          <ButtonIcon>
-                            <GithubOutlined style={{ fontSize: '22px' }} />
-                          </ButtonIcon>
-                        ) : (
-                          ''
-                        )}
-                      </ButtonNoBorder>
-                    </form>
+                    <ButtonNoBorder onClick={() => signIn(provider.id)}>
+                      {provider.name === 'Facebook' ? (
+                        <ButtonIcon margin="margin">
+                          <FacebookFilled
+                            style={{ fontSize: 22, marginRight: '10px' }}
+                          />
+                        </ButtonIcon>
+                      ) : (
+                        ''
+                      )}
+                      {provider.name === 'Google' ? (
+                        <ButtonIcon>
+                          <GoogleOutlined style={{ fontSize: '22px' }} />
+                        </ButtonIcon>
+                      ) : (
+                        ''
+                      )}
+                      {provider.name === 'GitHub' ? (
+                        <ButtonIcon>
+                          <GithubOutlined style={{ fontSize: '22px' }} />
+                        </ButtonIcon>
+                      ) : (
+                        ''
+                      )}
+                    </ButtonNoBorder>
                   </DivIconPlugin>
                 ))}
               </DivIcon>
@@ -230,7 +222,6 @@ const Signup = ({ providers: prd }: Props) => {
                   <Input.Password />
                 </Form.Item>
                 <Form.Item
-                  name="agreement"
                   valuePropName="checked"
                   rules={[
                     {
@@ -245,7 +236,7 @@ const Signup = ({ providers: prd }: Props) => {
                   {...tailFormItemLayout}
                 >
                   <Checkbox>
-                    Tôi đã đọc <a href="javascript:void(0)">điểu khoản</a>
+                    Tôi đã đọc <a href="#">điểu khoản</a>
                   </Checkbox>
                 </Form.Item>
                 <CustomButtonForm>
