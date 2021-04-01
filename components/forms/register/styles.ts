@@ -17,22 +17,14 @@ export const CustomSider = styled(Sider)`
 `;
 export const CustomButtonForm = styled(Form.Item)`
   .ant-form-item-control-input-content {
-    margin-left: 45%;
-    /* border:1px solid; */
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
-
-  /* transform:translate(-50px,-200px); */
-  /* @media (max-width:900px){
-transform:translateY(-200px); */
-  /* transform:translateX(00px); */
 `;
 export const CustomButtonForm2 = styled(Form.Item)`
   margin-bottom: 5px;
   .ant-form-item-control-input-content {
     margin-left: 0%;
-    /* border:1px solid; */
     display: flex;
     justify-content: space-between;
   }
@@ -49,28 +41,19 @@ export const DivIconPlugin = styled.div`
   justify-content: center;
   align-items: center;
 `;
-export const ButtonNoBorder = styled.button`
+export const ButtonNoBorder = styled.div`
   border: none;
   outline: none;
   cursor: pointer;
 `;
 export interface Prop {
   margin?: String | Boolean;
-  // premier: string
+  with?: String | Boolean;
 }
 export const SignTitle = styled(Title)`
   text-align: center;
   margin-bottom: 20px;
   margin-bottom: 20px !important;
-`;
-export const ButtonIcon = styled(Button)<Prop>`
-  width: 30px;
-  outline: none;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  padding-right: ${(props) => (props.margin ? '5px' : '')};
-  margin-right: ${(props) => (props.margin ? '10px' : '')};
 `;
 
 export const DivIcon = styled.div`
@@ -107,14 +90,28 @@ export const MissPass = styled.a`
   float: right;
 `;
 export const IconAnt = styled.span<Span>`
-  font-size: 1.5rem;
+  font-size: 1rem;
   margin-top: -5px;
-  padding-right: 8px;
-  margin-left: 54px;
-  margin-left: ${(props) => (props.right ? '59px' : '')};
-  margin-left: ${(props) => (props.left ? '-12px' : '')};
-  margin-top: ${(props) => (props.left ? '-7px' : '')};
+  padding-right: 3px;
+`;
+export const ButtonIcon = styled(Button)<Prop>`
+  width: 30px;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: ${(props) => (props.with ? '100px' : '')};
 `;
 export const NameIcon = styled.span`
   font-size: 16px;
+`;
+export const FormDiv = styled.div`
+  max-width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+export const FormA = styled.a`
+  margin: 20px;
 `;

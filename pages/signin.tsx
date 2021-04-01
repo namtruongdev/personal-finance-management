@@ -50,7 +50,8 @@ const Signin = ({ providers: signInProviders }: Props) => {
 
   const onFinish = async (values: unknown) => {
     setLoading(true);
-    const loginApi = await fetch(`http://localhost:3000/api/auth`, {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const loginApi: any = await fetch(`http://localhost:3000/api/auth`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -68,8 +69,6 @@ const Signin = ({ providers: signInProviders }: Props) => {
     const result = await loginApi.json();
     if (result.success && result.token) {
       Cookies.set('token', result.token);
-      // window.location.href = referer ? referer : "/";
-      // const pathUrl = referer ? referer.lastIndexOf("/") : "/";
       router.push('/');
 
       setLoading(false);
@@ -130,50 +129,40 @@ const Signin = ({ providers: signInProviders }: Props) => {
                   <DivIcon>
                     {Object.values(signInProviders).map((provider) => (
                       <DivIconPlugin key={provider.name}>
-                        <form>
-                          <ButtonNoBorder
-                            type="button"
-                            onClick={() => signIn(provider.id)}
-                          >
-                            {provider.name === 'Facebook' ? (
-                              <ButtonIcon margin>
-                                <FacebookFilled
-                                  style={{ fontSize: 22, marginRight: '10px' }}
-                                />
-                              </ButtonIcon>
-                            ) : (
-                              ''
-                            )}
-                            {provider.name === 'Google' ? (
-                              <ButtonIcon>
-                                <GoogleOutlined style={{ fontSize: '22px' }} />
-                              </ButtonIcon>
-                            ) : (
-                              ''
-                            )}
-                            {provider.name === 'GitHub' ? (
-                              <ButtonIcon>
-                                <GithubOutlined style={{ fontSize: '22px' }} />
-                              </ButtonIcon>
-                            ) : (
-                              ''
-                            )}
-                          </ButtonNoBorder>
-                        </form>
+                        {/* <form> */}
+                        <ButtonNoBorder onClick={() => signIn(provider.id)}>
+                          {provider.name === 'Facebook' ? (
+                            <ButtonIcon margin="margin">
+                              <FacebookFilled style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                          {provider.name === 'Google' ? (
+                            <ButtonIcon>
+                              <GoogleOutlined style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                          {provider.name === 'GitHub' ? (
+                            <ButtonIcon>
+                              <GithubOutlined style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                        </ButtonNoBorder>
                       </DivIconPlugin>
                     ))}
                   </DivIcon>
                   <Form.Item
-                    name="email"
-                    label="E-mail"
+                    name="name"
+                    label="Name"
                     rules={[
                       {
-                        type: 'email',
-                        message: 'The input is not valid E-mail!',
-                      },
-                      {
                         required: true,
-                        message: 'Please input your E-mail!',
+                        message: 'Hãy nhập tài khoản',
                       },
                     ]}
                   >
@@ -185,18 +174,14 @@ const Signin = ({ providers: signInProviders }: Props) => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please input your password!',
+                        message: 'Hãy nhập mật khẩu',
                       },
                     ]}
                     hasFeedback
                   >
                     <Input.Password />
                   </Form.Item>
-                  <Form.Item
-                    name="agreement"
-                    valuePropName="checked"
-                    {...tailFormItemLayout}
-                  >
+                  <Form.Item valuePropName="checked" {...tailFormItemLayout}>
                     <Checkbox>Nhớ mật khẩu</Checkbox>
                     <MissPass href="#">Quên mật khẩu?</MissPass>
                   </Form.Item>
@@ -221,7 +206,7 @@ const Signin = ({ providers: signInProviders }: Props) => {
   );
 };
 export default Signin;
-export async function getStaticProps() {
+export async function getServerSideProps() {
   return {
     props: { providers: await providers() },
   };

@@ -5,7 +5,7 @@ export default function Estimate() {
   return (
     <>
       <MainLayout>
-        <h1>Chi tiêu thiết yếu</h1>
+        <h1>Phân bổ lợi nhuận</h1>
       </MainLayout>
     </>
   );
