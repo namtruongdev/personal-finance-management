@@ -238,8 +238,8 @@ const Signup = ({ providers: prd }: Props) => {
                         value
                           ? Promise.resolve()
                           : Promise.reject(
-                            new Error('Làm ơn chấp nhận điều khoản')
-                          ),
+                              new Error('Làm ơn chấp nhận điều khoản')
+                            ),
                     },
                   ]}
                   {...tailFormItemLayout}

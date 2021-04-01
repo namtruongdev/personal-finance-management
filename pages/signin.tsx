@@ -109,9 +109,6 @@ const Signin = ({ providers: signInProviders }: Props) => {
     <Spin spinning={loading}>
       <div>
         <CustomLayout>
-          <Link href="/">
-            <a>Home</a>
-          </Link>
           <Layout>
             <Content
               style={{
