@@ -8,6 +8,7 @@ import type { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { ProSettings } from '@ant-design/pro-layout';
 
 import { MoneyBag } from '@components/Icons/index';
+import PageAuth from '@components/forms/auth/authention';
 
 const SettingDrawer = dynamic(
   () => import('@ant-design/pro-layout/lib/components/SettingDrawer'),
@@ -59,7 +60,8 @@ const Main = ({ children }) => {
       </a>
     </Link>
   );
-
+  const Div = () => <PageAuth />;
+  // const Div1 = () => <span>hihihih</span>
   return (
     <>
       <ProLayout
@@ -68,9 +70,11 @@ const Main = ({ children }) => {
         logo={<MoneyBag width="32" height="32" />}
         style={{ minHeight: '100vh' }}
         route={ROUTES}
+        // headerRender={Div}
         menuItemRender={menuItemRender}
         menuHeaderRender={menuHeaderRender}
         footerRender={footerRender}
+        rightContentRender={Div}
         {...settings}
       >
         {children}

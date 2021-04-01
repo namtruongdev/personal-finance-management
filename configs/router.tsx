@@ -12,11 +12,6 @@ export const ROUTES: Route = {
       icon: <SmileOutlined />,
     },
     {
-      path: '/example',
-      name: 'Example Page',
-      icon: <PlaySquareOutlined />,
-    },
-    {
       path: '/du-toan',
       name: 'Dự toán',
       icon: <PlaySquareOutlined />,

@@ -49,7 +49,7 @@ export const DivIconPlugin = styled.div`
   justify-content: center;
   align-items: center;
 `;
-export const ButtonNoBorder = styled.button`
+export const ButtonNoBorder = styled.div`
   border: none;
   outline: none;
   cursor: pointer;
@@ -62,15 +62,6 @@ export const SignTitle = styled(Title)`
   text-align: center;
   margin-bottom: 20px;
   margin-bottom: 20px !important;
-`;
-export const ButtonIcon = styled(Button)<Prop>`
-  width: 30px;
-  outline: none;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  padding-right: ${(props) => (props.margin ? '5px' : '')};
-  margin-right: ${(props) => (props.margin ? '10px' : '')};
 `;
 
 export const DivIcon = styled.div`
@@ -107,13 +98,22 @@ export const MissPass = styled.a`
   float: right;
 `;
 export const IconAnt = styled.span<Span>`
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   margin-top: -5px;
-  padding-right: 8px;
-  margin-left: 54px;
-  margin-left: ${(props) => (props.right ? '59px' : '')};
-  margin-left: ${(props) => (props.left ? '-12px' : '')};
-  margin-top: ${(props) => (props.left ? '-7px' : '')};
+  padding-right: 4px;
+  /* margin-left: 54px; */
+  /* margin-left: ${(props) => (props.right ? '59px' : '')}; */
+  /* margin-left: ${(props) => (props.left ? '-12px' : '')}; */
+  /* margin-top: ${(props) => (props.left ? '-7px' : '')}; */
+`;
+export const ButtonIcon = styled(Button)<Prop>`
+  width: 30px;
+  outline: none;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  padding-right: ${(props) => (props.margin ? '5px' : '')};
+  margin-right: ${(props) => (props.margin ? '10px' : '')};
 `;
 export const NameIcon = styled.span`
   font-size: 16px;
