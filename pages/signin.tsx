@@ -71,9 +71,9 @@ const Signin = ({ providers: signInProviders }: Props) => {
       Cookies.set('token', result.token);
       // window.location.href = referer ? referer : "/";
       // const pathUrl = referer ? referer.lastIndexOf("/") : "/";
+      router.push('/');
 
       setLoading(false);
-      router.push('/');
     } else {
       setLoading(false);
       notification.warning({
