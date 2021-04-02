@@ -1,3 +1,13 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Layout,
+  notification,
+  Spin,
+} from 'antd';
 import {
   FacebookFilled,
   GithubOutlined,
@@ -14,21 +24,11 @@ import {
   MissPass,
   SignTitle,
 } from '@components/forms/register/styles';
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Layout,
-  notification,
-  Spin,
-} from 'antd';
 import { Props } from 'interface/formInterface';
 import Cookies from 'js-cookie';
-import { providers, signIn, useSession } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 const { Content } = Layout;
@@ -50,10 +50,9 @@ const Signin = ({ providers: signInProviders }: Props) => {
 
   const onFinish = async (values: unknown) => {
     setLoading(true);
-    const loginApi = await fetch(`http://localhost:3000/api/auth`, {
+    const loginApi = await fetch(`http://localhost:3000/api/signin`, {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(values),
@@ -61,18 +60,9 @@ const Signin = ({ providers: signInProviders }: Props) => {
 
     const result = await loginApi.json();
 
-    //     .catch((error) => {
-    //       notification.warning({
-    //         message: '',
-    //         description: 'Đăng nhập thất bại',
-    //       });
-    //       setLoading(false);
-    // });
+    if (result.status === 'success' && result.token) {
+      Cookies.set('token', result.token, { secure: true });
 
-    if (result.success && result.token) {
-      Cookies.set('token', result.token);
-      // window.location.href = referer ? referer : "/";
-      // const pathUrl = referer ? referer.lastIndexOf("/") : "/";
       router.push('/');
 
       setLoading(false);
@@ -130,40 +120,7 @@ const Signin = ({ providers: signInProviders }: Props) => {
                   onFinish={onFinish}
                   scrollToFirstError
                 >
-                  <DivIcon>
-                    {signInProviders !== null &&
-                      Object.values(signInProviders).map((provider) => (
-                        <DivIconPlugin key={provider.name}>
-                          {/* <form> */}
-                          <ButtonNoBorder onClick={() => signIn(provider.id)}>
-                            {provider.name === 'Facebook' ? (
-                              <ButtonIcon margin="margin">
-                                <FacebookFilled
-                                  style={{ fontSize: 22, marginRight: '10px' }}
-                                />
-                              </ButtonIcon>
-                            ) : (
-                              ''
-                            )}
-                            {provider.name === 'Google' ? (
-                              <ButtonIcon>
-                                <GoogleOutlined style={{ fontSize: '22px' }} />
-                              </ButtonIcon>
-                            ) : (
-                              ''
-                            )}
-                            {provider.name === 'GitHub' ? (
-                              <ButtonIcon>
-                                <GithubOutlined style={{ fontSize: '22px' }} />
-                              </ButtonIcon>
-                            ) : (
-                              ''
-                            )}
-                          </ButtonNoBorder>
-                          {/* </form> */}
-                        </DivIconPlugin>
-                      ))}
-                  </DivIcon>
+                  <DivIcon />
                   <Form.Item
                     name="email"
                     label="E-mail"
@@ -222,8 +179,3 @@ const Signin = ({ providers: signInProviders }: Props) => {
   );
 };
 export default Signin;
-export async function getStaticProps() {
-  return {
-    props: { providers: await providers() },
-  };
-}

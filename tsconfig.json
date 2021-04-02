@@ -8,7 +8,8 @@
       "@hooks/*": ["hooks/*"],
       "@context/*": ["context/*"],
       "@styles/*": ["styles/*"],
-      "@configs/*": ["configs/*"]
+      "@configs/*": ["configs/*"],
+      "@assets/*": ["assets/*"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],

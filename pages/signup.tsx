@@ -1,8 +1,21 @@
+import { GetServerSideProps } from 'next';
+import Link from 'next/link';
+import React, { useEffect, useMemo } from 'react';
+
 import {
   FacebookFilled,
   GithubOutlined,
   GoogleOutlined,
 } from '@ant-design/icons';
+import {
+  Button,
+  Checkbox,
+  Form,
+  Input,
+  Layout,
+  message,
+  notification,
+} from 'antd';
 import {
   ButtonIcon,
   ButtonNoBorder,
@@ -14,49 +27,46 @@ import {
   DivIconPlugin,
   SignTitle,
 } from '@components/forms/register/styles';
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Layout,
-  message,
-  notification,
-} from 'antd';
+
 import { Props } from 'interface/formInterface';
 import { providers, signIn, useSession } from 'next-auth/client';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo } from 'react';
 
 const { Content } = Layout;
 
 export const success = () => {
   message.success('done', 1);
 };
-const Signup = ({ providers: prd }: Props) => {
+
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
+    },
+    sm: {
+      span: 24,
+      offset: 0,
+    },
+  },
+};
+
+const formItemLayout = {
+  labelCol: { span: 24 },
+  wrapperCol: { span: 24 },
+};
+
+const Signup = ({ Providers }: any) => {
   const [session] = useSession();
   const router = useRouter();
+
+  console.log(Providers, 'hihi');
+
   useEffect(() => {
     if (session) {
       router.push('/');
     }
   }, [session]);
-  const tailFormItemLayout = useMemo(
-    () => ({
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 24,
-          offset: 0,
-        },
-      },
-    }),
-    []
-  );
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
@@ -89,179 +99,170 @@ const Signup = ({ providers: prd }: Props) => {
     }
   };
 
-  const formItemLayout = useMemo(
-    () => ({
-      labelCol: { span: 24 },
-      wrapperCol: { span: 24 },
-    }),
-    []
-  );
   return (
-    <div>
-      <CustomLayout>
-        <Layout>
-          <Content
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Div>
-              <SignTitle>Đăng ký</SignTitle>
-              <DivIcon>
-                {Object.values(prd).map((provider) => (
-                  <DivIconPlugin key={provider.name}>
-                    <ButtonNoBorder onClick={() => signIn(provider.id)}>
-                      {provider.name === 'Facebook' ? (
-                        <ButtonIcon margin="margin">
-                          <FacebookFilled
-                            style={{ fontSize: 22, marginRight: '10px' }}
-                          />
-                        </ButtonIcon>
-                      ) : (
-                        ''
-                      )}
-                      {provider.name === 'Google' ? (
-                        <ButtonIcon>
-                          <GoogleOutlined style={{ fontSize: '22px' }} />
-                        </ButtonIcon>
-                      ) : (
-                        ''
-                      )}
-                      {provider.name === 'GitHub' ? (
-                        <ButtonIcon>
-                          <GithubOutlined style={{ fontSize: '22px' }} />
-                        </ButtonIcon>
-                      ) : (
-                        ''
-                      )}
-                    </ButtonNoBorder>
-                  </DivIconPlugin>
-                ))}
-              </DivIcon>
-              <SignTitle level={5}>
-                <small>hoặc sử dụng email của bạn để đăng ký</small>
-              </SignTitle>
-              <Form
-                {...formItemLayout}
-                layout="vertical"
-                form={form}
-                name="register"
-                onFinish={onFinish}
-                // onFinishFailed={handleOnFinishFailed}
-                // onValuesChange={onValuesChange}
-                scrollToFirstError
+    <CustomLayout>
+      <Layout>
+        <Content
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Div>
+            <SignTitle>Đăng ký</SignTitle>
+            <DivIcon>
+              {/* {Object.values(prd).map((provider) => (
+                <DivIconPlugin key={provider.name}>
+                  <ButtonNoBorder onClick={() => signIn(provider.id)}>
+                    {provider.name === 'Facebook' ? (
+                      <ButtonIcon margin="margin">
+                        <FacebookFilled
+                          style={{ fontSize: 22, marginRight: '10px' }}
+                        />
+                      </ButtonIcon>
+                    ) : (
+                      ''
+                    )}
+                    {provider.name === 'Google' ? (
+                      <ButtonIcon>
+                        <GoogleOutlined style={{ fontSize: '22px' }} />
+                      </ButtonIcon>
+                    ) : (
+                      ''
+                    )}
+                    {provider.name === 'GitHub' ? (
+                      <ButtonIcon>
+                        <GithubOutlined style={{ fontSize: '22px' }} />
+                      </ButtonIcon>
+                    ) : (
+                      ''
+                    )}
+                  </ButtonNoBorder>
+                </DivIconPlugin>
+              ))} */}
+            </DivIcon>
+            <SignTitle level={5}>
+              <small>hoặc sử dụng email của bạn để đăng ký</small>
+            </SignTitle>
+            <Form
+              {...formItemLayout}
+              layout="vertical"
+              form={form}
+              name="register"
+              onFinish={onFinish}
+              scrollToFirstError
+            >
+              <Form.Item
+                name="email"
+                label="E-mail"
+                rules={[
+                  {
+                    type: 'email',
+                    message: 'The input is not valid E-mail!',
+                  },
+                  {
+                    required: true,
+                    message: 'Please input your E-mail!',
+                  },
+                ]}
               >
-                <Form.Item
-                  name="email"
-                  label="E-mail"
-                  rules={[
-                    {
-                      type: 'email',
-                      message: 'The input is not valid E-mail!',
-                    },
-                    {
-                      required: true,
-                      message: 'Please input your E-mail!',
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  name="name"
-                  label="Tên người dùng"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input your name!',
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  name="password"
-                  label="Mật khảu"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input your password!',
-                    },
-                  ]}
-                  hasFeedback
-                >
-                  <Input.Password />
-                </Form.Item>
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="name"
+                label="Tên người dùng"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your name!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                label="Mật khảu"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your password!',
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
 
-                <Form.Item
-                  name="confirm"
-                  label="Xác nhận mật khẩu"
-                  dependencies={['password']}
-                  hasFeedback
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please confirm your password!',
+              <Form.Item
+                name="confirm"
+                label="Xác nhận mật khẩu"
+                dependencies={['password']}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please confirm your password!',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error(
+                          'The two passwords that you entered do not match!'
+                        )
+                      );
                     },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue('password') === value) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(
-                          new Error(
-                            'The two passwords that you entered do not match!'
-                          )
-                        );
-                      },
-                    }),
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
-                <Form.Item
-                  valuePropName="checked"
-                  rules={[
-                    {
-                      validator: (_, value) =>
-                        value
-                          ? Promise.resolve()
-                          : Promise.reject(
-                              new Error('Làm ơn chấp nhận điều khoản')
-                            ),
-                    },
-                  ]}
-                  {...tailFormItemLayout}
-                >
-                  <Checkbox>
-                    Tôi đã đọc <a href="#">điểu khoản</a>
-                  </Checkbox>
-                </Form.Item>
-                <CustomButtonForm>
-                  <Button type="primary" htmlType="submit">
-                    Đăng ký
-                  </Button>
-                  <Link href="/signin">
-                    <a>
-                      <Button type="primary">Đăng nhập</Button>
-                    </a>
-                  </Link>
-                </CustomButtonForm>
-              </Form>
-            </Div>
-          </Content>
-        </Layout>
-        <CustomSider>Sider</CustomSider>
-      </CustomLayout>
-    </div>
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                valuePropName="checked"
+                rules={[
+                  {
+                    validator: (_, value) =>
+                      value
+                        ? Promise.resolve()
+                        : Promise.reject(
+                            new Error('Làm ơn chấp nhận điều khoản')
+                          ),
+                  },
+                ]}
+                {...tailFormItemLayout}
+              >
+                <Checkbox>
+                  Tôi đã đọc <a href="#">điểu khoản</a>
+                </Checkbox>
+              </Form.Item>
+              <CustomButtonForm>
+                <Button type="primary" htmlType="submit">
+                  Đăng ký
+                </Button>
+                <Link href="/signin">
+                  <a>
+                    <Button type="primary">Đăng nhập</Button>
+                  </a>
+                </Link>
+              </CustomButtonForm>
+            </Form>
+          </Div>
+        </Content>
+      </Layout>
+      <CustomSider>Sider</CustomSider>
+    </CustomLayout>
   );
 };
 
-export default Signup;
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps = async () => {
+  const Providers = await providers();
   return {
-    props: { providers: await providers() },
+    props: { Providers },
   };
-}
+};
+
+export default Signup;
