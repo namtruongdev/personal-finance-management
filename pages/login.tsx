@@ -8,24 +8,16 @@ import {
   notification,
   Spin,
 } from 'antd';
+
 import {
-  FacebookFilled,
-  GithubOutlined,
-  GoogleOutlined,
-} from '@ant-design/icons';
-import {
-  ButtonIcon,
-  ButtonNoBorder,
   CustomLayout,
   CustomSider,
   Div,
   DivIcon,
-  DivIconPlugin,
   MissPass,
   SignTitle,
 } from '@components/forms/register/styles';
-import { Props } from 'interface/formInterface';
-import { signIn, useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';

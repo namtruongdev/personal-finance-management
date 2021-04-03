@@ -1,11 +1,6 @@
 import Link from 'next/link';
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 
-import {
-  FacebookFilled,
-  GithubOutlined,
-  GoogleOutlined,
-} from '@ant-design/icons';
 import {
   Button,
   Checkbox,
@@ -16,19 +11,13 @@ import {
   notification,
 } from 'antd';
 import {
-  ButtonIcon,
-  ButtonNoBorder,
   CustomButtonForm,
   CustomLayout,
   CustomSider,
   Div,
-  DivIcon,
-  DivIconPlugin,
   SignTitle,
 } from '@components/forms/register/styles';
 
-import { Props } from 'interface/formInterface';
-import { providers, signIn, useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
 
 const { Content } = Layout;
@@ -56,14 +45,8 @@ const formItemLayout = {
 };
 
 const Signup = () => {
-  const [session] = useSession();
   const router = useRouter();
 
-  useEffect(() => {
-    if (session) {
-      router.push('/');
-    }
-  }, [session]);
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
