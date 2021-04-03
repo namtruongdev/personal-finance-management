@@ -25,7 +25,6 @@ import {
   SignTitle,
 } from '@components/forms/register/styles';
 import { Props } from 'interface/formInterface';
-import Cookies from 'js-cookie';
 import { signIn, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -37,12 +36,12 @@ export const ButtonSignin = styled(Button)`
     margin-bottom: 0px !important;
   }
 `;
-const Signin = ({ providers: signInProviders }: Props) => {
+const Signin = () => {
   const [session] = useSession();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     if (session) {
-      router.push('/');
+      // router.push('/');
     }
   }, [session]);
   const [form] = Form.useForm();
@@ -50,7 +49,7 @@ const Signin = ({ providers: signInProviders }: Props) => {
 
   const onFinish = async (values: unknown) => {
     setLoading(true);
-    const loginApi = await fetch(`http://localhost:3000/api/signin`, {
+    const loginApi = await fetch(`http://localhost:3000/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -61,8 +60,6 @@ const Signin = ({ providers: signInProviders }: Props) => {
     const result = await loginApi.json();
 
     if (result.status === 'success' && result.token) {
-      Cookies.set('token', result.token, { secure: true });
-
       router.push('/');
 
       setLoading(false);

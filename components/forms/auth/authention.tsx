@@ -1,15 +1,12 @@
 import { LoginOutlined, UserOutlined } from '@ant-design/icons';
 import { IconAnt, NameIcon, SpanImg } from '@components/forms/register/styles';
-import { setLogout } from 'constants/until';
 import { signOut, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import React from 'react';
 
 export default function PageAuth() {
   const [session] = useSession();
-  const handleOnClickLogout = (e) => {
-    setLogout(e);
-  };
+  const handleOnClickLogout = (e) => {};
   return (
     <>
       {session ? (

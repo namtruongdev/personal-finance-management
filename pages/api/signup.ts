@@ -1,27 +1,41 @@
-import bcrypt from 'bcryptjs';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { hash } from 'bcrypt';
 import db from '@utils/database/index';
 
-export default async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const salt = bcrypt.genSaltSync(12);
-    const users = await db.collection('users').get();
-    const usersData = users.docs.map((user) => user.data());
+const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { method, body } = req;
 
-    if (usersData.some((entry) => entry.email === email)) {
-      res
-        .status(200)
-        .json({ error: 'ERROR', message: 'Email đã được đăng kí!' });
-    } else {
-      const hash = bcrypt.hashSync(password, salt);
-      const data = { ...req.body, password: hash };
-      const { id } = await db.collection('users').add({
-        ...data,
-        created: new Date().toISOString(),
-      });
-      res.status(200).json({ id });
-    }
-  } catch (e) {
-    res.status(400).end();
+  if (method === 'GET') {
+    return res.end('Not support GET request!');
   }
+
+  const { email, password } = body;
+
+  if (!email || !password) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Thiếu thông tin đăng ký!',
+    });
+  }
+
+  const SALT = 10;
+  const users = await db.collection('users').get();
+  const usersData = users.docs.map((user) => user.data());
+
+  if (usersData.some((entry) => entry.email === email)) {
+    return res
+      .status(400)
+      .json({ status: 'error', message: 'Email đã được sử dụng!' });
+  }
+  const genHash = await hash(password, SALT);
+
+  const data = { ...req.body, password: genHash };
+  const { id } = await db.collection('users').add({
+    ...data,
+    createdAt: new Date().toJSON(),
+  });
+
+  return id && res.status(200).json({ status: 'success' });
 };
+
+export default Signup;

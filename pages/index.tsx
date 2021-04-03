@@ -1,30 +1,16 @@
+import Link from 'next/link';
+import type { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { LoginOutlined, UserOutlined } from '@ant-design/icons';
-import {
-  ButtonIcon,
-  IconAnt,
-  NameIcon,
-  SpanImg,
-} from '@components/forms/register/styles';
-import MainLayout from '@layouts/main';
-import { signOut, useSession, signIn } from 'next-auth/client';
-import Link from 'next/link';
-import {
-  absoluteUrl,
-  getAppCookies,
-  setLogout,
-  verifyToken,
-} from 'constants/until';
 
-const Home = ({ profile, data }) => {
+import MainLayout from '@layouts/main';
+import { signOut, useSession, signIn, getSession } from 'next-auth/client';
+
+const Home = () => {
   const [session] = useSession();
   console.log(session, 'hihi');
 
   const router = useRouter();
-  useEffect(() => {
-    // if (!session) router.replace('/signin');
-  }, [session]);
 
   return (
     <MainLayout>
@@ -36,20 +22,17 @@ const Home = ({ profile, data }) => {
   );
 };
 
-// export const getServerSideProps = async (context) => {
-//   const { req } = context;
-//   const { origin } = absoluteUrl(req);
+export const getServerSideProps: GetServerSideProps = async (
+  ctx: GetServerSidePropsContext
+) => {
+  const session = await getSession(ctx);
+  console.log(ctx.req.cookies);
 
-//   const baseApiUrl = `${origin}/api`;
+  return {
+    props: {
+      session,
+    },
+  };
+};
 
-//   const { token } = getAppCookies(req);
-//   const profile = token ? verifyToken(token.split(' ')[1]) : '';
-
-//   return {
-//     props: {
-//       baseApiUrl,
-//       profile,
-//     },
-//   };
-// };
 export default Home;

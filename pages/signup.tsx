@@ -1,4 +1,3 @@
-import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import React, { useEffect, useMemo } from 'react';
 
@@ -56,11 +55,9 @@ const formItemLayout = {
   wrapperCol: { span: 24 },
 };
 
-const Signup = ({ Providers }: any) => {
+const Signup = () => {
   const [session] = useSession();
   const router = useRouter();
-
-  console.log(Providers, 'hihi');
 
   useEffect(() => {
     if (session) {
@@ -72,15 +69,10 @@ const Signup = ({ Providers }: any) => {
   const onFinish = async (values) => {
     const rep = await fetch('http://localhost:3000/api/signup', {
       method: 'POST',
-      headers: new Headers({
+      headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
-      }),
-      body: JSON.stringify({
-        email: values.email,
-        name: values.name,
-        password: values.password,
-      }),
+      },
+      body: JSON.stringify(values),
     });
     const repData = await rep.json();
     if (rep.status === 200) {
@@ -111,40 +103,7 @@ const Signup = ({ Providers }: any) => {
         >
           <Div>
             <SignTitle>Đăng ký</SignTitle>
-            <DivIcon>
-              {/* {Object.values(prd).map((provider) => (
-                <DivIconPlugin key={provider.name}>
-                  <ButtonNoBorder onClick={() => signIn(provider.id)}>
-                    {provider.name === 'Facebook' ? (
-                      <ButtonIcon margin="margin">
-                        <FacebookFilled
-                          style={{ fontSize: 22, marginRight: '10px' }}
-                        />
-                      </ButtonIcon>
-                    ) : (
-                      ''
-                    )}
-                    {provider.name === 'Google' ? (
-                      <ButtonIcon>
-                        <GoogleOutlined style={{ fontSize: '22px' }} />
-                      </ButtonIcon>
-                    ) : (
-                      ''
-                    )}
-                    {provider.name === 'GitHub' ? (
-                      <ButtonIcon>
-                        <GithubOutlined style={{ fontSize: '22px' }} />
-                      </ButtonIcon>
-                    ) : (
-                      ''
-                    )}
-                  </ButtonNoBorder>
-                </DivIconPlugin>
-              ))} */}
-            </DivIcon>
-            <SignTitle level={5}>
-              <small>hoặc sử dụng email của bạn để đăng ký</small>
-            </SignTitle>
+
             <Form
               {...formItemLayout}
               layout="vertical"
@@ -256,13 +215,6 @@ const Signup = ({ Providers }: any) => {
       <CustomSider>Sider</CustomSider>
     </CustomLayout>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const Providers = await providers();
-  return {
-    props: { Providers },
-  };
 };
 
 export default Signup;

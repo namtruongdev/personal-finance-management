@@ -1,9 +1,11 @@
+/* eslint-disable no-param-reassign */
+import type { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { sign, verify } from 'jsonwebtoken';
+import { JWT } from 'next-auth/jwt';
 
 const options = {
-  site: process.env.NEXTAUTH_URL,
   providers: [
     Providers.Facebook({
       clientId: process.env.FACEBOOK_ID,
@@ -22,33 +24,48 @@ const options = {
   secret: process.env.JWT_SECRET,
   session: {
     jwt: true,
-    maxAge: 1 * 60,
   },
 
   jwt: {
     secret: process.env.JWT_SECRET,
-    encryption: true,
+    verificationOptions: {
+      algorithms: ['HS256'],
+    },
+
+    async encode({ secret, token }) {
+      const claims = {
+        sub: await token?.sub?.toString(),
+        name: await token?.name,
+        picture: await token?.picture,
+        iat: Math.floor(Date.now() / 1000),
+        exp: Math.floor(Date.now() / 1000) + 60,
+      };
+
+      const accessToken = sign(claims, secret);
+      return accessToken;
+    },
+    async decode({ secret, token }) {
+      const decodedToken = verify(token, secret) as JWT;
+      const decoded = {
+        name: decodedToken.name,
+        email: decodedToken.email,
+        picture: decodedToken.picture,
+      };
+      return decoded;
+    },
   },
 
-  callbacks: {
-    async signIn(user) {
-      console.log(user, 'hhih');
-
-      return true;
-    },
-    async jwt(props) {
-      console.log(props, 'hoho');
-
-      return props;
+  cookies: {
+    sessionToken: {
+      name: `auth`,
+      options: {
+        httpOnly: true,
+        sameSite: 'strict' as 'strict',
+        path: '/',
+        secure: process.env.NODE_ENV !== 'development',
+      },
     },
   },
-
-  // Events are useful for logging
-  // https://next-auth.js.org/configuration/events
-  events: {},
-
-  // Enable debug messages in the console if you are having problems
-  debug: false,
 };
 
 const Auth = (req: NextApiRequest, res: NextApiResponse) =>
