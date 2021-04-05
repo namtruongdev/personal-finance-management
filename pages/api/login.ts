@@ -1,10 +1,7 @@
+// import db from '@utils/database/index';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import bcrypt from 'bcrypt';
-import cookie from 'cookie';
-import { sign } from 'jsonwebtoken';
-import db from '@utils/database/index';
 
-const secret = process.env.JWT_SECRET;
+// const secret = process.env.JWT_SECRET;
 
 const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
   const { body, method } = req;
@@ -14,7 +11,7 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { email, password } = body;
-  const users = await db.collection('users').get();
+  // const users = await db.collection('users').get();
 
   if (!email || !password) {
     return res.status(400).json({

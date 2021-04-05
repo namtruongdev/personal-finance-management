@@ -1,27 +1,17 @@
-import Link from 'next/link';
-import React from 'react';
-
-import { verify } from 'jsonwebtoken';
 import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Layout,
-  message,
-  notification,
-} from 'antd';
-import {
+  ButtonSubmit,
   CustomButtonForm,
+  CustomContent,
   CustomLayout,
   CustomSider,
   Div,
   SignTitle,
 } from '@components/forms/register/styles';
-
+import { Checkbox, Form, Input, Layout, message, notification } from 'antd';
+import { verify } from 'jsonwebtoken';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-
-const { Content } = Layout;
+import React from 'react';
 
 export const success = () => {
   message.success('done', 1);
@@ -51,7 +41,7 @@ const Signup = () => {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyMzkxMTF9.SD48xJhVoTZPfOj3WN9jq8um5Fdp7TM-ZMI8OrMTsS4',
     'your-256-bit-secre',
     (err, decoded) => {
-      console.log(err.message);
+      // console.log(err.message);
     }
   );
 
@@ -85,13 +75,7 @@ const Signup = () => {
   return (
     <CustomLayout>
       <Layout>
-        <Content
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
+        <CustomContent>
           <Div>
             <SignTitle>Đăng ký</SignTitle>
 
@@ -125,7 +109,11 @@ const Signup = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please input your name!',
+                    message: 'Hãy nhập tên người dùng!',
+                  },
+                  {
+                    pattern: /^[a-zA-Z0-9_]+$/,
+                    message: 'Không nhập kí tự đặc biệt',
                   },
                 ]}
               >
@@ -133,7 +121,7 @@ const Signup = () => {
               </Form.Item>
               <Form.Item
                 name="password"
-                label="Mật khảu"
+                label="Mật khẩu"
                 rules={[
                   {
                     required: true,
@@ -190,18 +178,18 @@ const Signup = () => {
                 </Checkbox>
               </Form.Item>
               <CustomButtonForm>
-                <Button type="primary" htmlType="submit">
+                <ButtonSubmit type="primary" htmlType="submit">
                   Đăng ký
-                </Button>
-                <Link href="/signin">
+                </ButtonSubmit>
+                <Link href="/login">
                   <a>
-                    <Button type="primary">Đăng nhập</Button>
+                    <ButtonSubmit type="primary">Đăng nhập</ButtonSubmit>
                   </a>
                 </Link>
               </CustomButtonForm>
             </Form>
           </Div>
-        </Content>
+        </CustomContent>
       </Layout>
       <CustomSider>Sider</CustomSider>
     </CustomLayout>
