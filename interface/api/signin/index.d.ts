@@ -1,6 +1,12 @@
 interface User {
-  sub: string;
   email: string;
+  username: string;
   createdAt: string;
   password: string;
+  refreshTokens: [
+    {
+      hash: string;
+      expiry: string;
+    }
+  ];
 }

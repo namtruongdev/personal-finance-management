@@ -8,6 +8,7 @@ import {
   notification,
   Spin,
 } from 'antd';
+import type {GetServerSidePropsContext} from 'next'
 
 import {
   CustomLayout,
@@ -21,7 +22,7 @@ import { useSession } from 'next-auth/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
-
+import {withAuth} from '@utils/auth/index'
 const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
   .ant-form-vertical .ant-form-item {
@@ -167,4 +168,6 @@ const Signin = () => {
     </Spin>
   );
 };
+
+export const getServerSideProps = withAuth(ctx: getServerSidePropsContext)
 export default Signin;

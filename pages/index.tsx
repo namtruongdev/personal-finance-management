@@ -2,6 +2,7 @@ import React from 'react';
 
 import MainLayout from '@layouts/main';
 import { signIn } from 'next-auth/client';
+import { withAuthSSP } from '@utils/auth/index';
 
 const Home = () => (
   <MainLayout>
@@ -11,5 +12,7 @@ const Home = () => (
     </button>
   </MainLayout>
 );
+
+export const getServerSideProps = withAuthSSP();
 
 export default Home;
