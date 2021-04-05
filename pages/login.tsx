@@ -1,4 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import {
+  CustomContent,
+  CustomLayout,
+  CustomSider,
+  Div,
+  MissPass,
+  SignTitle,
+} from '@components/forms/register/styles';
 import {
   Button,
   Checkbox,
@@ -8,22 +15,12 @@ import {
   notification,
   Spin,
 } from 'antd';
-import type { GetServerSidePropsContext } from 'next';
-
-import {
-  CustomLayout,
-  CustomSider,
-  Div,
-  DivIcon,
-  MissPass,
-  SignTitle,
-} from '@components/forms/register/styles';
 import { useSession } from 'next-auth/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
-const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
   .ant-form-vertical .ant-form-item {
     margin-bottom: 0px !important;
@@ -93,13 +90,7 @@ const Signin = () => {
       <div>
         <CustomLayout>
           <Layout>
-            <Content
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
+            <CustomContent>
               <Div>
                 <SignTitle>Đăng nhập</SignTitle>
                 <Form
@@ -110,18 +101,17 @@ const Signin = () => {
                   onFinish={onFinish}
                   scrollToFirstError
                 >
-                  <DivIcon />
                   <Form.Item
-                    name="email"
-                    label="E-mail"
+                    name="name"
+                    label="Name"
                     rules={[
                       {
-                        type: 'email',
-                        message: 'The input is not valid E-mail!',
+                        required: true,
+                        message: 'Hãy nhập tài khoản',
                       },
                       {
-                        required: true,
-                        message: 'Please input your E-mail!',
+                        pattern: /^[a-zA-Z0-9_]+$/,
+                        message: 'Không nhập kí tự đặc biệt',
                       },
                     ]}
                   >
@@ -133,18 +123,14 @@ const Signin = () => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please input your password!',
+                        message: 'Hãy nhập mật khẩu',
                       },
                     ]}
                     hasFeedback
                   >
                     <Input.Password />
                   </Form.Item>
-                  <Form.Item
-                    // name="agreement"
-                    valuePropName="checked"
-                    {...tailFormItemLayout}
-                  >
+                  <Form.Item valuePropName="checked" {...tailFormItemLayout}>
                     <Checkbox>Nhớ mật khẩu</Checkbox>
                     <MissPass href="#">Quên mật khẩu?</MissPass>
                   </Form.Item>
@@ -160,7 +146,7 @@ const Signin = () => {
                   </p>
                 </Form>
               </Div>
-            </Content>
+            </CustomContent>
           </Layout>
           <CustomSider>Sider</CustomSider>
         </CustomLayout>
