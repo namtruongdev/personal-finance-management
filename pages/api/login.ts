@@ -14,19 +14,7 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { email, password } = body;
-  const listUsers = await db.collection('users').get();
-
-  const usersData = listUsers.docs.map(
-    (user): User => {
-      const { email: mail, password: pwd, createdAt } = user.data();
-      return {
-        sub: user.id,
-        email: mail,
-        password: pwd,
-        createdAt,
-      };
-    }
-  );
+  const users = await db.collection('users').get();
 
   if (!email || !password) {
     return res.status(400).json({
@@ -36,37 +24,37 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   /* Check user email in database */
-  const payload = usersData.find((user) => user.email === email);
+  // const payload = usersData.find((user) => user.email === email);
 
-  if (!payload) {
-    /* Send error with message */
-    return res
-      .status(400)
-      .json({ status: '400', mesage: 'Tài khoản không tồn tại!' });
-  }
+  // if (!payload) {
+  //   /* Send error with message */
+  //   return res
+  //     .status(400)
+  //     .json({ status: '400', mesage: 'Tài khoản không tồn tại!' });
+  // }
 
-  const isMatch = await bcrypt.compare(password, payload.password);
+  // const isMatch = await bcrypt.compare(password, payload.password);
 
-  if (isMatch) {
-    /* Sign token */
-    const token = sign(payload, secret, { expiresIn: '1m' });
+  // if (isMatch) {
+  //   /* Sign token */
+  //   // const token = sign(payload, secret, { expiresIn: '1m' });
 
-    res.setHeader(
-      'Set-Cookie',
-      cookie.serialize('auth', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV !== 'development',
-        sameSite: 'strict',
-        maxAge: 60,
-        path: '/',
-      })
-    );
+  //   res.setHeader(
+  //     'Set-Cookie',
+  //     cookie.serialize('auth', token, {
+  //       httpOnly: true,
+  //       secure: process.env.NODE_ENV !== 'development',
+  //       sameSite: 'strict',
+  //       maxAge: 60,
+  //       path: '/',
+  //     })
+  //   );
 
-    return res.status(200).json({
-      status: 'success',
-      token,
-    });
-  }
+  //   // return res.status(200).json({
+  //   //   status: 'success',
+  //   //   token,
+  //   // });
+  // }
 
   return res.status(400).json({ status: 'error', message: 'Sai mật khẩu!' });
 };

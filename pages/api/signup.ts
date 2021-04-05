@@ -43,12 +43,10 @@ const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
     username,
     password: genHash,
     createdAt: new Date().toJSON(),
-    refreshTokens: [
-      {
-        hash: refreshTokenHash,
-        expiry: refreshTokenExpiry,
-      },
-    ],
+    refreshTokens: {
+      hash: refreshTokenHash,
+      expiry: refreshTokenExpiry,
+    },
   };
   const { id } = await db.collection('users').add(payload);
 
@@ -56,7 +54,8 @@ const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
     'Set-Cookie',
     setCookie({ name: 'refresh-token', value: refreshToken })
   );
-  return id && res.status(200).json({ status: 'success' });
+
+  return res.status(200).json({ id, message: 'OK' });
 };
 
 export default Signup;

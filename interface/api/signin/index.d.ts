@@ -3,10 +3,8 @@ interface User {
   username: string;
   createdAt: string;
   password: string;
-  refreshTokens: [
-    {
-      hash: string;
-      expiry: string;
-    }
-  ];
+  refreshTokens: {
+    hash: string;
+    expiry: string;
+  };
 }
