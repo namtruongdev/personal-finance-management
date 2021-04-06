@@ -51,7 +51,7 @@ const Signup = () => {
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE1MTYyMzkxMTF9.SD48xJhVoTZPfOj3WN9jq8um5Fdp7TM-ZMI8OrMTsS4',
     'your-256-bit-secre',
     (err, decoded) => {
-      console.log(err.message);
+      // console.log(err.message);
     }
   );
 

@@ -34,7 +34,7 @@ export default function PageAuth() {
       ) : (
         <>
           <section>
-            <Link href="/signin">
+            <Link href="/login">
               <a>
                 {/* <ButtonIcon htmlType="button"> */}
                 <IconAnt>

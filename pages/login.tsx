@@ -4,7 +4,7 @@ import {
   Div,
   DivIcon,
   MissPass,
-  SignTitle
+  SignTitle,
 } from '@components/forms/register/styles';
 import {
   Button,
@@ -13,14 +13,13 @@ import {
   Input,
   Layout,
   notification,
-  Spin
+  Spin,
 } from 'antd';
 import { useSession } from 'next-auth/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
-
 
 const { Content } = Layout;
 export const ButtonSignin = styled(Button)`
@@ -114,7 +113,6 @@ const Signin = () => {
                     name="username"
                     label="Username"
                     rules={[
-                    
                       {
                         required: true,
                         message: 'Please input your E-mail!',
