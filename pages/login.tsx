@@ -51,7 +51,7 @@ const Signin = () => {
     const result = await loginApi.json();
 
     setLoading(false);
-    if (result.status === 'success' && result.token) {
+    if (result.status === 'OK') {
       router.push('/');
     } else {
       notification.warning({

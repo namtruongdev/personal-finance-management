@@ -145,7 +145,7 @@ const Signup = () => {
               </Form.Item>
 
               <Form.Item
-                name="confirm"
+                name="rePassword"
                 label="Xác nhận mật khẩu"
                 dependencies={['password']}
                 hasFeedback
@@ -178,8 +178,8 @@ const Signup = () => {
                       value
                         ? Promise.resolve()
                         : Promise.reject(
-                            new Error('Làm ơn chấp nhận điều khoản')
-                          ),
+                          new Error('Làm ơn chấp nhận điều khoản')
+                        ),
                   },
                 ]}
                 {...tailFormItemLayout}

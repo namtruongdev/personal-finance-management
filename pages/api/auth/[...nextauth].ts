@@ -55,17 +55,7 @@ const options = {
     },
   },
 
-  cookies: {
-    sessionToken: {
-      name: `auth`,
-      options: {
-        httpOnly: true,
-        sameSite: 'strict' as 'strict',
-        path: '/',
-        secure: process.env.NODE_ENV !== 'development',
-      },
-    },
-  },
+
 };
 
 const Auth = (req: NextApiRequest, res: NextApiResponse) =>

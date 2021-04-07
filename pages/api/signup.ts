@@ -8,6 +8,7 @@ import db from '@utils/database';
 
 const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
+  console.log(body);
 
   const { email, username, password } = body;
 
@@ -24,7 +25,7 @@ const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
   const users = await db.collection('users').get();
   const usersData = users.docs.map((user) => user.data());
 
-  if (usersData.some((entry) => entry.email === email)) {
+  if (usersData.some((entry) => entry.username === email)) {
     return res
       .status(400)
       .json({ status: 'error', message: 'Email đã được sử dụng!' });
