@@ -67,5 +67,10 @@ export const ROUTES: Route = {
       name: 'Thống kê',
       icon: <PlaySquareOutlined />,
     },
+    {
+      path: '/phan-bo-loi-nhuan',
+      name: 'Phân bố lợi nhuận',
+      icon: <PlaySquareOutlined />,
+    },
   ],
 };

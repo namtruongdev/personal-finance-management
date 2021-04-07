@@ -1,47 +1,21 @@
-import { SALT } from '@constants/index';
-// eslint-disable-next-line import/no-cycle
-import { setCookie } from '@utils/auth';
-import db from '@utils/database/index';
-import { hash } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
 import type { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { SALT } from '@constants/index';
+import db from '@utils/database';
+import { hash, compare } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
+import { setCookie } from './setCookie';
 
 const secret = process.env.JWT_SECRET;
 
 export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
   ctx: GetServerSidePropsContext
 ) => {
-  const cookie = ctx?.req?.cookies;
-  const res = ctx?.res;
-  // const body =ctx.req.body;
-  // const { username, password } = body;
+  const { res, req } = ctx;
+  const { cookies } = req;
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { token, user_id, refresh_token } = cookie;
-  // console.log(token, 'token')
-  let user = {
-    id: '',
-    email: '',
-    password: '',
-    refreshTokens: { expiry: '', hash: '' },
-  };
-  if (user_id) {
-    await db
-      .collection('users')
-      .where('id', '==', user_id)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          user = { ...user, ...doc.data(), id: doc.id };
-        });
-      })
-      .catch((error) => {
-        // console.log(error)
-      });
-  }
-
-  if (!user_id || !refresh_token) {
+  const { auth, user_id: userId, refresh_token: refreshToken } = cookies;
+  if (!userId || !refreshToken) {
     return {
       redirect: {
         destination: '/login',
@@ -49,16 +23,44 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
       },
     };
   }
-  if (user_id === user.id && refresh_token === user.refreshTokens.hash) {
-    if (!token) {
-      const newToken = await sign(user, secret, { expiresIn: '1m' });
-      const refreshToken = uuidv4();
-      const refreshTokenHash = await hash(refreshToken, SALT);
+  let user = {
+    id: '',
+    email: '',
+    password: '',
+    refreshTokens: { expiry: '', hash: '' },
+  };
+  if (userId) {
+    const data = await db.collection('users').where('id', '==', userId).get();
+    data.forEach((doc) => {
+      user = { ...user, ...doc.data(), id: doc.id };
+    });
+  }
+
+  const isMatch = await compare(refreshToken, user.refreshTokens.hash);
+  if (!isMatch) {
+    res.setHeader('Set-Cookie', [
+      setCookie({ name: 'auth', value: '', options: { maxAge: 0 } }),
+      setCookie({ name: 'user_id', value: '', options: { maxAge: 0 } }),
+      setCookie({ name: 'refresh_token', value: '', options: { maxAge: 0 } }),
+    ]);
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: true,
+      },
+    };
+  }
+  if (userId === user.id && isMatch) {
+    if (!auth) {
+      const newToken = sign(user, secret, { expiresIn: '1m' });
+      const newRefreshToken = uuidv4();
+      const newRefreshTokenHash = await hash(newRefreshToken, SALT);
       res.setHeader('Set-Cookie', [
         setCookie({ name: 'auth', value: newToken }),
         setCookie({ name: 'user_id', value: user.id }),
-        setCookie({ name: 'refresh_token', value: refreshToken }),
+        setCookie({ name: 'refresh_token', value: newRefreshToken }),
       ]);
+
       await db
         .collection('users')
         .doc(user.id)
@@ -66,36 +68,18 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
           ...user,
           refreshTokens: {
             ...user.refreshTokens,
-            hash: refreshTokenHash,
+            hash: newRefreshTokenHash,
           },
-        })
-        .then(() => {
-          // console.log("Document successfully written!");
-        })
-        .catch((error) => {
-          // console.error("Error writing document: ", error);
         });
     }
     return {
-      redirect: {
-        destination: '/',
-        permanent: true,
-      },
+      props: {},
     };
   }
-  // return 0;
-
-  // const user = verify(token, secret, async (err, decoded) => {
-  //   console.log(err, 'loi');
-
-  //   if (!err && decoded) {
-  //     // console.log(user);
-  //   }
-  // });
-
   return {
-    props: {
-      user: {},
+    redirect: {
+      destination: '/login',
+      permanent: true,
     },
   };
 };

@@ -40,7 +40,12 @@ const Signin = () => {
 
   const onFinish = async (values: unknown) => {
     setLoading(true);
+<<<<<<< HEAD:pages/login.tsx
     const loginApi = await fetch(`http://localhost:3000/api/login`, {
+=======
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const loginApi: any = await fetch(`http://localhost:3000/api/auth`, {
+>>>>>>> truong1.0.2:pages/signin.tsx
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -49,11 +54,18 @@ const Signin = () => {
     });
 
     const result = await loginApi.json();
+<<<<<<< HEAD:pages/login.tsx
 
-    setLoading(false);
     if (result.status === 'success' && result.token) {
+=======
+    if (result.success && result.token) {
+      Cookies.set('token', result.token);
+>>>>>>> truong1.0.2:pages/signin.tsx
       router.push('/');
+
+      setLoading(false);
     } else {
+      setLoading(false);
       notification.warning({
         message: '',
         description: 'Đăng nhập thất bại',
@@ -106,14 +118,50 @@ const Signin = () => {
                   onFinish={onFinish}
                   scrollToFirstError
                 >
+<<<<<<< HEAD:pages/login.tsx
                   <DivIcon />
                   <Form.Item
                     name="username"
-                    label="Tên người dùng"
+                    label="Username"
+=======
+                  <DivIcon>
+                    {Object.values(signInProviders).map((provider) => (
+                      <DivIconPlugin key={provider.name}>
+                        {/* <form> */}
+                        <ButtonNoBorder onClick={() => signIn(provider.id)}>
+                          {provider.name === 'Facebook' ? (
+                            <ButtonIcon margin="margin">
+                              <FacebookFilled style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                          {provider.name === 'Google' ? (
+                            <ButtonIcon>
+                              <GoogleOutlined style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                          {provider.name === 'GitHub' ? (
+                            <ButtonIcon>
+                              <GithubOutlined style={{ fontSize: '22px' }} />
+                            </ButtonIcon>
+                          ) : (
+                            ''
+                          )}
+                        </ButtonNoBorder>
+                      </DivIconPlugin>
+                    ))}
+                  </DivIcon>
+                  <Form.Item
+                    name="name"
+                    label="Name"
+>>>>>>> truong1.0.2:pages/signin.tsx
                     rules={[
                       {
                         required: true,
-                        message: 'Please input your E-mail!',
+                        message: 'Hãy nhập tài khoản',
                       },
                     ]}
                   >
@@ -125,18 +173,22 @@ const Signin = () => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please input your password!',
+                        message: 'Hãy nhập mật khẩu',
                       },
                     ]}
                     hasFeedback
                   >
                     <Input.Password />
                   </Form.Item>
+<<<<<<< HEAD:pages/login.tsx
                   <Form.Item
                     // name="agreement"
                     valuePropName="checked"
                     {...tailFormItemLayout}
                   >
+=======
+                  <Form.Item valuePropName="checked" {...tailFormItemLayout}>
+>>>>>>> truong1.0.2:pages/signin.tsx
                     <Checkbox>Nhớ mật khẩu</Checkbox>
                     <MissPass href="#">Quên mật khẩu?</MissPass>
                   </Form.Item>
@@ -160,7 +212,13 @@ const Signin = () => {
     </Spin>
   );
 };
-// export const getServerSideProps = async() => {
 
-// }
 export default Signin;
+<<<<<<< HEAD:pages/login.tsx
+=======
+export async function getServerSideProps() {
+  return {
+    props: { providers: await providers() },
+  };
+}
+>>>>>>> truong1.0.2:pages/signin.tsx

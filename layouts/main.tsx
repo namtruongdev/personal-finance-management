@@ -61,7 +61,6 @@ const Main = ({ children }) => {
     </Link>
   );
   const Div = () => <PageAuth />;
-  // const Div1 = () => <span>hihihih</span>
   return (
     <>
       <ProLayout

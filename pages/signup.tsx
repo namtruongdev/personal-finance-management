@@ -1,7 +1,10 @@
-import Link from 'next/link';
-import React from 'react';
-
-import { verify } from 'jsonwebtoken';
+import {
+  CustomButtonForm,
+  CustomLayout,
+  CustomSider,
+  Div,
+  SignTitle,
+} from '@components/forms/register/styles';
 import {
   Button,
   Checkbox,
@@ -11,15 +14,11 @@ import {
   message,
   notification,
 } from 'antd';
-import {
-  CustomButtonForm,
-  CustomLayout,
-  CustomSider,
-  Div,
-  SignTitle,
-} from '@components/forms/register/styles';
-
+import { FormSignup } from 'interface/formInterface';
+import { verify } from 'jsonwebtoken';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
+import React from 'react';
 
 const { Content } = Layout;
 
@@ -57,7 +56,7 @@ const Signup = () => {
 
   const [form] = Form.useForm();
 
-  const onFinish = async (values) => {
+  const onFinish = async (values: FormSignup) => {
     const rep = await fetch('http://localhost:3000/api/signup', {
       method: 'POST',
       headers: {

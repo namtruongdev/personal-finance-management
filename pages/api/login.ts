@@ -5,6 +5,7 @@ import bcrypt, { hash } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { v4 as uuidv4 } from 'uuid';
+// import router from
 
 const secret = process.env.JWT_SECRET;
 
@@ -40,18 +41,18 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  await db
+  const a = await db
     .collection('users')
     .where('username', '==', username)
-    .get()
-    .then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        user = { ...user, ...doc.data(), id: doc.id };
-      });
-    })
-    .catch((error) => {
-      // console.log(error)
-    });
+    .get();
+  a.forEach((doc) => {
+    user = { ...user, ...doc.data(), id: doc.id };
+  });
+  // .then((querySnapshot) => {
+  //   querySnapshot.forEach((doc) => {
+  //     user = { ...user, ...doc.data(), id: doc.id };
+  //   });
+  // })
   // sửa refreshTokenHash trong dataBase
   await db
     .collection('users')
@@ -100,10 +101,13 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
       //   })
       // );
 
-      return res.status(200).json({
-        status: 'success',
-        token,
-      });
+      return (
+        // res.redirect('/'),
+        res.status(200).json({
+          status: 'success',
+          token,
+        })
+      );
     }
     // không match
     return res.status(400).json({ status: 'error', message: 'Sai mật khẩu!' });
