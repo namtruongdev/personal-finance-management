@@ -1,13 +1,15 @@
-import Link from 'next/link';
-import React, { useMemo, useState } from 'react';
-import { useRouter } from 'next/router';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import {
   ContentContainer,
   FormContent,
   FormLayout,
   FormSider,
 } from '@components/forms';
+import {
+  Facebook,
+  Github,
+  Google,
+  IconContainer,
+} from '@components/forms/login';
 import {
   Button,
   Checkbox,
@@ -19,6 +21,11 @@ import {
   Spin,
   Typography,
 } from 'antd';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { signIn } from 'next-auth/client';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useMemo, useState } from 'react';
 
 const { Title, Paragraph } = Typography;
 
@@ -85,7 +92,30 @@ const Signin = () => {
         <ContentContainer>
           <Spin spinning={loading}>
             <Row justify="center">
-              <Title>Đăng nhập</Title>
+              <Col span={24}>
+                <Row justify="center">
+                  <Title>Đăng nhập</Title>
+                </Row>
+              </Col>
+              <IconContainer span={24}>
+                <Row justify="center" gutter={[15, 15]}>
+                  <Col>
+                    <Facebook
+                      onClick={() => signIn('facebook', { redirect: false })}
+                    />
+                  </Col>
+                  <Col>
+                    <Github
+                      onClick={() => signIn('github', { redirect: true })}
+                    />
+                  </Col>
+                  <Col>
+                    <Google
+                      onClick={() => signIn('google', { redirect: false })}
+                    />
+                  </Col>
+                </Row>
+              </IconContainer>
             </Row>
             <Form
               {...formItemLayout}
@@ -137,7 +167,7 @@ const Signin = () => {
                   </Form.Item>
                 </Col>
               </Row>
-              <Form.Item style={{ marginBottom: '5px' }}>
+              <Form.Item>
                 <Button
                   type="primary"
                   block
@@ -148,7 +178,7 @@ const Signin = () => {
                 </Button>
               </Form.Item>
               <Paragraph>
-                Không có tài khoản?
+                Chưa có tài khoản?
                 <Link href="/signup">
                   <a> Đăng ký ngay</a>
                 </Link>
