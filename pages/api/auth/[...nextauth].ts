@@ -32,6 +32,7 @@ const options: NextAuthOptions = {
   jwt: {
     secret: process.env.JWT_SECRET,
     async encode({ secret, token }) {
+
       const claims = {
         sub: token.sub.toString(),
         name: token.name,

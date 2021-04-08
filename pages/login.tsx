@@ -9,7 +9,7 @@ import {
   ContentContainer,
   FormContent,
   FormLayout,
-  FormSider,
+  FormSider
 } from '@components/forms';
 
 import {
@@ -27,7 +27,7 @@ import {
   notification,
   Row,
   Spin,
-  Typography,
+  Typography
 } from 'antd';
 import { signIn } from 'next-auth/client';
 import { fetchAPI } from '@utils/services';
@@ -214,7 +214,8 @@ export const getServerSideProps: GetServerSideProps = async (
     };
   }
   return {
-    props: {},
+    props: {
+    },
   };
 };
 
