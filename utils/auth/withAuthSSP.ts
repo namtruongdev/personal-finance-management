@@ -52,7 +52,6 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
   }
 
   const user = doc.data();
-
   const claims = {
     id: userId,
     userName: user.username,
@@ -114,7 +113,7 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
       });
     }
     return {
-      props: {},
+      props: { user },
     };
   }
   return {
