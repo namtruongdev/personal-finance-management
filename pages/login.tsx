@@ -1,33 +1,27 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-
-import {
-  CustomLayout,
-  CustomSider,
-  Div,
-  DivIcon,
-  MissPass,
-  SignTitle,
-} from '@components/forms/register/styles';
-import {
-  Button,
-  Checkbox,
-  Form,
-  Input,
-  Layout,
-  notification,
-  Spin,
-} from 'antd';
 import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import styled from 'styled-components';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import {
+  ContentContainer,
+  FormContent,
+  FormLayout,
+  FormSider,
+} from '@components/forms';
+import {
+  Button,
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  notification,
+  Row,
+  Spin,
+  Typography,
+} from 'antd';
 
-const { Content } = Layout;
-export const ButtonSignin = styled(Button)`
-  .ant-form-vertical .ant-form-item {
-    margin-bottom: 0px !important;
-  }
-`;
+const { Title, Paragraph } = Typography;
+
 const Signin = () => {
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +41,8 @@ const Signin = () => {
     const results: RESP = await res.json();
 
     if (!res.ok) {
-      notification.error({
+      setLoading(false);
+      return notification.error({
         message: results.message,
       });
     }
@@ -85,86 +80,85 @@ const Signin = () => {
   );
 
   return (
-    <Spin spinning={loading}>
-      <div>
-        <CustomLayout>
-          <Layout>
-            <Content
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
+    <FormLayout>
+      <FormContent>
+        <ContentContainer>
+          <Spin spinning={loading}>
+            <Row justify="center">
+              <Title>Đăng nhập</Title>
+            </Row>
+            <Form
+              {...formItemLayout}
+              layout="vertical"
+              form={form}
+              name="register"
+              onFinish={onFinish}
+              scrollToFirstError
             >
-              <Div>
-                <SignTitle>Đăng nhập</SignTitle>
-                <Form
-                  {...formItemLayout}
-                  layout="vertical"
-                  form={form}
-                  name="register"
-                  onFinish={onFinish}
-                  scrollToFirstError
-                >
-                  <DivIcon />
-                  <Form.Item
-                    name="username"
-                    label="Tên người dùng"
-                    hasFeedback
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng nhập tên người dùng!',
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    name="password"
-                    label="Mật khẩu"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Vui lòng nhập mật khẩu!',
-                      },
-                    ]}
-                    hasFeedback
-                  >
-                    <Input.Password />
-                  </Form.Item>
+              <Form.Item
+                name="username"
+                label="Tên người dùng"
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập tên người dùng!',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                label="Mật khẩu"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Vui lòng nhập mật khẩu!',
+                  },
+                ]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
+              <Row justify="space-between">
+                <Col>
                   <Form.Item
                     name="remember"
                     valuePropName="checked"
                     {...tailFormItemLayout}
                   >
                     <Checkbox>Nhớ mật khẩu</Checkbox>
-                    <MissPass href="#">Quên mật khẩu?</MissPass>
                   </Form.Item>
-                  <Form.Item style={{ marginBottom: '5px' }}>
-                    <ButtonSignin
-                      type="primary"
-                      block
-                      htmlType="submit"
-                      loading={loading}
-                    >
-                      Đăng nhập
-                    </ButtonSignin>
+                </Col>
+                <Col>
+                  <Form.Item>
+                    <Link href="#">Quên mật khẩu?</Link>
                   </Form.Item>
-                  <p>
-                    Không có tài khoản?
-                    <Link href="/signup">
-                      <a> Đăng ký ngay</a>
-                    </Link>
-                  </p>
-                </Form>
-              </Div>
-            </Content>
-          </Layout>
-          <CustomSider>Sider</CustomSider>
-        </CustomLayout>
-      </div>
-    </Spin>
+                </Col>
+              </Row>
+              <Form.Item style={{ marginBottom: '5px' }}>
+                <Button
+                  type="primary"
+                  block
+                  htmlType="submit"
+                  loading={loading}
+                >
+                  Đăng nhập
+                </Button>
+              </Form.Item>
+              <Paragraph>
+                Không có tài khoản?
+                <Link href="/signup">
+                  <a> Đăng ký ngay</a>
+                </Link>
+              </Paragraph>
+            </Form>
+          </Spin>
+        </ContentContainer>
+      </FormContent>
+      <FormSider>Sider</FormSider>
+    </FormLayout>
   );
 };
 export const getServerSideProps: GetServerSideProps = async (
