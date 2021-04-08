@@ -4,10 +4,10 @@ import {
   FormLayout,
   FormSider,
 } from '@components/forms';
+import CarouselSelect from '@components/sider/carouselSelect';
 import {
   Button,
   Checkbox,
-  Col,
   Form,
   Input,
   notification,
@@ -20,7 +20,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 
 const tailFormItemLayout = {
   wrapperCol: {
@@ -171,25 +171,24 @@ const Signup = () => {
                     Tôi đã đọc <a href="#">điểu khoản</a>
                   </Checkbox>
                 </Form.Item>
-                <Row gutter={[15, 15]} justify="end">
-                  <Col>
-                    <Button type="primary" htmlType="submit">
-                      Đăng ký
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button type="primary">
-                      <Link href="/login">
-                        <a aria-hidden="true">Đăng nhập</a>
-                      </Link>
-                    </Button>
-                  </Col>
-                </Row>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" block>
+                    Đăng ký
+                  </Button>
+                </Form.Item>
+                <Paragraph>
+                  Đã có tài khoản?
+                  <Link href="/login">
+                    <a> Đăng nhập</a>
+                  </Link>
+                </Paragraph>
               </Form>
             </Spin>
           </ContentContainer>
         </FormContent>
-        <FormSider>Sider</FormSider>
+        <FormSider>
+          <CarouselSelect />
+        </FormSider>
       </FormLayout>
     </>
   );

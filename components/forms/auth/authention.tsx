@@ -1,5 +1,5 @@
-import { LoginOutlined, UserOutlined } from '@ant-design/icons';
-import { IconAnt, NameIcon, SpanImg } from '@components/forms/register/styles';
+// import { LoginOutlined, UserOutlined } from '@ant-design/icons';
+// import { IconAnt, NameIcon, SpanImg } from '@components/forms/register/styles';
 import { signOut, useSession } from 'next-auth/client';
 import Link from 'next/link';
 import React from 'react';
@@ -18,9 +18,7 @@ export default function PageAuth() {
           }}
         >
           {session && session.user.image && (
-            <SpanImg
-              style={{ backgroundImage: `url(${session.user.image})` }}
-            />
+            <div style={{ backgroundImage: `url(${session.user.image})` }} />
           )}
           <span>
             <small>Signed in as</small>
@@ -37,20 +35,20 @@ export default function PageAuth() {
             <Link href="/login">
               <a>
                 {/* <ButtonIcon htmlType="button"> */}
-                <IconAnt>
+                {/* <IconAnt>
                   <LoginOutlined />
                 </IconAnt>
-                <NameIcon>Sign in</NameIcon>
+                <NameIcon>Sign in</NameIcon> */}
                 {/* </ButtonIcon> */}
               </a>
             </Link>
             <Link href="/signup">
               <a aria-hidden="true">
                 {/* <ButtonIcon> */}
-                <IconAnt right>
+                {/* <IconAnt right>
                   <UserOutlined />
                 </IconAnt>
-                <NameIcon>Sign up</NameIcon>
+                <NameIcon>Sign up</NameIcon> */}
                 {/* </ButtonIcon> */}
               </a>
             </Link>

@@ -31,6 +31,7 @@
     "next-auth": "^3.13.2",
     "next-unused": "0.0.6",
     "null-loader": "4.0.0",
+    "particles-bg": "^2.5.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "styled-components": "^5.2.1",

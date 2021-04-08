@@ -8,7 +8,8 @@ import type { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { ProSettings } from '@ant-design/pro-layout';
 
 import { MoneyBag } from '@components/Icons/index';
-import PageAuth from '@components/forms/auth/authention';
+// import PageAuth from '@components/forms/auth/authention';
+import HeaderProfile from '../components/headerRight/profileUser';
 
 const SettingDrawer = dynamic(
   () => import('@ant-design/pro-layout/lib/components/SettingDrawer'),
@@ -22,7 +23,9 @@ const ProLayout = dynamic(() => import('@ant-design/pro-layout'), {
 
 const DefautFooter = dynamic(
   () => import('@ant-design/pro-layout/lib/Footer'),
-  { ssr: false }
+  {
+    ssr: false,
+  }
 );
 
 const menuHeaderRender = (logo: React.ReactNode, title: React.ReactNode) => (
@@ -41,14 +44,15 @@ const footerRender = () => (
   />
 );
 
-const Main = ({ children }) => {
+const Main = ({ users, children }) => {
+  const datauser = users;
   const router = useRouter();
-
   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
     title: 'PFM',
   });
   const [pathname, setPathname] = useState(router.pathname);
 
+  // eslint-disable-next-line max-len
   const menuItemRender = (options: MenuDataItem, element: React.ReactNode) => (
     <Link href={options.path}>
       <a
@@ -60,7 +64,7 @@ const Main = ({ children }) => {
       </a>
     </Link>
   );
-  const Div = () => <PageAuth />;
+  const Div = () => <HeaderProfile users={datauser} />;
   return (
     <>
       <ProLayout

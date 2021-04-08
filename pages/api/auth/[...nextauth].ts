@@ -1,9 +1,11 @@
-/* eslint-disable no-param-reassign */
+import db from '@utils/database/index';
+// import { hash } from 'bcrypt';
+import { sign, verify } from 'jsonwebtoken';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
-import { sign, verify } from 'jsonwebtoken';
 import { JWT } from 'next-auth/jwt';
+import Providers from 'next-auth/providers';
+// import { v4 as uuidv4 } from 'uuid';
 
 const options = {
   providers: [
@@ -38,7 +40,7 @@ const options = {
         name: await token?.name,
         picture: await token?.picture,
         iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + 60,
+        exp: Math.floor(Date.now() / 1000) + 60 * 15,
       };
 
       const accessToken = sign(claims, secret);
@@ -54,9 +56,44 @@ const options = {
       return decoded;
     },
   },
-};
+  callbacks: {
+    async signIn(props: {
+      id: string;
+      name: string;
+      email: string;
+      image: string;
+    }) {
+      const { id, name, email, image } = props;
+      const docs = await db.collection('users').doc(id).get();
+      // const secret = process.env.JWT_SECRET;
+      if (docs.exists) {
+        // const claims = {
+        //   id,
+        //   name,
+        // };
+        // const refreshToken = uuidv4();
+        // const refreshTokenHash = await hash(refreshToken, SALT);
+        // const token = sign(claims, secret, { expiresIn: '15m' });
+        return true;
+      }
+      // cookies.set('name', 'hi')
+      // const usersRef = db.collection('users');
+      const payload: User = {
+        email,
+        name,
+        username: id,
+        image,
+        createdAt: new Date().toJSON(),
+        password: '',
+      };
+      await db.collection('users').doc(id).set(payload);
+      return true;
+    },
+  },
 
-const Auth = (req: NextApiRequest, res: NextApiResponse) =>
+  debug: true,
+};
+const Auth = async (req: NextApiRequest, res: NextApiResponse) =>
   NextAuth(req, res, options);
 
 export default Auth;

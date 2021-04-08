@@ -1,12 +1,14 @@
 import React from 'react';
 import MainLayout from '@layouts/main';
+import { withAuthSSP } from '@utils/auth';
 
-export default function Estimate() {
+export default function Estimate({ user }) {
   return (
     <>
-      <MainLayout>
+      <MainLayout users={user}>
         <h1>Phân bổ lợi nhuận</h1>
       </MainLayout>
     </>
   );
 }
+export const getServerSideProps = withAuthSSP();
