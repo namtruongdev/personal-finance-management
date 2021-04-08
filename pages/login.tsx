@@ -13,10 +13,8 @@ import {
 } from '@components/forms';
 
 import {
-  Facebook,
-  Github,
-  Google,
-  IconContainer,
+  Facebook, Github, Google,
+  IconContainer
 } from '@components/forms/login';
 import {
   Button,
