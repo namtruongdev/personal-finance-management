@@ -1,23 +1,25 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import dynamic from 'next/dynamic';
-
-import React, { useMemo, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-
 import {
   ContentContainer,
   FormContent,
   FormLayout,
   FormSider,
 } from '@components/forms';
-
 import {
   Facebook,
   Github,
   Google,
   IconContainer,
 } from '@components/forms/login';
+import { LOGIN_API } from '@constants/index';
+import {
+  JWT_TOKEN_EXPIRY,
+  REFRESH_TOKEN_EXPIRY,
+  SALT,
+  SET_COOKIE_OPTIONS,
+} from '@constants/jwt';
+import { setCookie } from '@utils/auth';
+import db from '@utils/database/index';
+import { fetchAPI } from '@utils/services';
 import {
   Button,
   Checkbox,
@@ -29,9 +31,16 @@ import {
   Spin,
   Typography,
 } from 'antd';
-import { signIn } from 'next-auth/client';
-import { fetchAPI } from '@utils/services';
-import { LOGIN_API } from '@constants/index';
+import { hash } from 'bcryptjs';
+import { sign } from 'jsonwebtoken';
+import { NextApiResponse, NextApiRequest } from 'next';
+import { getSession, signIn } from 'next-auth/client';
+import jwt from 'next-auth/jwt';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useMemo, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 const ParticlesBg = dynamic(() => import('particles-bg'), {
   ssr: false,
@@ -40,10 +49,8 @@ const { Title, Paragraph } = Typography;
 
 const Signin = () => {
   const [loading, setLoading] = useState(false);
-
   const [form] = Form.useForm();
   const router = useRouter();
-
   const onFinish = async (values: unknown) => {
     setLoading(true);
 
@@ -93,7 +100,6 @@ const Signin = () => {
     }),
     []
   );
-
   return (
     <FormLayout>
       <FormContent>
@@ -114,7 +120,9 @@ const Signin = () => {
                     />
                   </Col>
                   <Col>
-                    <Github onClick={() => signIn()} />
+                    <Github
+                      onClick={() => signIn('github', { redirect: false })}
+                    />
                   </Col>
                   <Col>
                     <Google
@@ -198,14 +206,79 @@ const Signin = () => {
     </FormLayout>
   );
 };
-export const getServerSideProps: GetServerSideProps = async (
-  ctx: GetServerSidePropsContext
-) => {
-  const { req } = ctx;
+export const getServerSideProps = async ({
+  req,
+  res,
+}: {
+  req: NextApiRequest;
+  res: NextApiResponse;
+}) => {
+  const secret = process.env.JWT_SECRET;
   const { cookies } = req;
-  const { user_id: userId, refresh_token: refreshToken } = cookies;
+  const { user_id: isUserId, refresh_token: isRefreshToken } = cookies;
+  const session = await getSession({ req });
 
-  if (refreshToken && userId) {
+  const infor = await jwt.getToken({ req, secret });
+
+  if (session) {
+    const { sub, name } = infor;
+    const doc = await db.collection('users').doc(`${sub}`).get();
+
+    const claims = {
+      id: sub,
+      name,
+    };
+    const token = sign(claims, secret, { expiresIn: '15m' });
+    const refreshToken = uuidv4();
+    const refreshTokenHash = await hash(refreshToken, SALT);
+
+    res.setHeader('Set-Cookie', [
+      setCookie({
+        name: 'auth',
+        value: token,
+        options: SET_COOKIE_OPTIONS({ maxAge: JWT_TOKEN_EXPIRY }),
+      }),
+      setCookie({
+        name: 'user_id',
+        value: `${sub}`,
+        options: SET_COOKIE_OPTIONS({ maxAge: REFRESH_TOKEN_EXPIRY }),
+      }),
+      setCookie({
+        name: 'refresh_token',
+        value: refreshToken,
+        options: SET_COOKIE_OPTIONS({ maxAge: REFRESH_TOKEN_EXPIRY }),
+      }),
+    ]);
+
+    const usersRef = db.collection('users');
+
+    if (!doc.exists) {
+      usersRef.doc(`${sub}`).set({
+        infor,
+        username: name,
+      });
+
+      await db.collection('users').doc(`${sub}`).update({
+        refreshTokenHash,
+      });
+      return {
+        redirect: {
+          destination: '/',
+          permanent: true,
+        },
+      };
+    }
+    await db.collection('users').doc(`${sub}`).update({
+      refreshTokenHash,
+    });
+    return {
+      redirect: {
+        destination: '/',
+        permanent: true,
+      },
+    };
+  }
+  if (isRefreshToken && isUserId) {
     return {
       redirect: {
         destination: '/',

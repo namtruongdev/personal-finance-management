@@ -10,7 +10,6 @@ const SetCookie = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { auth, refresh_token: refreshToken, user_id: userId } = body;
-
   res.setHeader('Set-Cookie', [
     setCookie({
       name: 'auth',
