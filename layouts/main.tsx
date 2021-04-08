@@ -69,7 +69,6 @@ const Main = ({ children }) => {
         logo={<MoneyBag width="32" height="32" />}
         style={{ minHeight: '100vh' }}
         route={ROUTES}
-        // headerRender={Div}
         menuItemRender={menuItemRender}
         menuHeaderRender={menuHeaderRender}
         footerRender={footerRender}

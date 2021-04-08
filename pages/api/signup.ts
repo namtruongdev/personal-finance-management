@@ -1,62 +1,54 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { hash } from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
 
-import { SALT, REFRESH_TOKEN_EXPIRY } from '@constants/index';
-import { setCookie } from '@utils/auth';
+import { SALT } from '@constants/index';
 import db from '@utils/database';
 
 const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
-  console.log(body);
 
-  const { email, username, password } = body;
+  const { email, username, password, rePassword, rules } = body;
 
   if (method === 'GET') {
-    return res.end(`Not support GET request!`);
+    return res.status(200).end(`Not support GET request!`);
   }
-  if (!email || !password) {
+
+  if (!email || !username || !password || !rePassword || !rules) {
     return res.status(400).json({
-      status: 'error',
       message: 'Thiếu thông tin đăng ký!',
     });
   }
 
-  const users = await db.collection('users').get();
-  const usersData = users.docs.map((user) => user.data());
-
-  if (usersData.some((entry) => entry.username === email)) {
-    return res
-      .status(400)
-      .json({ status: 'error', message: 'Email đã được sử dụng!' });
+  if (password !== rePassword) {
+    return res.status(400).json({
+      message: 'Mật khẩu nhập lại không khớp!',
+    });
   }
 
-  const refreshToken = uuidv4();
-  const refreshTokenExpiry = new Date(
-    Date.now() + REFRESH_TOKEN_EXPIRY * 1000
-  ).toJSON();
+  const usersRef = db.collection('users');
+  const checkEmail = await usersRef.where('email', '==', email).get();
 
-  const genHash = await hash(password, SALT);
-  const refreshTokenHash = await hash(refreshToken, SALT);
+  if (!checkEmail.empty) {
+    return res.status(400).json({ message: 'Email đã được sử dụng!' });
+  }
+
+  const checkUsername = await usersRef.where('username', '==', username).get();
+
+  if (!checkUsername.empty) {
+    return res.status(400).json({ message: 'Tên người dùng đã tồn tại!' });
+  }
+
+  const passwordHash = await hash(password, SALT);
 
   const payload: User = {
     email,
     username,
-    password: genHash,
+    password: passwordHash,
     createdAt: new Date().toJSON(),
-    refreshTokens: {
-      hash: refreshTokenHash,
-      expiry: refreshTokenExpiry,
-    },
   };
   const { id } = await db.collection('users').add(payload);
 
-  res.setHeader(
-    'Set-Cookie',
-    setCookie({ name: 'refresh-token', value: refreshToken })
-  );
-
-  return res.status(200).json({ id, message: 'OK' });
+  return res.status(200).json({ id, message: 'Đăng ký thành công!' });
 };
 
 export default Signup;

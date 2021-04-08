@@ -1,11 +1,15 @@
 import type { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import { SALT, JWT_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from '@constants/index';
+import {
+  SALT,
+  JWT_TOKEN_EXPIRY,
+  REFRESH_TOKEN_EXPIRY,
+  SET_COOKIE_OPTIONS,
+} from '@constants/index';
 import db from '@utils/database';
 import { hash, compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { setCookie } from './setCookie';
-
 
 const secret = process.env.JWT_SECRET;
 
@@ -14,7 +18,6 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
 ) => {
   const { res, req } = ctx;
   const { cookies } = req;
-  // console.log('hi');
 
   const { auth, user_id: userId, refresh_token: refreshToken } = cookies;
   if (!userId || !refreshToken) {
@@ -26,8 +29,7 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
     };
   }
 
-
-  const doc = await db.collection("users").doc(userId).get();
+  const doc = await db.collection('users').doc(userId).get();
   if (!doc.exists) {
     return {
       redirect: {
@@ -37,23 +39,30 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
     };
   }
 
-
   const user = doc.data();
   const claims = {
     id: userId,
     userName: user.username,
-  }
+  };
 
-
-
-
-
-  const isMatch = await compare(refreshToken, user.refreshTokens.hash);
+  const isMatch = await compare(refreshToken, user.refreshTokenHash);
   if (!isMatch) {
     res.setHeader('Set-Cookie', [
-      setCookie({ name: 'auth', value: '', options: { maxAge: 0 } }),
-      setCookie({ name: 'user_id', value: '', options: { maxAge: 0 } }),
-      setCookie({ name: 'refresh_token', value: '', options: { maxAge: 0 } }),
+      setCookie({
+        name: 'auth',
+        value: '',
+        options: SET_COOKIE_OPTIONS({ maxAge: 0 }),
+      }),
+      setCookie({
+        name: 'user_id',
+        value: '',
+        options: SET_COOKIE_OPTIONS({ maxAge: 0 }),
+      }),
+      setCookie({
+        name: 'refresh_token',
+        value: '',
+        options: SET_COOKIE_OPTIONS({ maxAge: 0 }),
+      }),
     ]);
 
     return {
@@ -71,24 +80,34 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
       const newRefreshTokenHash = await hash(newRefreshToken, SALT);
 
       res.setHeader('Set-Cookie', [
-        setCookie({ name: 'auth', value: newToken, options: { maxAge: JWT_TOKEN_EXPIRY } }),
-        setCookie({ name: 'user_id', value: user.id, options: { maxAge: REFRESH_TOKEN_EXPIRY } }),
-        setCookie({ name: 'refresh_token', value: newRefreshToken, options: { maxAge: REFRESH_TOKEN_EXPIRY } }),
+        setCookie({
+          name: 'auth',
+          value: newToken,
+          options: SET_COOKIE_OPTIONS({ maxAge: JWT_TOKEN_EXPIRY }),
+        }),
+        setCookie({
+          name: 'user_id',
+          value: user.id,
+          options: SET_COOKIE_OPTIONS({ maxAge: REFRESH_TOKEN_EXPIRY }),
+        }),
+        setCookie({
+          name: 'refresh_token',
+          value: newRefreshToken,
+          options: SET_COOKIE_OPTIONS({ maxAge: REFRESH_TOKEN_EXPIRY }),
+        }),
       ]);
-      await db.collection("users").doc(userId).update({
-        refreshTokens: {
-          hash: newRefreshTokenHash,
-        },
-      })
+      await db.collection('users').doc(userId).update({
+        refreshTokenHash: newRefreshTokenHash,
+      });
     }
     return {
       props: {},
     };
-  };
+  }
   return {
     redirect: {
       destination: '/login',
       permanent: true,
     },
   };
-}
+};
