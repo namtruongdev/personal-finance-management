@@ -1,31 +1,27 @@
-import { JWT_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY, SALT, SET_COOKIE_OPTIONS } from '@constants/jwt';
+import {
+  JWT_TOKEN_EXPIRY,
+  REFRESH_TOKEN_EXPIRY,
+  SALT,
+  SET_COOKIE_OPTIONS,
+} from '@constants/jwt';
 import { setCookie } from '@utils/auth';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import jwt from 'next-auth/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import db from '@utils/database/index';
-import { getSession } from 'next-auth/client'
 
 const secret = process.env.JWT_SECRET;
-const SigninPlugin = async (
-  req: NextApiRequest, res: NextApiResponse
-) => {
-  const { body, method } = req;
-  if (method === "GET") {
-    return res.end('hihi')
+const SigninPlugin = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { method } = req;
+  if (method === 'GET') {
+    return res.end('hihi');
   }
-  const session = await getSession({ req });
-  console.log(session, 'session')
-  console.log(body, 'body')
-  const infor = await jwt.getToken({ req, secret })
-  console.log(infor, 'token')
-  const { sub, name, email } = infor;
+  const infor = await jwt.getToken({ req, secret });
+  const { sub, name } = infor;
   const subString = sub.toString();
-  console.log(subString, name, email)
   const doc = await db.collection('users').doc(subString).get();
-  const user = doc.data();
   const claims = {
     id: subString,
     userName: name,
@@ -50,26 +46,21 @@ const SigninPlugin = async (
       options: SET_COOKIE_OPTIONS({ maxAge: REFRESH_TOKEN_EXPIRY }),
     }),
   ]);
-  const currentRef = db.collection('users')
+  const currentRef = db.collection('users');
   // const map = { 'id': subString, 'name': 'New Data' };
-  console.log(doc.exists)
   if (!doc.exists) {
     currentRef.doc(subString).set({
-      ...infor, username: name
+      ...infor,
+      username: name,
     });
-    console.log('ko')
     await db.collection('users').doc(subString).update({
       refreshTokenHash,
-    }
-    );
-    return res.status(200).json({})
-
+    });
+    return res.status(200).json({});
   }
   await db.collection('users').doc(subString).update({
     refreshTokenHash,
   });
-  console.log(user)
-  // return res.status(200).json({ message: 'cuoi' })
   return res.status(200).json({
     message: 'Đăng nhập thành công!',
     status: 'OK',

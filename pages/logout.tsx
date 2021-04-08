@@ -4,12 +4,7 @@ import { GetServerSideProps } from 'next';
 import React from 'react';
 
 export default function PageLogout() {
-  return (
-    <>
-      hi
-    </>
-  );
-
+  return <>hi</>;
 }
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { res } = ctx;
@@ -32,14 +27,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     setCookie({
       name: 'next-auth.session-token',
       value: '',
-      options: SET_COOKIE_OPTIONS({ maxAge: 0 })
-    })
+      options: SET_COOKIE_OPTIONS({ maxAge: 0 }),
+    }),
   ]);
   return {
     redirect: {
       destination: '/login',
       permanent: true,
     },
-
-  }
-}
+  };
+};

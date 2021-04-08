@@ -2,11 +2,13 @@ import {
   ContentContainer,
   FormContent,
   FormLayout,
-  FormSider
+  FormSider,
 } from '@components/forms';
 import {
-  Facebook, Github, Google,
-  IconContainer
+  Facebook,
+  Github,
+  Google,
+  IconContainer,
 } from '@components/forms/login';
 import { LOGIN_API } from '@constants/index';
 import { fetchAPI } from '@utils/services';
@@ -19,18 +21,14 @@ import {
   notification,
   Row,
   Spin,
-  Typography
+  Typography,
 } from 'antd';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { signIn, useSession } from 'next-auth/client';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { React, useEffect, useMemo, useState } from 'react';
-
-
-
-
+import { useEffect, useMemo, useState, React } from 'react';
 
 const ParticlesBg = dynamic(() => import('particles-bg'), {
   ssr: false,
@@ -40,7 +38,6 @@ const { Title, Paragraph } = Typography;
 const Signin = () => {
   const [loading, setLoading] = useState(false);
   const [session] = useSession();
-  console.log(session)
   const [form] = Form.useForm();
   const router = useRouter();
   const [isLogin, setIsLogin] = useState(false);
@@ -53,19 +50,18 @@ const Signin = () => {
         },
         body: JSON.stringify({
           username: 'truong111',
-          password: '1'
+          password: '1',
         }),
       })
-        .then(() => { router.push('/') })
+        .then(() => {
+          router.push('/');
+        })
         .then(() => setIsLogin(true));
-    }
-    console.log(session, isLogin)
+    };
     if (!isLogin && session) {
       LogIn();
     }
-    console.log('object')
-  }, [isLogin, session])
-  console.log(session)
+  }, [isLogin, session]);
   const onFinish = async (values: unknown) => {
     setLoading(true);
 
@@ -116,9 +112,9 @@ const Signin = () => {
     []
   );
   const handleSignin = async () => {
-    signIn('github')
-    setIsLogin(true)
-  }
+    signIn('github');
+    setIsLogin(true);
+  };
   return (
     <FormLayout>
       <FormContent>
@@ -239,8 +235,7 @@ export const getServerSideProps: GetServerSideProps = async (
     };
   }
   return {
-    props: {
-    },
+    props: {},
   };
 };
 
