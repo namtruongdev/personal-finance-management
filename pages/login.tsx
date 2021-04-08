@@ -1,13 +1,10 @@
-import Link from 'next/link';
-import React, { useMemo, useState } from 'react';
-import { useRouter } from 'next/router';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import {
   ContentContainer,
   FormContent,
   FormLayout,
-  FormSider,
+  FormSider
 } from '@components/forms';
+import { Facebook, Github, Google } from '@components/forms/login';
 import {
   Button,
   Checkbox,
@@ -17,8 +14,13 @@ import {
   notification,
   Row,
   Spin,
-  Typography,
+  Typography
 } from 'antd';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { signIn } from 'next-auth/client';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useMemo, useState } from 'react';
 
 const { Title, Paragraph } = Typography;
 
@@ -85,7 +87,30 @@ const Signin = () => {
         <ContentContainer>
           <Spin spinning={loading}>
             <Row justify="center">
-              <Title>Đăng nhập</Title>
+              <Col span={24}>
+                <Row justify="center">
+                  <Title>Đăng nhập</Title>
+                </Row>
+              </Col>
+              <Col span={24}>
+                <Row justify="center" gutter={[15, 15]}>
+                  <Col>
+                    <Facebook
+                      onClick={() => signIn('facebook', { redirect: false })}
+                    />
+                  </Col>
+                  <Col>
+                    <Github
+                      onClick={() => signIn('github', { redirect: true })}
+                    />
+                  </Col>
+                  <Col>
+                    <Google
+                      onClick={() => signIn('google', { redirect: false })}
+                    />
+                  </Col>
+                </Row>
+              </Col>
             </Row>
             <Form
               {...formItemLayout}
@@ -177,7 +202,8 @@ export const getServerSideProps: GetServerSideProps = async (
     };
   }
   return {
-    props: {},
+    props: {
+    },
   };
 };
 
