@@ -31,6 +31,18 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
 
   const doc = await db.collection('users').doc(userId).get();
   if (!doc.exists) {
+    res.setHeader('Set-Cookie', [
+      setCookie({
+        name: 'user_id',
+        value: '',
+        options: SET_COOKIE_OPTIONS({ maxAge: 0 }),
+      }),
+      setCookie({
+        name: 'refresh_token',
+        value: '',
+        options: SET_COOKIE_OPTIONS({ maxAge: 0 }),
+      }),
+    ]);
     return {
       redirect: {
         destination: '/login',
@@ -40,6 +52,7 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
   }
 
   const user = doc.data();
+
   const claims = {
     id: userId,
     userName: user.username,
@@ -87,7 +100,7 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
         }),
         setCookie({
           name: 'user_id',
-          value: user.id,
+          value: userId,
           options: SET_COOKIE_OPTIONS({ maxAge: REFRESH_TOKEN_EXPIRY }),
         }),
         setCookie({

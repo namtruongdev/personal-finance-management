@@ -16,8 +16,7 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
   const { username, password } = body;
   if (!username || !password) {
     return res.status(400).json({
-      status: 'error',
-      error: 'Request missing username or password',
+      message: 'Thiếu thông tin đăng nhập!',
     });
   }
 
@@ -32,15 +31,13 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  let user: { id: string; password?: string };
+  const doc = docs.docs[0];
 
-  docs.forEach((doc) => {
-    const { id } = doc;
-    user = {
-      id,
-      ...doc.data(),
-    };
-  });
+  const user: UserPayload = {
+    id: doc.id,
+    ...doc.data(),
+  };
+
   const { password: passwordHash, id } = user;
 
   const claims = {
@@ -61,6 +58,7 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
   await db.collection('users').doc(id).update({
     refreshTokenHash,
   });
+
   res.setHeader('Set-Cookie', [
     setCookie({
       name: 'auth',

@@ -1,3 +1,5 @@
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+
 import {
   CustomLayout,
   CustomSider,
@@ -15,10 +17,9 @@ import {
   notification,
   Spin,
 } from 'antd';
-import { useSession } from 'next-auth/client';
 import Link from 'next/link';
+import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 const { Content } = Layout;
@@ -28,19 +29,14 @@ export const ButtonSignin = styled(Button)`
   }
 `;
 const Signin = () => {
-  const [session] = useSession();
   const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (session) {
-      // router.push('/');
-    }
-  }, [session]);
+
   const [form] = Form.useForm();
   const router = useRouter();
 
   const onFinish = async (values: unknown) => {
     setLoading(true);
-    const loginApi = await fetch(`http://localhost:3000/api/login`, {
+    const res = await fetch(`http://localhost:3000/api/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,17 +44,21 @@ const Signin = () => {
       body: JSON.stringify(values),
     });
 
-    const result = await loginApi.json();
+    const results: RESP = await res.json();
 
-    setLoading(false);
-    if (result.status === 'OK') {
-      router.push('/');
-    } else {
-      notification.warning({
-        message: '',
-        description: 'Đăng nhập thất bại',
+    if (!res.ok) {
+      notification.error({
+        message: results.message,
       });
     }
+
+    notification.success({
+      message: results.message,
+    });
+
+    setLoading(false);
+
+    return router.replace('/');
   };
 
   const formItemLayout = useMemo(
@@ -110,10 +110,11 @@ const Signin = () => {
                   <Form.Item
                     name="username"
                     label="Tên người dùng"
+                    hasFeedback
                     rules={[
                       {
                         required: true,
-                        message: 'Please input your E-mail!',
+                        message: 'Vui lòng nhập tên người dùng!',
                       },
                     ]}
                   >
@@ -125,7 +126,7 @@ const Signin = () => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please input your password!',
+                        message: 'Vui lòng nhập mật khẩu!',
                       },
                     ]}
                     hasFeedback
@@ -133,7 +134,7 @@ const Signin = () => {
                     <Input.Password />
                   </Form.Item>
                   <Form.Item
-                    // name="agreement"
+                    name="remember"
                     valuePropName="checked"
                     {...tailFormItemLayout}
                   >
@@ -141,13 +142,19 @@ const Signin = () => {
                     <MissPass href="#">Quên mật khẩu?</MissPass>
                   </Form.Item>
                   <Form.Item style={{ marginBottom: '5px' }}>
-                    <ButtonSignin type="primary" block htmlType="submit">
+                    <ButtonSignin
+                      type="primary"
+                      block
+                      htmlType="submit"
+                      loading={loading}
+                    >
                       Đăng nhập
                     </ButtonSignin>
                   </Form.Item>
                   <p>
+                    Không có tài khoản?
                     <Link href="/signup">
-                      <a>Đăng ký ngay</a>
+                      <a> Đăng ký ngay</a>
                     </Link>
                   </p>
                 </Form>
@@ -160,7 +167,24 @@ const Signin = () => {
     </Spin>
   );
 };
-// export const getServerSideProps = async() => {
+export const getServerSideProps: GetServerSideProps = async (
+  ctx: GetServerSidePropsContext
+) => {
+  const { req } = ctx;
+  const { cookies } = req;
+  const { user_id: userId, refresh_token: refreshToken } = cookies;
 
-// }
+  if (refreshToken && userId) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: true,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};
+
 export default Signin;

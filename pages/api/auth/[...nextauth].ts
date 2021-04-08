@@ -54,8 +54,6 @@ const options = {
       return decoded;
     },
   },
-
-
 };
 
 const Auth = (req: NextApiRequest, res: NextApiResponse) =>
