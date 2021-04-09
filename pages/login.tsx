@@ -1,21 +1,15 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import dynamic from 'next/dynamic';
-
-import React, { useMemo, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-
 import {
   ContentContainer,
   FormContent,
   FormLayout,
   FormSider
 } from '@components/forms';
-
 import {
   Facebook, Github, Google,
   IconContainer
 } from '@components/forms/login';
+import { LOGIN_API } from '@constants/index';
+import { fetchAPI } from '@utils/services';
 import {
   Button,
   Checkbox,
@@ -27,9 +21,16 @@ import {
   Spin,
   Typography
 } from 'antd';
-import { signIn } from 'next-auth/client';
-import { fetchAPI } from '@utils/services';
-import { LOGIN_API } from '@constants/index';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { signIn, useSession } from 'next-auth/client';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { React, useEffect, useMemo, useState } from 'react';
+
+
+
+
 
 const ParticlesBg = dynamic(() => import('particles-bg'), {
   ssr: false,
@@ -38,10 +39,33 @@ const { Title, Paragraph } = Typography;
 
 const Signin = () => {
   const [loading, setLoading] = useState(false);
-
+  const [session] = useSession();
+  console.log(session)
   const [form] = Form.useForm();
   const router = useRouter();
-
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    const LogIn = async () => {
+      await fetch(`http://localhost:3000/api/signinPlugin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: 'truong111',
+          password: '1'
+        }),
+      })
+        .then(() => { router.push('/') })
+        .then(() => setIsLogin(true));
+    }
+    console.log(session, isLogin)
+    if (!isLogin && session) {
+      LogIn();
+    }
+    console.log('object')
+  }, [isLogin, session])
+  console.log(session)
   const onFinish = async (values: unknown) => {
     setLoading(true);
 
@@ -91,7 +115,10 @@ const Signin = () => {
     }),
     []
   );
-
+  const handleSignin = async () => {
+    signIn('github')
+    setIsLogin(true)
+  }
   return (
     <FormLayout>
       <FormContent>
@@ -112,7 +139,7 @@ const Signin = () => {
                     />
                   </Col>
                   <Col>
-                    <Github onClick={() => signIn()} />
+                    <Github onClick={handleSignin} />
                   </Col>
                   <Col>
                     <Google
