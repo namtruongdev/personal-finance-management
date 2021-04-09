@@ -1,13 +1,13 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+import Providers from 'next-auth/providers';
 import db from '@utils/database/index';
 // import { hash } from 'bcrypt';
 import { sign, verify } from 'jsonwebtoken';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
-import Providers from 'next-auth/providers';
 // import { v4 as uuidv4 } from 'uuid';
 
-const options = {
+const options: NextAuthOptions = {
   providers: [
     Providers.Facebook({
       clientId: process.env.FACEBOOK_ID,
@@ -26,19 +26,15 @@ const options = {
   secret: process.env.JWT_SECRET,
   session: {
     jwt: true,
+    maxAge: 900,
   },
 
   jwt: {
     secret: process.env.JWT_SECRET,
-    verificationOptions: {
-      algorithms: ['HS256'],
-    },
-
     async encode({ secret, token }) {
       const claims = {
-        sub: await token?.sub?.toString(),
-        name: await token?.name,
-        picture: await token?.picture,
+        sub: token.sub.toString(),
+        name: token.name,
         iat: Math.floor(Date.now() / 1000),
         exp: Math.floor(Date.now() / 1000) + 60 * 15,
       };
@@ -49,24 +45,23 @@ const options = {
     async decode({ secret, token }) {
       const decodedToken = verify(token, secret) as JWT;
       const decoded = {
+        sub: decodedToken.sub,
         name: decodedToken.name,
-        email: decodedToken.email,
-        picture: decodedToken.picture,
       };
+
       return decoded;
     },
   },
-  callbacks: {
-    async signIn(props: {
-      id: string;
-      name: string;
-      email: string;
-      image: string;
-    }) {
-      const { id, name, email, image } = props;
-      const docs = await db.collection('users').doc(id).get();
-      // const secret = process.env.JWT_SECRET;
+
+  events: {
+    async signIn({ user }) {
+      const secret = process.env.JWT_SECRET;
+      const { id, name, email, image } = user;
+      const docsRef = db.collection('users').doc(`${id}`);
+      const docs = await docsRef.get();
       if (docs.exists) {
+        console.log('hhhhhhhhhhhhhhhhhhhhhh');
+
         // const claims = {
         //   id,
         //   name,
@@ -74,25 +69,27 @@ const options = {
         // const refreshToken = uuidv4();
         // const refreshTokenHash = await hash(refreshToken, SALT);
         // const token = sign(claims, secret, { expiresIn: '15m' });
-        return true;
       }
-      // cookies.set('name', 'hi')
-      // const usersRef = db.collection('users');
-      const payload: User = {
-        email,
-        name,
-        username: id,
-        image,
-        createdAt: new Date().toJSON(),
-        password: '',
-      };
-      await db.collection('users').doc(id).set(payload);
-      return true;
+
+      if (!docs.exists) {
+        console.log('no exists');
+        
+      }
+      // const payload: User = {
+      //   email,
+      //   name,
+      //   username: id,
+      //   image,
+      //   createdAt: new Date().toJSON(),
+      //   password: '',
+      // };
+      // console.log(payload, 'hihi');
+
+      // await docsRef.set(payload);
     },
   },
-
-  debug: true,
 };
+
 const Auth = async (req: NextApiRequest, res: NextApiResponse) =>
   NextAuth(req, res, options);
 

@@ -105,9 +105,7 @@ const Signin = () => {
                     />
                   </Col>
                   <Col>
-                    <Github
-                      onClick={() => signIn('github', { redirect: true })}
-                    />
+                    <Github onClick={() => signIn()} />
                   </Col>
                   <Col>
                     <Google

@@ -1,14 +1,13 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useState, ReactNode, useMemo } from 'react';
 import { ROUTES } from '@configs/router';
 
 import type { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { ProSettings } from '@ant-design/pro-layout';
 
 import { MoneyBag } from '@components/Icons/index';
-import PageAuth from '@components/forms/auth/authention';
 
 const SettingDrawer = dynamic(
   () => import('@ant-design/pro-layout/lib/components/SettingDrawer'),
@@ -23,15 +22,6 @@ const ProLayout = dynamic(() => import('@ant-design/pro-layout'), {
 const DefautFooter = dynamic(
   () => import('@ant-design/pro-layout/lib/Footer'),
   { ssr: false }
-);
-
-const menuHeaderRender = (logo: React.ReactNode, title: React.ReactNode) => (
-  <Link href="/">
-    <a href="/">
-      {logo}
-      {title}
-    </a>
-  </Link>
 );
 
 const footerRender = () => (
@@ -49,18 +39,30 @@ const Main = ({ children }) => {
   });
   const [pathname, setPathname] = useState(router.pathname);
 
-  const menuItemRender = (options: MenuDataItem, element: React.ReactNode) => (
-    <Link href={options.path}>
-      <a
-        href={options.path}
-        onClick={() => setPathname(options.path || '/')}
-        aria-hidden="true"
-      >
-        {element}
-      </a>
-    </Link>
+  const menuHeaderRender = useMemo(
+    () => (logo: ReactNode, title: ReactNode) => (
+      <>
+        <div onClick={() => router.push('/')} aria-hidden="true">
+          {logo}
+        </div>
+        <Link href="/">
+          <a>{title}</a>
+        </Link>
+      </>
+    ),
+    []
   );
-  const Div = () => <PageAuth />;
+
+  const menuItemRender = useMemo(
+    () => (options: MenuDataItem, element: React.ReactNode) => (
+      <Link href={options.path}>
+        <a onClick={() => setPathname(options.path || '/')} aria-hidden="true">
+          {element}
+        </a>
+      </Link>
+    ),
+    []
+  );
   return (
     <>
       <ProLayout
@@ -72,7 +74,6 @@ const Main = ({ children }) => {
         menuItemRender={menuItemRender}
         menuHeaderRender={menuHeaderRender}
         footerRender={footerRender}
-        rightContentRender={Div}
         {...settings}
       >
         {children}
