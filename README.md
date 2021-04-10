@@ -1,4 +1,4 @@
-## Các type commtit được chấp nhận:
+## Các type commit được chấp nhận:
 
 - 'build': Các commit liên quán đến xây dựng trang.
 - 'chore': Các commit lặt vặt, rât nhỏ.

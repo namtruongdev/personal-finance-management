@@ -6,7 +6,7 @@ import {
   SET_COOKIE_OPTIONS,
 } from '@constants/index';
 import db from '@utils/database';
-import { hash, compare } from 'bcrypt';
+import { hash, compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { setCookie } from './setCookie';

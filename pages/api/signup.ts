@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { hash } from 'bcrypt';
+import { hash } from 'bcryptjs';
 
 import { SALT } from '@constants/index';
 import db from '@utils/database';

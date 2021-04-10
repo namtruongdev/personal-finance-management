@@ -1,9 +1,17 @@
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import dynamic from 'next/dynamic';
+
+import React, { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+
 import {
   ContentContainer,
   FormContent,
   FormLayout,
   FormSider,
 } from '@components/forms';
+
 import {
   Facebook,
   Github,
@@ -21,12 +29,13 @@ import {
   Spin,
   Typography,
 } from 'antd';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { signIn } from 'next-auth/client';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useMemo, useState } from 'react';
+import { fetchAPI } from '@utils/services';
+import { LOGIN_API } from '@constants/index';
 
+const ParticlesBg = dynamic(() => import('particles-bg'), {
+  ssr: false,
+});
 const { Title, Paragraph } = Typography;
 
 const Signin = () => {
@@ -37,12 +46,11 @@ const Signin = () => {
 
   const onFinish = async (values: unknown) => {
     setLoading(true);
-    const res = await fetch(`http://localhost:3000/api/login`, {
+
+    const res = await fetchAPI({
+      url: LOGIN_API,
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
+      payload: values,
     });
 
     const results: RESP = await res.json();
@@ -89,6 +97,7 @@ const Signin = () => {
   return (
     <FormLayout>
       <FormContent>
+        <ParticlesBg type="cobweb" bg={true} />
         <ContentContainer>
           <Spin spinning={loading}>
             <Row justify="center">

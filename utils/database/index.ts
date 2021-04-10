@@ -1,10 +1,12 @@
 import admin from 'firebase-admin';
 
+const { privateKey } = JSON.parse(process.env.FIRESTORE_PRIVATE_KEY);
+
 if (!admin.apps.length) {
   try {
     admin.initializeApp({
       credential: admin.credential.cert({
-        privateKey: process.env.FIRESTORE_PRIVATE_KEY,
+        privateKey,
         projectId: process.env.FIRESTORE_PROJECT_ID,
         clientEmail: process.env.FIRESTORE_CLIENT_EMAIL,
       }),

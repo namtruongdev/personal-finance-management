@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import Providers from 'next-auth/providers';
-import db from '@utils/database/index';
+// import db from '@utils/database/index';
 // import { hash } from 'bcrypt';
 import { sign, verify } from 'jsonwebtoken';
 import NextAuth, { NextAuthOptions } from 'next-auth';
@@ -55,38 +55,37 @@ const options: NextAuthOptions = {
 
   events: {
     async signIn({ user }) {
-      const secret = process.env.JWT_SECRET;
-      const { id, name, email, image } = user;
-      const docsRef = db.collection('users').doc(`${id}`);
-      const docs = await docsRef.get();
-      if (docs.exists) {
-        console.log('hhhhhhhhhhhhhhhhhhhhhh');
-
-        // const claims = {
-        //   id,
-        //   name,
-        // };
-        // const refreshToken = uuidv4();
-        // const refreshTokenHash = await hash(refreshToken, SALT);
-        // const token = sign(claims, secret, { expiresIn: '15m' });
-      }
-
-      if (!docs.exists) {
-        console.log('no exists');
-        
-      }
-      // const payload: User = {
-      //   email,
+      // const secret = process.env.JWT_SECRET;
+      // const { id, name, email, image } = user;
+      // const docsRef = db.collection('users').doc(`${id}`);
+      // const docs = await docsRef.get();
+      // if (docs.exists) {
+      //   console.log('hhhhhhhhhhhhhhhhhhhhhh');
+      // const claims = {
+      //   id,
       //   name,
-      //   username: id,
-      //   image,
-      //   createdAt: new Date().toJSON(),
-      //   password: '',
       // };
-      // console.log(payload, 'hihi');
-
-      // await docsRef.set(payload);
+      // const refreshToken = uuidv4();
+      // const refreshTokenHash = await hash(refreshToken, SALT);
+      // const token = sign(claims, secret, { expiresIn: '15m' });
     },
+
+    // if (!docs.exists) {
+    //   console.log('no exists');
+
+    // }
+    // const payload: User = {
+    //   email,
+    //   name,
+    //   username: id,
+    //   image,
+    //   createdAt: new Date().toJSON(),
+    //   password: '',
+    // };
+    // console.log(payload, 'hihi');
+
+    // await docsRef.set(payload);
+    // },
   },
 };
 
