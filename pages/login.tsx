@@ -13,14 +13,7 @@ import {
 } from '@components/forms';
 
 import {
-  Facebook,
-  Github,
-  Google,
-  IconContainer,
-} from '@components/forms/login';
-import {
   Button,
-  Checkbox,
   Col,
   Form,
   Input,
@@ -29,9 +22,9 @@ import {
   Spin,
   Typography,
 } from 'antd';
-import { signIn } from 'next-auth/client';
 import { fetchAPI } from '@utils/services';
 import { LOGIN_API } from '@constants/index';
+import CarouselSelect from '@components/sider/carouselSelect';
 
 const ParticlesBg = dynamic(() => import('particles-bg'), {
   ssr: false,
@@ -78,21 +71,6 @@ const Signin = () => {
     }),
     []
   );
-  const tailFormItemLayout = useMemo(
-    () => ({
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 24,
-          offset: 0,
-        },
-      },
-    }),
-    []
-  );
 
   return (
     <FormLayout>
@@ -106,23 +84,6 @@ const Signin = () => {
                   <Title>Đăng nhập</Title>
                 </Row>
               </Col>
-              <IconContainer span={24}>
-                <Row justify="center" gutter={[15, 15]}>
-                  <Col>
-                    <Facebook
-                      onClick={() => signIn('facebook', { redirect: false })}
-                    />
-                  </Col>
-                  <Col>
-                    <Github onClick={() => signIn()} />
-                  </Col>
-                  <Col>
-                    <Google
-                      onClick={() => signIn('google', { redirect: false })}
-                    />
-                  </Col>
-                </Row>
-              </IconContainer>
             </Row>
             <Form
               {...formItemLayout}
@@ -141,6 +102,10 @@ const Signin = () => {
                     required: true,
                     message: 'Vui lòng nhập tên người dùng!',
                   },
+                  {
+                    pattern: /^[a-zA-Z0-9_]+$/,
+                    message: 'Không nhập kí tự đặc biệt',
+                  },
                 ]}
               >
                 <Input />
@@ -158,22 +123,7 @@ const Signin = () => {
               >
                 <Input.Password />
               </Form.Item>
-              <Row justify="space-between">
-                <Col>
-                  <Form.Item
-                    name="remember"
-                    valuePropName="checked"
-                    {...tailFormItemLayout}
-                  >
-                    <Checkbox>Nhớ mật khẩu</Checkbox>
-                  </Form.Item>
-                </Col>
-                <Col>
-                  <Form.Item>
-                    <Link href="#">Quên mật khẩu?</Link>
-                  </Form.Item>
-                </Col>
-              </Row>
+
               <Form.Item>
                 <Button
                   type="primary"
@@ -184,17 +134,26 @@ const Signin = () => {
                   Đăng nhập
                 </Button>
               </Form.Item>
-              <Paragraph>
-                Chưa có tài khoản?
-                <Link href="/signup">
-                  <a> Đăng ký ngay</a>
-                </Link>
-              </Paragraph>
+              <Row justify="space-between">
+                <Col>
+                  <Paragraph>
+                    Chưa có tài khoản?
+                    <Link href="/signup">
+                      <a> Đăng ký ngay</a>
+                    </Link>
+                  </Paragraph>
+                </Col>
+                <Col>
+                  <Link href="#">Quên mật khẩu?</Link>
+                </Col>
+              </Row>
             </Form>
           </Spin>
         </ContentContainer>
       </FormContent>
-      <FormSider>Sider</FormSider>
+      <FormSider>
+        <CarouselSelect />
+      </FormSider>
     </FormLayout>
   );
 };
