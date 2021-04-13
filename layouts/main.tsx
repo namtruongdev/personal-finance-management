@@ -8,6 +8,8 @@ import type { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { ProSettings } from '@ant-design/pro-layout';
 
 import { MoneyBag } from '@components/Icons/index';
+import Autoset from '@components/logout';
+import { NameAcc } from '@components/forms/logout';
 
 const SettingDrawer = dynamic(
   () => import('@ant-design/pro-layout/lib/components/SettingDrawer'),
@@ -31,7 +33,7 @@ const footerRender = () => (
   />
 );
 
-const Main = ({ children }) => {
+const Main = ({ children, user }) => {
   const router = useRouter();
 
   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
@@ -63,6 +65,15 @@ const Main = ({ children }) => {
     ),
     []
   );
+  const logOut = useMemo(
+    () => () => (
+      <>
+        <Autoset data={user} />
+        <NameAcc>{user.username}</NameAcc>
+      </>
+    ),
+    []
+  );
   return (
     <>
       <ProLayout
@@ -75,6 +86,7 @@ const Main = ({ children }) => {
         menuHeaderRender={menuHeaderRender}
         footerRender={footerRender}
         {...settings}
+        rightContentRender={logOut}
       >
         {children}
       </ProLayout>
