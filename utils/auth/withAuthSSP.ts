@@ -114,7 +114,7 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
       });
     }
     return {
-      props: {},
+      props: { user },
     };
   }
   return {
