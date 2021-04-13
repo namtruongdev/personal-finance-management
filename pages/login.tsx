@@ -13,12 +13,6 @@ import {
 } from '@components/forms';
 
 import {
-  Facebook,
-  Github,
-  Google,
-  IconContainer,
-} from '@components/forms/login';
-import {
   Button,
   Checkbox,
   Col,
@@ -29,7 +23,6 @@ import {
   Spin,
   Typography,
 } from 'antd';
-import { signIn } from 'next-auth/client';
 import { fetchAPI } from '@utils/services';
 import { LOGIN_API } from '@constants/index';
 
@@ -106,23 +99,6 @@ const Signin = () => {
                   <Title>Đăng nhập</Title>
                 </Row>
               </Col>
-              <IconContainer span={24}>
-                <Row justify="center" gutter={[15, 15]}>
-                  <Col>
-                    <Facebook
-                      onClick={() => signIn('facebook', { redirect: false })}
-                    />
-                  </Col>
-                  <Col>
-                    <Github onClick={() => signIn()} />
-                  </Col>
-                  <Col>
-                    <Google
-                      onClick={() => signIn('google', { redirect: false })}
-                    />
-                  </Col>
-                </Row>
-              </IconContainer>
             </Row>
             <Form
               {...formItemLayout}
