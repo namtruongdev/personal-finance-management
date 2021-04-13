@@ -99,6 +99,7 @@ const Signup = () => {
                     <Form.Item
                       name="email"
                       label="Email"
+                      hasFeedback
                       rules={[
                         {
                           type: 'email',
@@ -117,10 +118,15 @@ const Signup = () => {
                     <Form.Item
                       name="username"
                       label="Tên người dùng"
+                      hasFeedback
                       rules={[
                         {
                           required: true,
                           message: 'Vui lòng nhập tên người dùng!',
+                        },
+                        {
+                          pattern: /^[a-zA-Z0-9_]+$/,
+                          message: 'Không nhập kí tự đặc biệt',
                         },
                       ]}
                     >

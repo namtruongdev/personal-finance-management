@@ -14,7 +14,6 @@ import {
 
 import {
   Button,
-  Checkbox,
   Col,
   Form,
   Input,
@@ -71,21 +70,6 @@ const Signin = () => {
     }),
     []
   );
-  const tailFormItemLayout = useMemo(
-    () => ({
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 24,
-          offset: 0,
-        },
-      },
-    }),
-    []
-  );
 
   return (
     <FormLayout>
@@ -117,6 +101,10 @@ const Signin = () => {
                     required: true,
                     message: 'Vui lòng nhập tên người dùng!',
                   },
+                  {
+                    pattern: /^[a-zA-Z0-9_]+$/,
+                    message: 'Không nhập kí tự đặc biệt',
+                  },
                 ]}
               >
                 <Input />
@@ -134,22 +122,7 @@ const Signin = () => {
               >
                 <Input.Password />
               </Form.Item>
-              <Row justify="space-between">
-                <Col>
-                  <Form.Item
-                    name="remember"
-                    valuePropName="checked"
-                    {...tailFormItemLayout}
-                  >
-                    <Checkbox>Nhớ mật khẩu</Checkbox>
-                  </Form.Item>
-                </Col>
-                <Col>
-                  <Form.Item>
-                    <Link href="#">Quên mật khẩu?</Link>
-                  </Form.Item>
-                </Col>
-              </Row>
+
               <Form.Item>
                 <Button
                   type="primary"
@@ -160,12 +133,19 @@ const Signin = () => {
                   Đăng nhập
                 </Button>
               </Form.Item>
-              <Paragraph>
-                Chưa có tài khoản?
-                <Link href="/signup">
-                  <a> Đăng ký ngay</a>
-                </Link>
-              </Paragraph>
+              <Row justify="space-between">
+                <Col>
+                  <Paragraph>
+                    Chưa có tài khoản?
+                    <Link href="/signup">
+                      <a> Đăng ký ngay</a>
+                    </Link>
+                  </Paragraph>
+                </Col>
+                <Col>
+                  <Link href="#">Quên mật khẩu?</Link>
+                </Col>
+              </Row>
             </Form>
           </Spin>
         </ContentContainer>
