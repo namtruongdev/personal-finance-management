@@ -1,7 +1,7 @@
 import { JWT_TOKEN_EXPIRY, SALT, SET_COOKIE_OPTIONS } from '@constants/index';
 import { setCookie } from '@utils/auth';
 import db from '@utils/database/index';
-import bcrypt, { hash } from 'bcrypt';
+import { hash, compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { v4 as uuidv4 } from 'uuid';
@@ -45,7 +45,7 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
     username,
   };
 
-  const isMatch = await bcrypt.compare(password, passwordHash);
+  const isMatch = await compare(password, passwordHash);
   if (!isMatch) {
     return res.status(401).json({
       message: 'Sai mật khẩu!',

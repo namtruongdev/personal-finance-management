@@ -14,7 +14,9 @@ import {
 } from '@constants/index';
 
 const HeaderProfile = ({ users }) => {
-  const { username } = users;
+  const { username, picture } = users;
+  // console.log(users, "data -----------");
+
   const handleLogout = () => {
     setCookie({
       name: 'user_id',
@@ -35,7 +37,7 @@ const HeaderProfile = ({ users }) => {
   };
   return (
     <DivUser>
-      <SpanImg />
+      <SpanImg src={picture || ''} />
       <StrongName>{username}</StrongName>
       <SignOutProfile href="/">
         <StrongName onClick={handleLogout}>log out</StrongName>

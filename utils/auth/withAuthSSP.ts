@@ -6,7 +6,7 @@ import {
   SET_COOKIE_OPTIONS,
 } from '@constants/index';
 import db from '@utils/database';
-import { hash, compare } from 'bcrypt';
+import { hash, compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { setCookie } from './setCookie';
@@ -52,6 +52,10 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
   }
 
   const user = doc.data();
+  const dataUser = {
+    id: userId,
+    data: doc.data(),
+  };
 
   const claims = {
     id: userId,
@@ -114,7 +118,10 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
       });
     }
     return {
-      props: { user },
+      props: {
+        user,
+        dataUser,
+      },
     };
   }
   return {

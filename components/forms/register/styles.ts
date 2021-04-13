@@ -12,7 +12,7 @@ export const DivUser = styled.div`
   align-items: center;
   flex-direction: row;
 `;
-export const SpanImg = styled.span`
+export const SpanImg = styled.img`
   border-radius: 50%;
   float: left;
   height: 2rem;

@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useState, ReactNode, useMemo } from 'react';
 import { ROUTES } from '@configs/router';
 
 import type { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
@@ -28,15 +28,6 @@ const DefautFooter = dynamic(
   }
 );
 
-const menuHeaderRender = (logo: React.ReactNode, title: React.ReactNode) => (
-  <Link href="/">
-    <a href="/">
-      {logo}
-      {title}
-    </a>
-  </Link>
-);
-
 const footerRender = () => (
   <DefautFooter
     links={[]}
@@ -52,19 +43,30 @@ const Main = ({ users, children }) => {
   });
   const [pathname, setPathname] = useState(router.pathname);
 
-  // eslint-disable-next-line max-len
-  const menuItemRender = (options: MenuDataItem, element: React.ReactNode) => (
-    <Link href={options.path}>
-      <a
-        href={options.path}
-        onClick={() => setPathname(options.path || '/')}
-        aria-hidden="true"
-      >
-        {element}
-      </a>
-    </Link>
+  const menuHeaderRender = useMemo(
+    () => (logo: ReactNode, title: ReactNode) => (
+      <>
+        <div onClick={() => router.push('/')} aria-hidden="true">
+          {logo}
+        </div>
+        <Link href="/">
+          <a>{title}</a>
+        </Link>
+      </>
+    ),
+    []
   );
   const Div = () => <HeaderProfile users={datauser} />;
+  const menuItemRender = useMemo(
+    () => (options: MenuDataItem, element: React.ReactNode) => (
+      <Link href={options.path}>
+        <a onClick={() => setPathname(options.path || '/')} aria-hidden="true">
+          {element}
+        </a>
+      </Link>
+    ),
+    []
+  );
   return (
     <>
       <ProLayout

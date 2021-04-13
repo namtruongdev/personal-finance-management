@@ -1,3 +1,8 @@
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+
 import {
   ContentContainer,
   FormContent,
@@ -12,15 +17,20 @@ import {
   Input,
   notification,
   Row,
+  Col,
   Spin,
   Typography,
 } from 'antd';
 import { FormSignup } from 'interface/formInterface';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { SIGNUP_API } from '@constants/api';
+
+import { fetchAPI } from '@utils/services';
 
 const { Title, Paragraph } = Typography;
+
+const ParticlesBg = dynamic(() => import('particles-bg'), {
+  ssr: false,
+});
 
 const tailFormItemLayout = {
   wrapperCol: {
@@ -48,23 +58,21 @@ const Signup = () => {
 
   const onFinish = async (values: FormSignup) => {
     setLoading(true);
-    const resp = await fetch('http://localhost:3000/api/signup', {
+    const res = await fetchAPI({
+      url: SIGNUP_API,
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(values),
+      payload: values,
     });
-    const data: RESP = await resp.json();
+    const results: RESP = await res.json();
 
-    if (!resp.ok) {
+    if (!res.ok) {
       setLoading(false);
       return notification.error({
-        message: data.message,
+        message: results.message,
       });
     }
     notification.success({
-      message: data.message,
+      message: results.message,
     });
     setLoading(false);
     return router.push('/login');
@@ -74,6 +82,7 @@ const Signup = () => {
     <>
       <FormLayout>
         <FormContent>
+          <ParticlesBg type="cobweb" bg={true} />
           <ContentContainer>
             <Spin spinning={loading}>
               <Row justify="center">
@@ -87,34 +96,40 @@ const Signup = () => {
                 onFinish={onFinish}
                 scrollToFirstError
               >
-                <Form.Item
-                  name="email"
-                  label="Email"
-                  rules={[
-                    {
-                      type: 'email',
-                      message: 'Email không hợp lệ!',
-                    },
-                    {
-                      required: true,
-                      message: 'Vui lòng nhập Email!',
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-                <Form.Item
-                  name="username"
-                  label="Tên người dùng"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Vui lòng nhập tên người dùng!',
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
+                <Row gutter={[15, 15]}>
+                  <Col span={12}>
+                    <Form.Item
+                      name="email"
+                      label="Email"
+                      rules={[
+                        {
+                          type: 'email',
+                          message: 'Email không hợp lệ!',
+                        },
+                        {
+                          required: true,
+                          message: 'Vui lòng nhập Email!',
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col span={12}>
+                    <Form.Item
+                      name="username"
+                      label="Tên người dùng"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Vui lòng nhập tên người dùng!',
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Col>
+                </Row>
                 <Form.Item
                   name="password"
                   label="Mật khẩu"
