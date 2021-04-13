@@ -1,28 +1,29 @@
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
-
+// import { FormSignup } from 'interface/formInterface';
+import { SIGNUP_API } from '@constants/api';
+import CarouselSelect from '@layouts/sider';
 import {
   ContentContainer,
   FormContent,
   FormLayout,
   FormSider,
-} from '@components/forms';
+} from '@layouts/sider/styles';
+import { fetchAPI } from '@utils/services';
 import {
   Button,
   Checkbox,
+  Col,
   Form,
   Input,
   notification,
   Row,
-  Col,
   Spin,
   Typography,
 } from 'antd';
-import { FormSignup } from 'interface/formInterface';
-import { SIGNUP_API } from '@constants/api';
-import { fetchAPI } from '@utils/services';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
 
 const { Title, Paragraph } = Typography;
 
@@ -54,7 +55,7 @@ const Signup = () => {
 
   const [form] = Form.useForm();
 
-  const onFinish = async (values: FormSignup) => {
+  const onFinish = async (values) => {
     setLoading(true);
     const res = await fetchAPI({
       url: SIGNUP_API,
@@ -127,6 +128,16 @@ const Signup = () => {
                         {
                           pattern: /^[a-zA-Z0-9_]+$/,
                           message: 'Không nhập kí tự đặc biệt',
+                        },
+                        {
+                          validator(_, value) {
+                            if (!value.match(new RegExp('[A-Z]'))) {
+                              return Promise.resolve('HI');
+                            }
+                            return Promise.reject(
+                              new Error('Không nhập chữ viết hoa')
+                            );
+                          },
                         },
                       ]}
                     >
@@ -205,10 +216,30 @@ const Signup = () => {
             </Spin>
           </ContentContainer>
         </FormContent>
-        <FormSider>Sider</FormSider>
+        <FormSider>
+          <CarouselSelect />
+        </FormSider>
       </FormLayout>
     </>
   );
 };
+export const getServerSideProps: GetServerSideProps = async (
+  ctx: GetServerSidePropsContext
+) => {
+  const { req } = ctx;
+  const { cookies } = req;
+  const { user_id: userId, refresh_token: refreshToken } = cookies;
 
+  if (refreshToken && userId) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: true,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};
 export default Signup;

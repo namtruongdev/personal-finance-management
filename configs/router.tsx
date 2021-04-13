@@ -17,12 +17,16 @@ export const ROUTES: Route = {
       icon: <PlaySquareOutlined />,
       routes: [
         {
+          path: '/du-toan/thu-nhap',
+          name: 'Thu nhập',
+        },
+        {
           path: '/du-toan/chi-tieu-thiet-yeu',
           name: 'Chi tiêu thiết yếu',
         },
         {
-          path: '/du-toan/chi-tieu-ko-thiet-yeu',
-          name: 'Chi tiêu không thiết yếu',
+          path: '/du-toan/chi-tieu-giai-tri',
+          name: 'Chi tiêu giải trí',
         },
         {
           path: '/du-toan/chi-tieu-dot-xuat',
@@ -31,6 +35,10 @@ export const ROUTES: Route = {
         {
           path: '/du-toan/ke-hoach-chi-tieu',
           name: 'Kế hoạch chi tiêu',
+        },
+        {
+          path: '/du-toan/phan-bo-thu-nhap',
+          name: 'Phân bổ thu nhập',
         },
       ],
     },
@@ -44,8 +52,8 @@ export const ROUTES: Route = {
           name: 'Chi tiêu thiết yếu',
         },
         {
-          path: '/chi-tieu/chi-tieu-ko-thiet-yeu',
-          name: 'Chi tiêu không thiết yếu',
+          path: '/chi-tieu/chi-tieu-giai-tri',
+          name: 'Chi tiêu giải trí',
         },
         {
           path: '/chi-tieu/chi-tieu-dot-xuat',
