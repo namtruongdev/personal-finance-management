@@ -9,6 +9,9 @@ import { ProSettings } from '@ant-design/pro-layout';
 
 import { MoneyBag } from '@components/Icons/index';
 
+import Autoset from '@components/logout';
+import { StrongName, DivUser } from '@components/forms/register/styles';
+
 const SettingDrawer = dynamic(
   () => import('@ant-design/pro-layout/lib/components/SettingDrawer'),
   {
@@ -21,7 +24,9 @@ const ProLayout = dynamic(() => import('@ant-design/pro-layout'), {
 
 const DefautFooter = dynamic(
   () => import('@ant-design/pro-layout/lib/Footer'),
-  { ssr: false }
+  {
+    ssr: false,
+  }
 );
 
 const footerRender = () => (
@@ -31,9 +36,10 @@ const footerRender = () => (
   />
 );
 
-const Main = ({ children }) => {
-  const router = useRouter();
+const Main = ({ children, user, dataUser }) => {
+  // console.log(user,"----------------ụm");
 
+  const router = useRouter();
   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
     title: 'PFM',
   });
@@ -52,7 +58,7 @@ const Main = ({ children }) => {
     ),
     []
   );
-
+  //   const Div = () => <HeaderProfile users={datauser} />;
   const menuItemRender = useMemo(
     () => (options: MenuDataItem, element: React.ReactNode) => (
       <Link href={options.path}>
@@ -60,6 +66,15 @@ const Main = ({ children }) => {
           {element}
         </a>
       </Link>
+    ),
+    []
+  );
+  const logOut = useMemo(
+    () => () => (
+      <DivUser>
+        <Autoset data={user} dataUser={dataUser} />
+        <StrongName>{user.username}</StrongName>
+      </DivUser>
     ),
     []
   );
@@ -74,7 +89,9 @@ const Main = ({ children }) => {
         menuItemRender={menuItemRender}
         menuHeaderRender={menuHeaderRender}
         footerRender={footerRender}
+        // rightContentRender={Div}
         {...settings}
+        rightContentRender={logOut}
       >
         {children}
       </ProLayout>

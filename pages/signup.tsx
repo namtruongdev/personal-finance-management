@@ -9,6 +9,7 @@ import {
   FormLayout,
   FormSider,
 } from '@components/forms';
+import CarouselSelect from '@components/sider/carouselSelect';
 import {
   Button,
   Checkbox,
@@ -22,6 +23,7 @@ import {
 } from 'antd';
 import { FormSignup } from 'interface/formInterface';
 import { SIGNUP_API } from '@constants/api';
+
 import { fetchAPI } from '@utils/services';
 
 const { Title, Paragraph } = Typography;
@@ -205,7 +207,9 @@ const Signup = () => {
             </Spin>
           </ContentContainer>
         </FormContent>
-        <FormSider>Sider</FormSider>
+        <FormSider>
+          <CarouselSelect />
+        </FormSider>
       </FormLayout>
     </>
   );
