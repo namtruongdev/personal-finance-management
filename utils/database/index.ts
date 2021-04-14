@@ -16,4 +16,5 @@ if (!admin.apps.length) {
     throw new Error(`Firebase admin initialization error: ${error.stack}`);
   }
 }
+
 export default admin.firestore();
