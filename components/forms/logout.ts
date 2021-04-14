@@ -13,3 +13,12 @@ export const Hr = styled.hr`
   color: #dadde1;
   height: 1px;
 `;
+export const UpLoad = styled.div`
+  margin: 10px;
+  width: 100px;
+`;
+export const PickImg = styled.input`
+  background-color: black;
+  color: white;
+  font-weight: 600;
+`;

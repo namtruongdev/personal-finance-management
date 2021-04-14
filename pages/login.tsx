@@ -1,17 +1,12 @@
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import dynamic from 'next/dynamic';
-
-import React, { useMemo, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-
 import {
   ContentContainer,
   FormContent,
   FormLayout,
   FormSider,
 } from '@components/forms';
-
+import CarouselSelect from '@components/sider/carouselSelect';
+import { LOGIN_API } from '@constants/index';
+import { fetchAPI } from '@utils/services';
 import {
   Button,
   Col,
@@ -22,8 +17,11 @@ import {
   Spin,
   Typography,
 } from 'antd';
-import { fetchAPI } from '@utils/services';
-import { LOGIN_API } from '@constants/index';
+import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import React, { useMemo, useState } from 'react';
 
 const ParticlesBg = dynamic(() => import('particles-bg'), {
   ssr: false,
@@ -122,7 +120,6 @@ const Signin = () => {
               >
                 <Input.Password />
               </Form.Item>
-
               <Form.Item>
                 <Button
                   type="primary"
@@ -150,7 +147,9 @@ const Signin = () => {
           </Spin>
         </ContentContainer>
       </FormContent>
-      <FormSider>Sider</FormSider>
+      <FormSider>
+        <CarouselSelect />
+      </FormSider>
     </FormLayout>
   );
 };
