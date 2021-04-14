@@ -24,6 +24,7 @@ import {
 } from 'antd';
 import { fetchAPI } from '@utils/services';
 import { LOGIN_API } from '@constants/index';
+import CarouselSelect from '@components/sider/carouselSelect';
 
 const ParticlesBg = dynamic(() => import('particles-bg'), {
   ssr: false,
@@ -150,7 +151,9 @@ const Signin = () => {
           </Spin>
         </ContentContainer>
       </FormContent>
-      <FormSider>Sider</FormSider>
+      <FormSider>
+        <CarouselSelect />
+      </FormSider>
     </FormLayout>
   );
 };
