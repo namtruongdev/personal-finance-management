@@ -8,8 +8,8 @@ import type { MenuDataItem } from '@ant-design/pro-layout/lib/typings';
 import { ProSettings } from '@ant-design/pro-layout';
 
 import { MoneyBag } from '@components/Icons/index';
-import LogoutButton from '@layouts/headerRight/logout';
-import { NameAcc } from '@layouts/headerRight/logout/styles';
+import LogoutButton from '@layouts/headerRight';
+import { NameAcc } from '@layouts/headerRight/styles';
 
 const SettingDrawer = dynamic(
   () => import('@ant-design/pro-layout/lib/components/SettingDrawer'),
@@ -36,7 +36,6 @@ const footerRender = () => (
 );
 
 const Main = ({ children, user }) => {
-  // console.log(user,"----------------ụm");
 
   const router = useRouter();
   const [settings, setSetting] = useState<Partial<ProSettings> | undefined>({
@@ -57,7 +56,6 @@ const Main = ({ children, user }) => {
     ),
     []
   );
-  //   const Div = () => <HeaderProfile users={datauser} />;
   const menuItemRender = useMemo(
     () => (options: MenuDataItem, element: React.ReactNode) => (
       <Link href={options.path}>

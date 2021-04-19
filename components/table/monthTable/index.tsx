@@ -1,188 +1,233 @@
-import React, { useState } from 'react';
-import {
-  Table,
-  Input,
-  InputNumber,
-  Popconfirm,
-  Form,
-  Typography,
-  Col,
-  Row,
-} from 'antd';
+import React, { memo, useCallback, useMemo, useState } from 'react';
+import { Table, Popconfirm, Form, Col, Row, Button } from 'antd';
+import EditableCell from '@components/table/components/EditableCell';
 
-const originData = [];
-
-for (let i = 0; i < 5; i++) {
-  originData.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
-
-const EditableCell = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === 'number' ? <InputNumber /> : <Input />;
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{
-            margin: 0,
-          }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
-
-const EditableTable = () => {
+const EditableTable = ({ originData }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState('');
 
-  const isEditing = (record) => record.key === editingKey;
+  const isEditing = (record: { key: string }) => record.key === editingKey;
 
-  const handleDelete = (key) => {
-    setData([...data.filter((item) => item.key !== key)]);
+  const handleDelete = (key: string) => {
+    setData([...data.filter((item: { key: string }) => item.key !== key)]);
   };
-  const edit = (record) => {
-    form.setFieldsValue({
-      name: '',
-      age: '',
-      address: '',
-      ...record,
-    });
-    setEditingKey(record.key);
-  };
+  const edit = useCallback(
+    (record: { key: string, thang1: number }) => {
+      form.setFieldsValue({
+        thang1: 0,
+        thang2: 0,
+        thang3: 0,
+        thang4: 0,
+        thang5: 0,
+        thang6: 0,
+        thang7: 0,
+        thang8: 0,
+        thang9: 0,
+        thang10: 0,
+        thang11: 0,
+        thang12: 0,
+        ...record,
+      });
+      setEditingKey(record.key);
+    },
+    [form]
+  );
 
-  const cancel = () => {
-    setEditingKey('');
-  };
+  const cancel = useCallback(() => setEditingKey(''), []);
 
-  const save = async (key) => {
-    try {
-      const row = await form.validateFields();
-      const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
+  const save = useCallback(
+    async (key: string) => {
+      try {
+        const row = await form.validateFields();
+        const newData = [...data];
+        const index = newData.findIndex((item) => key === item.key);
 
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setData(newData);
-        setEditingKey('');
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey('');
+        if (index > -1) {
+          const item = newData[index];
+          newData.splice(index, 1, { ...item, ...row });
+          setData(newData);
+          setEditingKey('');
+        } else {
+          newData.push(row);
+          setData(newData);
+          setEditingKey('');
+        }
+      } catch (err) {
+        throw new Error(err);
       }
-    } catch (errInfo) {
-      // console.log('Validate Failed:', errInfo);
-    }
-  };
+    },
+    [data, form]
+  );
+  const columns = useMemo(
+    () => [
+      {
+        title: '#',
+        dataIndex: 'hieuc',
+        align: 'center' as 'center',
+        width: '3%',
+      },
+      {
+        title: '01/2021',
+        dataIndex: 'thang1',
+        align: 'center' as 'center',
+        editable: true,
+      },
+      {
+        title: '02/2021',
+        dataIndex: 'thang2',
+        align: 'center' as 'center',
+        editable: true,
+      },
+      {
+        title: '03/2021',
+        dataIndex: 'thang3',
+        align: 'center' as 'center',
 
-  const columns = [
-    {
-      title: 'name',
-      dataIndex: 'name',
-      width: '25%',
-      editable: true,
-    },
-    {
-      title: 'age',
-      dataIndex: 'age',
-      width: '15%',
-      editable: true,
-    },
-    {
-      title: 'address',
-      dataIndex: 'address',
-      width: '40%',
-      editable: true,
-    },
-    {
-      title: 'operation',
-      dataIndex: 'operation',
-      render: (_, record) => {
-        const editable = isEditing(record);
-        return originData.length >= 1 ? (
-          <>
+        editable: true,
+      },
+      {
+        title: '04/2021',
+        dataIndex: 'thang4',
+        align: 'center' as 'center',
+
+        editable: true,
+      },
+      {
+        title: '05/2021',
+        dataIndex: 'thang5',
+        align: 'center' as 'center',
+
+        editable: true,
+      },
+      {
+        title: '06/2021',
+        dataIndex: 'thang6',
+        align: 'center' as 'center',
+
+        editable: true,
+      },
+      {
+        title: '07/2021',
+        dataIndex: 'thang7',
+        align: 'center' as 'center',
+
+        editable: true,
+      },
+      {
+        title: '08/2021',
+        dataIndex: 'thang8',
+        align: 'center' as 'center',
+
+        editable: true,
+      },
+      {
+        title: '09/2021',
+        dataIndex: 'thang9',
+        align: 'center' as 'center',
+
+        editable: true,
+      },
+      {
+        title: '10/2021',
+        dataIndex: 'thang10',
+        align: 'center' as 'center',
+
+        editable: true,
+      },
+      {
+        title: '11/2021',
+        dataIndex: 'thang11',
+        align: 'center' as 'center',
+
+        editable: true,
+      },
+      {
+        title: '12/2021',
+        align: 'center' as 'center',
+
+        dataIndex: 'thang12',
+        editable: true,
+      },
+
+      {
+        title: 'Chức năng',
+        dataIndex: 'operation',
+        align: 'center' as 'center',
+        fixed: 'right' as 'right',
+        width: '6%',
+        render: (_: unknown, record: { key: string }) => {
+          const editable = isEditing(record);
+          return originData.length >= 1 ? (
             <Row>
-              <Col span={6}>
+              <Col span={24}>
                 <Popconfirm
-                  title="Sure to delete?"
+                  cancelText="Xóa"
+                  title="Bạn muốn xóa?"
                   onConfirm={() => handleDelete(record.key)}
                 >
-                  <a>Delete</a>
+                  <Button type="link">Xoá</Button>
                 </Popconfirm>
               </Col>
-              <Col span={10}>
+              <Col span={24}>
                 {editable ? (
-                  <span>
-                    <a
-                      href="javascript:;"
-                      onClick={() => save(record.key)}
-                      style={{ marginRight: 8 }}
-                    >
-                      Save
-                    </a>
-                    <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-                      <a>Cancel</a>
-                    </Popconfirm>
-                  </span>
+                  <Row>
+                    <Col span={24}>
+                      <Button onClick={() => save(record.key)} type="link">
+                        Lưu
+                      </Button>
+                    </Col>
+                    <Col span={24}>
+                      <Popconfirm
+                        cancelText="Hủy"
+                        title="Bạn muốn hủy?"
+                        onConfirm={cancel}
+                      >
+                        <Button type="link">Hủy</Button>
+                      </Popconfirm>
+                    </Col>
+                  </Row>
                 ) : (
-                  <Typography.Link
+                  <Button
                     disabled={editingKey !== ''}
                     onClick={() => edit(record)}
+                    type="link"
                   >
-                    Edit
-                  </Typography.Link>
+                    Sửa
+                  </Button>
                 )}
               </Col>
             </Row>
-          </>
-        ) : null;
+          ) : null;
+        },
       },
-    },
-  ];
+    ],
+    [editingKey, isEditing, originData.length]
+  );
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
+
       return col;
     }
-
     return {
       ...col,
-      onCell: (record) => ({
+      onCell: (record: { key: string }) =>
+
+      ({
         record,
-        inputType: col.dataIndex === 'age' ? 'number' : 'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
-      }),
+      })
+      ,
     };
   });
+
   return (
-    <Form form={form} component={false}>
+    <Form
+      form={form}
+      component={false}
+    >
       <Table
         components={{
           body: {
@@ -192,11 +237,9 @@ const EditableTable = () => {
         bordered
         dataSource={data}
         columns={mergedColumns}
-        rowClassName="editable-row"
-        pagination={false}
-        scroll={{ x: 1500 }}
+        scroll={{ x: 1800 }}
       />
     </Form>
   );
 };
-export default EditableTable;
+export default memo(EditableTable);

@@ -132,7 +132,7 @@ const Signup = () => {
                         {
                           validator(_, value) {
                             if (!value.match(new RegExp('[A-Z]'))) {
-                              return Promise.resolve('HI');
+                              return Promise.resolve();
                             }
                             return Promise.reject(
                               new Error('Không nhập chữ viết hoa')
