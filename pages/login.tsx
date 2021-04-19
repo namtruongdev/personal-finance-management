@@ -10,7 +10,7 @@ import {
   FormContent,
   FormLayout,
   FormSider,
-} from '@components/forms';
+} from '@layouts/sider/styles';
 
 import {
   Button,
@@ -24,6 +24,7 @@ import {
 } from 'antd';
 import { fetchAPI } from '@utils/services';
 import { LOGIN_API } from '@constants/index';
+import CarouselSelect from '@layouts/sider';
 
 const ParticlesBg = dynamic(() => import('particles-bg'), {
   ssr: false,
@@ -105,6 +106,16 @@ const Signin = () => {
                     pattern: /^[a-zA-Z0-9_]+$/,
                     message: 'Không nhập kí tự đặc biệt',
                   },
+                  {
+                    validator(_, value) {
+                      if (!value.match(new RegExp('[A-Z]'))) {
+                        return Promise.resolve('HI');
+                      }
+                      return Promise.reject(
+                        new Error('Không nhập chữ viết hoa')
+                      );
+                    },
+                  },
                 ]}
               >
                 <Input />
@@ -150,7 +161,9 @@ const Signin = () => {
           </Spin>
         </ContentContainer>
       </FormContent>
-      <FormSider>Sider</FormSider>
+      <FormSider>
+        <CarouselSelect />
+      </FormSider>
     </FormLayout>
   );
 };
