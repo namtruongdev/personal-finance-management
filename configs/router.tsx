@@ -8,7 +8,7 @@ export const ROUTES: Route = {
   routes: [
     {
       path: '/',
-      name: 'Bảng điều khiển',
+      name: 'Thống kê chi tiết',
       icon: <SmileOutlined />,
     },
     {
@@ -33,8 +33,8 @@ export const ROUTES: Route = {
           name: 'Chi tiêu đột xuất',
         },
         {
-          path: '/du-toan/ke-hoach-chi-tieu',
-          name: 'Kế hoạch chi tiêu',
+          path: '/du-toan/chi-tieu-lau-dai',
+          name: 'Chi tiêu lâu dài',
         },
         {
           path: '/du-toan/phan-bo-thu-nhap',
