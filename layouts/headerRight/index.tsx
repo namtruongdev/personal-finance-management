@@ -1,7 +1,7 @@
 import { LOGOUT_API } from '@constants/api';
-import { AvatarIcon, HrLogout } from '@layouts/headerRight/logout/styles';
+import { AvatarIcon, ButtonLogout } from '@layouts/headerRight/styles';
 import { fetchAPI } from '@utils/services';
-import { Avatar, Button, Dropdown, Menu, notification } from 'antd';
+import { Avatar, Dropdown, Menu, notification } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
@@ -38,19 +38,13 @@ const LogoutButton = ({ data }) => {
 
   const menu = (
     <Menu>
-      <HrLogout />
+
       <Menu.Item>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.aliyun.com"
-        >
-          Thông tin cá nhân
-        </a>
+        <ButtonLogout block > Thông tin cá nhân</ButtonLogout>
       </Menu.Item>
-      <HrLogout />
+
       <Menu.Item>
-        <Button onClick={logout}>Đăng xuất</Button>
+        <ButtonLogout block onClick={logout}>Đăng xuất</ButtonLogout>
       </Menu.Item>
     </Menu>
   );
