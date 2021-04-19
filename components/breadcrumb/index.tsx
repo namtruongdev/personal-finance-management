@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import React, { memo } from 'react';
 import { Breadcrumb, BreadcrumbProps } from 'antd';
+import { Route } from 'antd/lib/breadcrumb/Breadcrumb';
 
-const itemRender = (route, params, routes) => {
+const itemRender = (route: Route, params: unknown, routes: Route[]) => {
   const first = routes.indexOf(route) === 0;
   return first ? (
     <Link href="/">{route.breadcrumbName}</Link>
