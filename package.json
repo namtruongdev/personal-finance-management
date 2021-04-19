@@ -23,6 +23,7 @@
     "bcryptjs": "^2.4.3",
     "cookie": "^0.4.1",
     "esm": "3.2.25",
+    "firebase": "^8.4.1",
     "firebase-admin": "^9.6.0",
     "jsonwebtoken": "^8.5.1",
     "less": "3.11.1",

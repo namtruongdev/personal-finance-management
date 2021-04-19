@@ -7,7 +7,7 @@ if (!admin.apps.length) {
     admin.initializeApp({
       credential: admin.credential.cert({
         privateKey,
-        projectId: process.env.FIRESTORE_PROJECT_ID,
+        projectId: process.env.NEXT_PUBLIC_FIRESTORE_PROJECT_ID,
         clientEmail: process.env.FIRESTORE_CLIENT_EMAIL,
       }),
       databaseURL: process.env.FIRESTORE_DATABASE_URL,
