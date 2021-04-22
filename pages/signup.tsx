@@ -1,11 +1,11 @@
 // import { FormSignup } from 'interface/formInterface';
 import { SIGNUP_API } from '@constants/api';
-import CarouselSelect from '@layouts/sider';
+// import CarouselSelect from '@layouts/sider';
 import {
   ContentContainer,
   FormContent,
   FormLayout,
-  FormSider,
+  // FormSider,
 } from '@layouts/sider/styles';
 import { fetchAPI } from '@utils/services';
 import {
@@ -216,9 +216,9 @@ const Signup = () => {
             </Spin>
           </ContentContainer>
         </FormContent>
-        <FormSider>
+        {/* <FormSider>
           <CarouselSelect />
-        </FormSider>
+        </FormSider> */}
       </FormLayout>
     </>
   );

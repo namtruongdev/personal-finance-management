@@ -41,6 +41,7 @@ const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
   const passwordHash = await hash(password, SALT);
 
   const payload: User = {
+    dutoan: { thunhap: [] },
     email,
     username,
     password: passwordHash,

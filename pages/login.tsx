@@ -9,7 +9,7 @@ import {
   ContentContainer,
   FormContent,
   FormLayout,
-  FormSider,
+  // FormSider,
 } from '@layouts/sider/styles';
 
 import {
@@ -24,7 +24,7 @@ import {
 } from 'antd';
 import { fetchAPI } from '@utils/services';
 import { LOGIN_API } from '@constants/index';
-import CarouselSelect from '@layouts/sider';
+// import CarouselSelect from '@layouts/sider';
 
 const ParticlesBg = dynamic(() => import('particles-bg'), {
   ssr: false,
@@ -161,9 +161,9 @@ const Signin = () => {
           </Spin>
         </ContentContainer>
       </FormContent>
-      <FormSider>
+      {/* <FormSider>
         <CarouselSelect />
-      </FormSider>
+      </FormSider> */}
     </FormLayout>
   );
 };

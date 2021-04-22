@@ -1,5 +1,8 @@
 import styled from 'styled-components';
-import { Button } from 'antd'
+import { Button, Menu } from 'antd'
+
+const { Item } = Menu;
+
 
 export const NameAcc = styled.span`
   font-weight: 600;
@@ -9,16 +12,31 @@ export const AvatarIcon = styled.span`
   cursor: pointer;
 `;
 
-export const ButtonLogout = styled(Button)`
 
-border:0;
-padding:6px;
-font-weight:600;
-margin-top:5px;
-margin-bottom:3px;
+export const Items = styled(Item)`
+padding: 18px;
+font-weight: 600;
+border-bottom: 0.1px solid #D7D9DD;
+text-align: center;
 &:hover {
-background-color:black;
-color: white;
-font-weight:600
+background-color: white;
+color: orange;
+font-weight: 600;
+border-bottom: 0.1px solid orange;
 }
+`;
+export const Menus = styled(Menu)`
+border:0;
+margin: 5px;
+border-radius: 4px;
+padding: 0;
+`;
+
+export const NameUser = styled.div`
+
+display:flex;
+margin-right:13px;
+justify-content:center;
+align-items:center
+
 `;

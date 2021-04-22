@@ -9,7 +9,7 @@ import { ProSettings } from '@ant-design/pro-layout';
 
 import { MoneyBag } from '@components/Icons/index';
 import LogoutButton from '@layouts/headerRight';
-import { NameAcc } from '@layouts/headerRight/styles';
+import { NameAcc, NameUser } from '@layouts/headerRight/styles';
 
 const SettingDrawer = dynamic(
   () => import('@ant-design/pro-layout/lib/components/SettingDrawer'),
@@ -68,10 +68,10 @@ const Main = ({ children, user }) => {
   );
   const logOut = useMemo(
     () => () => (
-      <div>
+      <NameUser>
         <LogoutButton data={user} />
         <NameAcc>{user.username}</NameAcc>
-      </div>
+      </NameUser>
     ),
     []
   );

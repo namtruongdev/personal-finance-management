@@ -1,4 +1,5 @@
 interface User {
+  dutoan: { thunhap: [] }
   email: string;
   username: string;
   createdAt: string;
