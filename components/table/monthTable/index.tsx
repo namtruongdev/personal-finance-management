@@ -2,7 +2,7 @@ import React, { memo, useCallback, useMemo, useState } from 'react';
 import { Table, Popconfirm, Form, Col, Row, Button } from 'antd';
 import EditableCell from '@components/table/components/EditableCell';
 
-const EditableTable = ({ originData }) => {
+const EditableTable = ({ originData, column }) => {
   const [form] = Form.useForm();
   const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState('');
@@ -66,6 +66,13 @@ const EditableTable = ({ originData }) => {
         dataIndex: 'stt',
         align: 'center' as 'center',
         width: '3%',
+      },
+      {
+        title: column.title,
+        dataIndex: column.dataIndex,
+        align: 'center' as 'center',
+        width: '12%',
+        editable: true,
       },
       {
         title: '01/2021',

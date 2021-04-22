@@ -10,6 +10,7 @@ import Diolog from '@components/table/components/diolog/dialog';
 export default function Estimate({ user }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const originData = [];
+  const column = { title: 'Chi tiêu đột xuất', dataIndex: 'chitieudotxuat' };
 
   for (let i = 0; i < 3; i++) {
     const randomNum = Math.floor(Math.random() * 10000000 + 1);
@@ -41,7 +42,7 @@ export default function Estimate({ user }) {
         breadcrumbName: 'Dự toán',
       },
       {
-        path: '/phan-bo-thu-nhap',
+        path: '/chi-tieu-dot-xuat',
         breadcrumbName: 'Chi tiêu đột xuất',
       },
     ],
@@ -80,7 +81,7 @@ export default function Estimate({ user }) {
                     </Row>
                   </Modal>
                 </Col>
-                <MonthTable originData={originData} />
+                <MonthTable column={column} originData={originData} />
               </Row>
             </Card>
           </Col>

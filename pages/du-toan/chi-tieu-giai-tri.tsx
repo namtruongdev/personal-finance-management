@@ -2,8 +2,10 @@ import MonthTable from '@components/table/monthTable';
 import Breadcrumb from '@components/breadcrumb';
 import MainLayout from '@layouts/main';
 import { withAuthSSP } from '@utils/auth';
-import { Card, Col, Row } from 'antd';
-import React, { useMemo } from 'react';
+import { Button, Card, Col, Row } from 'antd';
+import React, { useMemo, useState } from 'react';
+import Modal from 'antd/lib/modal/Modal';
+import Diolog from '@components/table/components/diolog/dialog';
 
 // import { useRouter } from 'next/router';
 
@@ -11,12 +13,28 @@ export default function Estimate({ user, dataUser }) {
   // const router = useRouter();
   const originData = [];
 
-  for (let i = 0; i < 5; i++) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const column = { title: 'Chi tiêu giải trí', dataIndex: 'chitieugiaitri' };
+
+  for (let i = 0; i < 3; i++) {
+    const randomNum = Math.floor(Math.random() * 10000000 + 1);
     originData.push({
       key: i.toString(),
-      name: `Edrward ${i}`,
-      age: 32,
-      address: `London Park no. ${i}`,
+      stt: `${i + 1}`,
+      chitieugiaitri: '',
+      thang1: 200000,
+      thang2: 600000,
+      thang3: 1000000,
+      thang4: randomNum,
+      thang5: randomNum,
+      thang6: randomNum,
+      thang7: randomNum,
+      thang8: randomNum,
+      thang9: randomNum,
+      thang10: randomNum,
+      thang11: randomNum,
+      thang12: randomNum,
     });
   }
   const routes: Routes[] = useMemo(
@@ -30,12 +48,18 @@ export default function Estimate({ user, dataUser }) {
         breadcrumbName: 'Dự toán',
       },
       {
-        path: '/phan-bo-thu-nhap',
+        path: '/chi-tieu-giai-tri',
         breadcrumbName: 'Chi tiêu giải trí',
       },
     ],
     []
   );
+  const showModalAdd = () => {
+    setIsModalVisible(true);
+  };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
   return (
     <>
       <MainLayout user={user}>
@@ -45,7 +69,26 @@ export default function Estimate({ user, dataUser }) {
           </Col>
           <Col span={24}>
             <Card title="Chi tiêu giải trí">
-              <MonthTable originData={originData} />
+              <Row gutter={[0, 15]} justify="end">
+                <Col>
+                  <Button type="primary" onClick={showModalAdd}>
+                    Thêm
+                  </Button>
+                  <Modal
+                    title="Thêm tài nguyên"
+                    visible={isModalVisible}
+                    onCancel={handleCancel}
+                    footer={null}
+                  >
+                    <Row justify="space-around">
+                      <Col span={16}>
+                        <Diolog onCancel={handleCancel} />
+                      </Col>
+                    </Row>
+                  </Modal>
+                </Col>
+                <MonthTable column={column} originData={originData} />
+              </Row>
             </Card>
           </Col>
         </Row>
