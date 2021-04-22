@@ -1,7 +1,7 @@
 import { LOGOUT_API } from '@constants/api';
-import { AvatarIcon, ButtonLogout } from '@layouts/headerRight/styles';
+import { AvatarIcon, Items, Menus } from '@layouts/headerRight/styles';
 import { fetchAPI } from '@utils/services';
-import { Avatar, Dropdown, Menu, notification } from 'antd';
+import { Avatar, Dropdown, notification } from 'antd';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
@@ -37,16 +37,10 @@ const LogoutButton = ({ data }) => {
   };
 
   const menu = (
-    <Menu>
-
-      <Menu.Item>
-        <ButtonLogout block > Thông tin cá nhân</ButtonLogout>
-      </Menu.Item>
-
-      <Menu.Item>
-        <ButtonLogout block onClick={logout}>Đăng xuất</ButtonLogout>
-      </Menu.Item>
-    </Menu>
+    <Menus>
+      <Items>Thông tin cá nhân </Items>
+      <Items onClick={logout}> Đăng xuất </Items>
+    </Menus>
   );
 
   return (

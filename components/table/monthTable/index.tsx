@@ -13,7 +13,7 @@ const EditableTable = ({ originData }) => {
     setData([...data.filter((item: { key: string }) => item.key !== key)]);
   };
   const edit = useCallback(
-    (record: { key: string, thang1: number }) => {
+    (record: { key: string }) => {
       form.setFieldsValue({
         thang1: 0,
         thang2: 0,
@@ -63,7 +63,7 @@ const EditableTable = ({ originData }) => {
     () => [
       {
         title: '#',
-        dataIndex: 'hieuc',
+        dataIndex: 'stt',
         align: 'center' as 'center',
         width: '3%',
       },
@@ -206,28 +206,21 @@ const EditableTable = ({ originData }) => {
   );
   const mergedColumns = columns.map((col) => {
     if (!col.editable) {
-
       return col;
     }
     return {
       ...col,
-      onCell: (record: { key: string }) =>
-
-      ({
+      onCell: (record: { key: string }) => ({
         record,
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
-      })
-      ,
+      }),
     };
   });
 
   return (
-    <Form
-      form={form}
-      component={false}
-    >
+    <Form form={form} component={false}>
       <Table
         components={{
           body: {

@@ -9,7 +9,6 @@ import {
   ContentContainer,
   FormContent,
   FormLayout,
-  FormSider,
 } from '@layouts/sider/styles';
 
 import {
@@ -161,9 +160,8 @@ const Signin = () => {
           </Spin>
         </ContentContainer>
       </FormContent>
-      <FormSider>
-        <CarouselSelect />
-      </FormSider>
+
+      <CarouselSelect />
     </FormLayout>
   );
 };
