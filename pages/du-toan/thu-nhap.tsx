@@ -1,11 +1,32 @@
-import MonthTable from '@components/table/monthTable';
 import Breadcrumb from '@components/breadcrumb';
+import Diolog from '@components/table/components/diolog/dialog';
+import MonthTable from '@components/table/monthTable';
 import MainLayout from '@layouts/main';
 import { withAuthSSP } from '@utils/auth';
-import { Card, Col, Row } from 'antd';
-import React, { useMemo } from 'react';
+import { Button, Card, Col, Row } from 'antd';
+import Modal from 'antd/lib/modal/Modal';
+import React, { useMemo, useState } from 'react';
 
-const Estimate = ({ user }) => {
+export default function Estimate({ user }) {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [columnsMonth, setColumnsMonth] = useState('');
+  const dataInitial = {
+    thunhap: 'Tiền xăng',
+    thang1: 0,
+    thang2: 0,
+    thang3: 0,
+    thang4: 0,
+    thang5: 0,
+    thang6: 0,
+    thang7: 0,
+    thang8: 0,
+    thang9: 0,
+    thang10: 0,
+    thang11: 0,
+    thang12: 0,
+  };
+  const data = user.dutoan?.thunhap ? user.dutoan.thunhap : [dataInitial];
+  const data1 = data.map((val, key) => ({ ...dataInitial, ...val, stt: (key + 1).toString() }))
   const routes: Routes[] = useMemo(
     () => [
       {
@@ -23,26 +44,15 @@ const Estimate = ({ user }) => {
     ],
     []
   );
-  const originData = [];
-
-  for (let i = 0; i < 3; i++) {
-    originData.push({
-      key: i.toString(),
-      hieuc: `${i + 1} `,
-      thang1: `Edrward ${i}`,
-      thang2: `Edrward ${i}`,
-      thang3: `Edrward ${i}`,
-      thang4: `Edrward ${i}`,
-      thang5: `Edrward ${i}`,
-      thang6: `Edrward ${i}`,
-      thang7: `Edrward ${i}`,
-      thang8: `Edrward ${i}`,
-      thang9: `Edrward ${i}`,
-      thang10: `Edrward ${i}`,
-      thang11: `Edrward ${i}`,
-      thang12: `Edrward ${i}`,
-    });
-  }
+  const showModalAdd = () => {
+    setIsModalVisible(true);
+  };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  const columns = (param) => {
+    setColumnsMonth(param);
+  };
   return (
     <>
       <MainLayout user={user}>
@@ -52,13 +62,35 @@ const Estimate = ({ user }) => {
           </Col>
           <Col span={24}>
             <Card title="Thu nhập">
-              <MonthTable originData={originData} />
+              <Row gutter={[0, 15]} justify="end">
+                <Col>
+                  <Button type="primary" onClick={showModalAdd}>
+                    Thêm
+                  </Button>
+                  <Modal
+                    title="Thêm tài nguyên"
+                    visible={isModalVisible}
+                    onCancel={handleCancel}
+                    footer={null}
+                  >
+                    <Row justify="space-around">
+                      <Col span={24}>
+                        <Diolog
+                          onCancel={handleCancel}
+                          columnsMonth={columnsMonth}
+                          user={user}
+                        />
+                      </Col>
+                    </Row>
+                  </Modal>
+                </Col>
+                <MonthTable originData={data1} columnss={columns} />
+              </Row>
             </Card>
           </Col>
         </Row>
       </MainLayout>
     </>
   );
-};
-export default Estimate;
+}
 export const getServerSideProps = withAuthSSP();

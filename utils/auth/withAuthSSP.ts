@@ -19,6 +19,7 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
   const { res, req } = ctx;
   const { cookies } = req;
 
+
   const { auth, user_id: userId, refresh_token: refreshToken } = cookies;
   if (!userId || !refreshToken) {
     return {
@@ -52,10 +53,6 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
   }
 
   const user = doc.data();
-  const dataUser = {
-    id: userId,
-    data: doc.data(),
-  };
 
   const claims = {
     id: userId,
@@ -120,7 +117,6 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
     return {
       props: {
         user,
-        dataUser,
       },
     };
   }
