@@ -7,18 +7,16 @@ import React, { useMemo, useState } from 'react';
 import Modal from 'antd/lib/modal/Modal';
 import Diolog from '@components/table/components/diolog/dialog';
 
-// import { useRouter } from 'next/router';
-
 export default function Estimate({ user }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // const router = useRouter();
   const originData = [];
+  const column = { title: 'Chi tiêu đột xuất', dataIndex: 'chitieudotxuat' };
 
   for (let i = 0; i < 3; i++) {
     const randomNum = Math.floor(Math.random() * 10000000 + 1);
     originData.push({
       key: i.toString(),
-      hieuc: `${i}`,
+      stt: `${i + 1}`,
       thang1: 200000,
       thang2: 600000,
       thang3: 1000000,
@@ -44,7 +42,7 @@ export default function Estimate({ user }) {
         breadcrumbName: 'Dự toán',
       },
       {
-        path: '/phan-bo-thu-nhap',
+        path: '/chi-tieu-dot-xuat',
         breadcrumbName: 'Chi tiêu đột xuất',
       },
     ],
@@ -52,7 +50,6 @@ export default function Estimate({ user }) {
   );
   const showModalAdd = () => {
     setIsModalVisible(true);
-    // setText('Thêm tài nguyên');
   };
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -72,7 +69,7 @@ export default function Estimate({ user }) {
                     Thêm
                   </Button>
                   <Modal
-                    title='Thêm tài nguyên'
+                    title="Thêm tài nguyên"
                     visible={isModalVisible}
                     onCancel={handleCancel}
                     footer={null}
@@ -84,7 +81,7 @@ export default function Estimate({ user }) {
                     </Row>
                   </Modal>
                 </Col>
-                <MonthTable originData={originData} />
+                <MonthTable column={column} originData={originData} />
               </Row>
             </Card>
           </Col>
