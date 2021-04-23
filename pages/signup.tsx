@@ -5,7 +5,6 @@ import {
   ContentContainer,
   FormContent,
   FormLayout,
-  FormSider,
 } from '@layouts/sider/styles';
 import { fetchAPI } from '@utils/services';
 import {
@@ -216,9 +215,8 @@ const Signup = () => {
             </Spin>
           </ContentContainer>
         </FormContent>
-        <FormSider>
-          <CarouselSelect />
-        </FormSider>
+
+        <CarouselSelect />
       </FormLayout>
     </>
   );

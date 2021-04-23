@@ -23,6 +23,10 @@ export const ContentContainer = styled.div`
 `;
 export const FormSider = styled(Sider)`
   min-width: 500px !important;
+  .slick-slide {
+    height: 100vh;
+  }
+
   @media (max-width: 992px) {
     display: none;
   }

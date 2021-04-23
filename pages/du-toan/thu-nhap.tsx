@@ -28,7 +28,7 @@ const Estimate = ({ user }) => {
   for (let i = 0; i < 3; i++) {
     originData.push({
       key: i.toString(),
-      hieuc: `${i + 1} `,
+      stt: `${i + 1} `,
       thang1: `Edrward ${i}`,
       thang2: `Edrward ${i}`,
       thang3: `Edrward ${i}`,
