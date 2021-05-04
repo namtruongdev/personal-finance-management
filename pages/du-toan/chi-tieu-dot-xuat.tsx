@@ -5,7 +5,7 @@ import { withAuthSSP } from '@utils/auth';
 import { Button, Card, Col, Row } from 'antd';
 import React, { useMemo, useState } from 'react';
 import Modal from 'antd/lib/modal/Modal';
-import Diolog from '@components/table/components/diolog/dialog';
+import Dialog from '@components/table/components/dialog/dialog';
 
 export default function Estimate({ user }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -75,7 +75,7 @@ export default function Estimate({ user }) {
                   >
                     <Row justify="space-around">
                       <Col span={16}>
-                        <Diolog onCancel={handleCancel} />
+                        <Dialog onCancel={handleCancel} />
                       </Col>
                     </Row>
                   </Modal>

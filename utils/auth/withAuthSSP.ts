@@ -19,7 +19,6 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
   const { res, req } = ctx;
   const { cookies } = req;
 
-
   const { auth, user_id: userId, refresh_token: refreshToken } = cookies;
   if (!userId || !refreshToken) {
     return {
@@ -116,7 +115,7 @@ export const withAuthSSP = (getServerSideProps?: GetServerSideProps) => async (
     }
     return {
       props: {
-        user,
+        user: claims.userName,
       },
     };
   }

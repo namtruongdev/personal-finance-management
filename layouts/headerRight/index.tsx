@@ -38,13 +38,14 @@ const LogoutButton = ({ data }) => {
 
   const menu = (
     <Menu>
-
       <Menu.Item>
-        <ButtonLogout block > Thông tin cá nhân</ButtonLogout>
+        <ButtonLogout block> Thông tin cá nhân</ButtonLogout>
       </Menu.Item>
 
       <Menu.Item>
-        <ButtonLogout block onClick={logout}>Đăng xuất</ButtonLogout>
+        <ButtonLogout block onClick={logout}>
+          Đăng xuất
+        </ButtonLogout>
       </Menu.Item>
     </Menu>
   );
@@ -63,7 +64,7 @@ const LogoutButton = ({ data }) => {
             size={30}
             gap={2}
           >
-            {data.username.charAt(0).toUpperCase()}
+            {data.charAt(0).toUpperCase()}
           </Avatar>
         </AvatarIcon>
       </Dropdown>

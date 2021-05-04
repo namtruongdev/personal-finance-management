@@ -1,37 +1,41 @@
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { Table, Popconfirm, Form, Col, Row, Button, Typography, Tooltip } from 'antd';
+import React, { memo, useCallback, useMemo, useState } from 'react';
+import {
+  Table,
+  Popconfirm,
+  Form,
+  Col,
+  Row,
+  Button,
+  Typography,
+  Tooltip,
+  message,
+} from 'antd';
 import EditableCell from '@components/table/components/EditableCell';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchAPI } from '@utils/services';
-import { GET_DATA, EDIT_DATA } from '@constants/api';
-import { useRouter } from 'next/router';
+import { DELETE_DATA, EDIT_DATA } from '@constants/api';
+import { numberToVND } from '@utils/common/index';
 
 const { Text } = Typography;
-const EditableTable = ({ originData, columnss }) => {
-  const d = new Date();
-  const year = d.getFullYear()
+const EditableTable = ({ originData, getData, year }) => {
   const [form] = Form.useForm();
-  // const [data, setData] = useState(originData);
   const [editingKey, setEditingKey] = useState('');
   const isEditing = (record: DataTableMonth) => record.key === editingKey;
-  const router = useRouter()
-
-  const reFreshPage = () => {
-    router.replace(router.asPath)
-  }
+  const success = (result) => {
+    message.success(`${result.message}`);
+  };
   const handleDelete = async (key: string) => {
     const res = await fetchAPI({
-      url: GET_DATA,
+      url: DELETE_DATA,
       payload: key,
-      method: "POST"
-    })
+      method: 'POST',
+    });
+    const result = await res.json();
+    success(result);
     if (res.ok) {
-      reFreshPage();
+      getData();
     }
   };
-  useEffect(() => {
-    columnss(columns);
-  }, []);
   const edit = useCallback(
     (record: DataTableMonth) => {
       form.setFieldsValue({
@@ -49,7 +53,7 @@ const EditableTable = ({ originData, columnss }) => {
         thang12: 0,
         ...record,
       });
-      setEditingKey(record.key); 1
+      setEditingKey(record.key);
     },
     [form]
   );
@@ -57,24 +61,21 @@ const EditableTable = ({ originData, columnss }) => {
 
   const save = useCallback(
     async (key: string) => {
-      try {
-        const row = await form.validateFields();
-        const newData = [...originData];
-        const index = newData.findIndex((item) => key === item.key);
-        const item = newData[index];
-        newData.splice(index, 1, { ...item, ...row });
-        setEditingKey('');
-        const res = await fetchAPI({
-          url: EDIT_DATA,
-          payload: newData,
-          method: "POST"
-        })
-        console.log(res)
-        if (res.ok) {
-          reFreshPage();
-        }
-      } catch (err) {
-        throw new Error(err);
+      const row = await form.validateFields();
+      const newData = [...originData];
+      const index = newData.findIndex((item) => key === item.key);
+      const item = newData[index];
+      newData.splice(index, 1, { ...item, ...row });
+      setEditingKey('');
+      const res = await fetchAPI({
+        url: EDIT_DATA,
+        payload: newData,
+        method: 'POST',
+      });
+      const result = await res.json();
+      if (res.ok) {
+        getData();
+        success(result);
       }
     },
     [originData, form]
@@ -86,13 +87,14 @@ const EditableTable = ({ originData, columnss }) => {
         dataIndex: 'stt',
         align: 'center' as 'center',
         fixed: true,
-        width: '4%',
+        width: '3%',
+        editable: true,
       },
       {
         title: 'Thu nhập',
         dataIndex: 'thunhap',
         align: 'center' as 'center',
-        width: '8%',
+        width: '6%',
         fixed: true,
         editable: true,
       },
@@ -101,17 +103,19 @@ const EditableTable = ({ originData, columnss }) => {
         dataIndex: 'thang1',
         align: 'center' as 'center',
         editable: true,
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 13 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 11)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 15 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 11)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
       },
       {
@@ -119,17 +123,19 @@ const EditableTable = ({ originData, columnss }) => {
         dataIndex: 'thang2',
         align: 'center' as 'center',
         editable: true,
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 13 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 11)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 15 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 11)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
       },
       {
@@ -138,17 +144,19 @@ const EditableTable = ({ originData, columnss }) => {
         align: 'center' as 'center',
 
         editable: true,
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 13 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 11)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 15 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 11)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
       },
       {
@@ -157,34 +165,38 @@ const EditableTable = ({ originData, columnss }) => {
         align: 'center' as 'center',
 
         editable: true,
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 13 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 11)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 15 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 11)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
       },
       {
         title: `05/${year}`,
         dataIndex: 'thang5',
         align: 'center' as 'center',
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 13 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal}
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 15 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal}
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
         editable: true,
       },
@@ -192,17 +204,19 @@ const EditableTable = ({ originData, columnss }) => {
         title: `06/${year}`,
         dataIndex: 'thang6',
         align: 'center' as 'center',
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 13 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 11)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 15 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 11)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
         editable: true,
       },
@@ -210,17 +224,19 @@ const EditableTable = ({ originData, columnss }) => {
         title: `07/${year}`,
         dataIndex: 'thang7',
         align: 'center' as 'center',
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 13 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 11)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 15 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 11)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
         editable: true,
       },
@@ -228,17 +244,19 @@ const EditableTable = ({ originData, columnss }) => {
         title: `08/${year}`,
         dataIndex: 'thang8',
         align: 'center' as 'center',
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 13 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 11)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 15 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 11)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
         editable: true,
       },
@@ -246,17 +264,19 @@ const EditableTable = ({ originData, columnss }) => {
         title: `09/${year}`,
         dataIndex: 'thang9',
         align: 'center' as 'center',
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 13 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 11)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 15 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 11)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
         editable: true,
       },
@@ -264,17 +284,19 @@ const EditableTable = ({ originData, columnss }) => {
         title: `10/${year}`,
         dataIndex: 'thang10',
         align: 'center' as 'center',
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 14 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 12)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 14 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 12)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
         editable: true,
       },
@@ -282,34 +304,38 @@ const EditableTable = ({ originData, columnss }) => {
         title: `11/${year}`,
         dataIndex: 'thang11',
         align: 'center' as 'center',
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 14 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 12)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 14 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 12)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
         editable: true,
       },
       {
         title: `12/${year}`,
         align: 'center' as 'center',
-        ellipsis: {
-          showTitle: false,
-        },
         render: (a) => {
-          const toLocal = a.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })
-          return (<>
-            {toLocal.length > 14 ? <Tooltip placement="topLeft" title={toLocal}>
-              {toLocal.substring(0, 12)}...
-            </Tooltip> : toLocal}
-          </>
-          )
+          const toLocal = numberToVND(a);
+          return (
+            <>
+              {toLocal.length > 14 ? (
+                <Tooltip placement="topLeft" title={toLocal}>
+                  {toLocal.substring(0, 12)}...
+                </Tooltip>
+              ) : (
+                toLocal
+              )}
+            </>
+          );
         },
         dataIndex: 'thang12',
         editable: true,
@@ -320,6 +346,7 @@ const EditableTable = ({ originData, columnss }) => {
         align: 'center' as 'center',
         fixed: 'right' as 'right',
         width: '6%',
+
         render: (_: unknown, record: DataTableMonth) => {
           const editable = isEditing(record);
           return originData.length >= 1 ? (
@@ -394,7 +421,8 @@ const EditableTable = ({ originData, columnss }) => {
         dataSource={originData}
         pagination={{ pageSize: 4 }}
         columns={mergedColumns}
-        scroll={{ x: 1800 }}
+        scroll={{ x: 1700 }}
+        size="small"
         summary={() => {
           const arrTotal = [
             originData.reduce((total, curr) => total + curr.thang1, 0),
@@ -420,24 +448,24 @@ const EditableTable = ({ originData, columnss }) => {
                   const totalTolocal = total.toLocaleString('vi-VN', {
                     style: 'currency',
                     currency: 'VND',
-                  })
+                  });
                   return (
                     <Table.Summary.Cell
                       align="center"
                       index={index + 2}
                       key={uuidv4()}
                     >
-                      <Text>
-                        <strong>
-                          {total.toString().length > 9 ?
-                            <Tooltip placement="topLeft" title={totalTolocal}>
-                              {totalTolocal.substring(0, 11)}...
-                        </Tooltip>
-                            : totalTolocal}
-                        </strong>
+                      <Text strong>
+                        {total.toString().length > 10 ? (
+                          <Tooltip placement="topLeft" title={totalTolocal}>
+                            {totalTolocal.substring(0, 11)}...
+                          </Tooltip>
+                        ) : (
+                          totalTolocal
+                        )}
                       </Text>
                     </Table.Summary.Cell>
-                  )
+                  );
                 })}
                 <Table.Summary.Cell align="center" index={14}>
                   <Text> </Text>

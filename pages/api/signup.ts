@@ -3,6 +3,7 @@ import { hash } from 'bcryptjs';
 
 import { SALT } from '@constants/index';
 import db from '@utils/database';
+import { yearCrr } from '@constants/year';
 
 const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method, body } = req;
@@ -41,7 +42,7 @@ const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
   const passwordHash = await hash(password, SALT);
 
   const payload: User = {
-    dutoan: { thunhap: [] },
+    [`nam${yearCrr}`]: { dutoan: { thunhap: [] } },
     email,
     username,
     password: passwordHash,

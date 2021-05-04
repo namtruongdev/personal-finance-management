@@ -1,5 +1,5 @@
 interface User {
-  dutoan: { thunhap: [] }
+  [x: string]: { dutoan: { thunhap: [] } };
   email: string;
   username: string;
   createdAt: string;
