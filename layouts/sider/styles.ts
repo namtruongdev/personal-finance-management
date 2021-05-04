@@ -21,9 +21,9 @@ export const ContentContainer = styled.div`
   max-width: 400px;
   z-index: 2;
 `;
-export const FormSider = styled(Sider)`
-  min-width: 500px !important;
-  @media (max-width: 992px) {
-    display: none;
-  }
-`;
+// export const FormSider = styled(Sider)`
+//   min-width: 500px !important;
+//   @media (max-width: 992px) {
+//     display: none;
+//   }
+// `;
